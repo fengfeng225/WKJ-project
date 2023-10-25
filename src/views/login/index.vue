@@ -101,6 +101,15 @@ export default {
       immediate: true
     }
   },
+  created() {
+    const _this = this
+    document.onkeydown = function(e) {
+      const { keyCode } = e
+      if (keyCode === 13) {
+        _this.handleLogin()
+      }
+    }
+  },
   methods: {
     checkCapslock(e) {
       const { key } = e

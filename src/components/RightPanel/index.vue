@@ -2,19 +2,18 @@
   <div ref="rightPanel" :class="{show:show}" class="rightPanel-container">
     <div class="rightPanel-background" />
     <div class="rightPanel">
-      <div class="handle-button" :style="{'top':buttonTop+'px','background-color':theme}" @click="show=!show">
+      <!-- <div class="handle-button" :style="{'top':buttonTop+'px','background-color':theme}" @click="toggleShow">
         <i :class="show?'el-icon-close':'el-icon-setting'" />
       </div>
       <div class="rightPanel-items">
         <slot />
-      </div>
+      </div> -->
+      <slot />
     </div>
   </div>
 </template>
 
 <script>
-import { addClass, removeClass } from '@/utils'
-
 export default {
   name: 'RightPanel',
   props: {
@@ -42,11 +41,6 @@ export default {
       if (value && !this.clickNotClose) {
         this.addEventClick()
       }
-      if (value) {
-        addClass(document.body, 'showRightPanel')
-      } else {
-        removeClass(document.body, 'showRightPanel')
-      }
     }
   },
   mounted() {
@@ -57,6 +51,9 @@ export default {
     elx.remove()
   },
   methods: {
+    toggleShow() {
+      this.show = !this.show
+    },
     addEventClick() {
       window.addEventListener('click', this.closeSidebar)
     },
@@ -75,14 +72,6 @@ export default {
   }
 }
 </script>
-
-<style>
-.showRightPanel {
-  overflow: hidden;
-  position: relative;
-  width: calc(100% - 15px);
-}
-</style>
 
 <style lang="scss" scoped>
 .rightPanel-background {

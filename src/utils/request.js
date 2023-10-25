@@ -51,7 +51,7 @@ service.interceptors.response.use(
         type: 'error',
         duration: 1500,
         onClose: () => {
-          if (res.code === 602 || res.code === 50012 || res.code === 50014) {
+          if (res.code === 500) {
             // to re-login
             store.dispatch('user/resetToken').then(() => {
               location.reload()
