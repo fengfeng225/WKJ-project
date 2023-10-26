@@ -4,6 +4,7 @@
 @import './element-ui.scss';
 @import './sidebar.scss';
 @import './btn.scss';
+@import './common.scss';
 
 body {
   height: 100%;
@@ -126,7 +127,14 @@ aside {
 
 //main-container全局样式
 .app-container {
-  padding: 20px;
+  height: 100%;
+  background-color: #fff;
+  padding: 0 10px 10px;
+  overflow: hidden;
+  position: relative;
+  &.nohead {
+      padding-top: 10px;
+  }
 }
 
 .components-container {
@@ -193,4 +201,19 @@ aside {
 
 .multiselect--active {
   z-index: 1000 !important;
+}
+
+h2 {
+  font-size: 16px;
+  line-height: 42px;
+  font-weight: 500;
+
+  &.bold {
+    font-weight: 600;
+  }
+}
+
+.title-box {
+  border-bottom: 1px solid #ebeef5;
+  margin-bottom: 20px !important;
 }

@@ -1,5 +1,5 @@
 <template>
-  <div>首页</div>
+  <div>列表权限</div>
 </template>
 
 <script>

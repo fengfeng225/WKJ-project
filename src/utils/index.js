@@ -1,6 +1,4 @@
-/**
- * Created by PanJiaChen on 16/11/18.
- */
+import dayjs from 'dayjs'
 
 /**
  * Parse the time to string
@@ -354,4 +352,11 @@ export function removeClass(ele, cls) {
     const reg = new RegExp('(\\s|^)' + cls + '(\\s|$)')
     ele.className = ele.className.replace(reg, ' ')
   }
+}
+
+// 基于dayjs日期格式化,时间戳(毫秒)转日期
+export function dateFormat(date, format) {
+  format = format || 'YYYY-MM-DD HH:mm'
+  if (!date) return ''
+  return dayjs(date).format(format)
 }

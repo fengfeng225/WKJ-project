@@ -70,7 +70,20 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard'),
         name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+        meta: { title: '首页', icon: 'el-icon-s-home', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/profile',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/',
+        component: () => import('@/views/profile'),
+        name: 'Profile',
+        meta: { title: '个人信息', icon: 'user', noCache: true }
       }
     ]
   }
@@ -81,6 +94,26 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
+  {
+    path: '/bill',
+    component: Layout,
+    name: 'Bill',
+    meta: { title: '台账', icon: 'el-icon-folder', noCache: true },
+    children: [
+      {
+        path: 'longBill',
+        component: () => import('@/views/bill/longBill'),
+        name: 'LongBill',
+        meta: { title: '长期台账', icon: 'el-icon-document-copy', noCache: true }
+      },
+      {
+        path: 'shortBill',
+        component: () => import('@/views/bill/shortBill'),
+        name: 'ShortBill',
+        meta: { title: '短期台账', icon: 'el-icon-document', noCache: true }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

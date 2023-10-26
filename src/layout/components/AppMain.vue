@@ -25,8 +25,11 @@ export default {
 <style lang="scss" scoped>
 .app-main {
   /* 50= navbar  50  */
-  min-height: calc(100vh - 50px);
+  height: calc(100vh - 100px);
+  background-color: #ebeef5;
   width: 100%;
+  margin-bottom: 20px;
+  box-sizing: border-box;
   position: relative;
   overflow: hidden;
 }
@@ -38,7 +41,7 @@ export default {
 .hasTagsView {
   .app-main {
     /* 84 = navbar + tags-view = 50 + 34 */
-    min-height: calc(100vh - 84px);
+    height: calc(100vh - 100px);
   }
 
   .fixed-header+.app-main {

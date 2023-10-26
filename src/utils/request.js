@@ -18,6 +18,8 @@ service.interceptors.request.use(
     if (store.getters.token) {
       config.headers['Authorization'] = getToken()
     }
+    const timestamp = Date.parse(new Date()) / 1000
+    config.url += `&n=${timestamp}`
     return config
   },
   error => {

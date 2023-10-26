@@ -1,5 +1,5 @@
 <template>
-  <div>首页</div>
+  <div>长期台账</div>
 </template>
 
 <script>

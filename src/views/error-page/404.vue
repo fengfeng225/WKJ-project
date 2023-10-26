@@ -11,7 +11,7 @@
         <el-link type="primary" class="bullshit__oops" :underline="false">OOPS!</el-link>
         <div class="bullshit__headline">{{ message }}</div>
         <div class="bullshit__info">请检查您输入的URL是否正确，或单击按钮返回首页。</div>
-        <el-button type="primary" size="large" @click="$router.push('/home')">返回首页</el-button>
+        <el-button type="primary" size="large" @click="$router.push('/')">返回首页</el-button>
       </div>
     </div>
   </div>

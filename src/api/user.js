@@ -21,3 +21,11 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function updatePassword(data) {
+  return request({
+    url: '/vue-element-admin/user/updatePassword',
+    method: 'post',
+    data
+  })
+}

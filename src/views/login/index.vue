@@ -8,7 +8,7 @@
       <div class="login-logo">
         <!-- <img src="../../assets/images/hg.png" alt=""> -->
         <div class="login-logo-text">
-          <span class="text-zh">台账管理平台</span>
+          <span class="text-zh">台账管理系统</span>
         </div>
       </div>
       <div class="login-form">

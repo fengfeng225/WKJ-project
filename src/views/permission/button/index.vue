@@ -1,5 +1,5 @@
 <template>
-  <div>首页</div>
+  <div>按钮权限</div>
 </template>
 
 <script>
