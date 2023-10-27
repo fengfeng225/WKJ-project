@@ -30,9 +30,19 @@
 .BL-flex-main {
   display: flex;
   flex-direction: column;
-  .BL-common-table {
+  .el-table {
     flex: 1;
-    height: 100%;
+
+    &::before {
+      border-bottom: 0;
+      height: 0px
+    }
+  }
+
+  .el-table__fixed::before,
+  .el-table__fixed-right::before {
+    border-bottom: 0;
+    height: 0px
   }
 }
 
@@ -67,4 +77,86 @@
 .BL-common-pagination {
   text-align: right;
   padding: 0 15px;
+  margin-top: 3px;
+}
+
+.el-table {
+  border-top: 1px solid #EBEEF5;
+
+  thead {
+
+    tr,
+    tr th {
+      background-color: #f5f7fa;
+      font-weight: normal;
+      color: #606266;
+      padding: 2px;
+    }
+  }
+
+  .el-switch {
+    transform: scale(0.8);
+  }
+
+  .el-button--mini.el-button--text {
+    padding: 3px 0;
+  }
+
+  &.columnTable {
+    border-top: none;
+
+    thead {
+
+      tr,
+      tr th {
+        background-color: #fff;
+      }
+    }
+
+    td {
+      border-bottom: none;
+    }
+
+    &.el-table--mini td,
+    &.el-table--mini th {
+      padding: 3px 0;
+    }
+
+    &::before {
+      height: 0;
+    }
+  }
+
+  &::before {
+    height: 0 !important;
+  }
+
+  .el-table__fixed-right-patch {
+    background-color: #f5f7fa;
+    top: 0;
+  }
+
+  .has-gutter .gutter {
+    border-bottom: 1px solid #ebeef5;
+  }
+
+  .el-table__empty-block {
+    display: inline-block;
+  }
+
+  .el-table__column-filter-trigger {
+    line-height: 22px;
+  }
+
+  .caret-wrapper {
+    height: 23px !important;
+  }
+
+  .sort-caret.ascending {
+    top: 0px !important;
+  }
+
+  .sort-caret.descending {
+    bottom: 1px !important;
+  }
 }

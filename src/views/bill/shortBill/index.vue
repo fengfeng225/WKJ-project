@@ -44,35 +44,20 @@
       </el-row>
 
       <div class="BL-common-layout-main BL-flex-main">
-        <el-table v-loading="tableLoading" class="BL-common-table" :data="tableData" :cell-style="{padding: '0'}" :header-cell-style="{background:'#f5f7fa'}" row-key="id">
-          <el-table-column type="index" label="序号" width="50" />
+        <BL-table ref="BLTable" v-loading="tableLoading" :data="tableData" :cell-style="{padding: '0'}" fixed-n-o row-key="id">
           <template v-for="item in columns">
-            <template v-if="item.prop === 'description'">
-              <el-table-column :key="item.prop" :label="item.label" width="220">
+            <template v-if="item.prop === 'action'">
+              <ex-table-column :key="item.prop" :label="item.label" width="120" fixed="right">
                 <template #default="scope">
-                  {{ scope.row.prop }}
+                  按钮
                 </template>
-              </el-table-column>
-            </template>
-            <template v-else-if="item.prop === 'size'">
-              <el-table-column :key="item.prop" :label="item.label" width="120">
-                <template #default="scope">
-                  {{ scope.row.prop }}
-                </template>
-              </el-table-column>
-            </template>
-            <template v-else-if="item.prop === 'action'">
-              <el-table-column :key="item.prop" :label="item.label" width="120" fixed="right">
-                <template #default="scope">
-                  {{ scope.row.prop }}
-                </template>
-              </el-table-column>
+              </ex-table-column>
             </template>
             <template v-else>
-              <el-table-column :key="item.prop" :label="item.label" :prop="item.prop" />
+              <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" />
             </template>
           </template>
-        </el-table>
+        </BL-table>
         <el-pagination
           class="BL-common-pagination"
           background
@@ -101,7 +86,53 @@ export default {
       },
       total: 100,
       tableLoading: false,
-      tableData: [],
+      tableData: [
+        {
+          name: '15万白油加氢',
+          code: '033',
+          pipDiameter: '40',
+          description: 'C-601顶部出口线现场排空手阀后法兰',
+          pipelineMediaName: '常顶油气',
+          pipelineMediaTemperature: '230',
+          pipelineMediaPressure: '0.1',
+          size: '8',
+          type: '8字盲板',
+          material: '钢制',
+          installTime: '2022.7',
+          operators: '木胡太尔江',
+          Manager: '王科举'
+        },
+        {
+          name: '15万白油加氢',
+          code: '033',
+          pipDiameter: '40',
+          description: 'C-601顶部出口线现场排空手阀后法兰',
+          pipelineMediaName: '常顶油气',
+          pipelineMediaTemperature: '230',
+          pipelineMediaPressure: '0.1',
+          size: '8',
+          type: '8字盲板',
+          material: '钢制',
+          installTime: '2022.7',
+          operators: '木胡太尔江',
+          Manager: '王科举'
+        },
+        {
+          name: '15万白油加氢',
+          code: '033',
+          pipDiameter: '40',
+          description: 'C-601顶部出口线现场排空手阀后法兰',
+          pipelineMediaName: '常顶油气',
+          pipelineMediaTemperature: '230',
+          pipelineMediaPressure: '0.1',
+          size: '8',
+          type: '8字盲板',
+          material: '钢制',
+          installTime: '2022.7',
+          operators: '木胡太尔江',
+          Manager: '王科举'
+        }
+      ],
       importLoading: false,
       exportLoading: false,
       roleButtonOptions: [],
