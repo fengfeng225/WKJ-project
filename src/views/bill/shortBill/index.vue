@@ -1,7 +1,27 @@
 <template>
   <div class="BL-common-layout">
     <!-- left -->
-    <div class="BL-common-layout-left">123</div>
+    <div class="BL-common-layout-left">
+      <div class="BL-common-title">
+        <h2>班组</h2>
+      </div>
+      <el-scrollbar
+        v-loading="treeLoading"
+        class="BL-common-el-tree-scrollbar"
+      >
+        <el-tree
+          ref="Tree"
+          :data="treeData"
+          :props="defaultProps"
+          default-expand-all
+          highlight-current
+          :expand-on-click-node="false"
+          node-key="id"
+          class="BL-common-el-tree"
+          @node-click="handleNodeClick"
+        />
+      </el-scrollbar>
+    </div>
     <!-- right -->
     <div class="BL-common-layout-center BL-flex-main">
       <el-row class="BL-common-search-box" :gutter="16">
@@ -30,7 +50,7 @@
           <div>
             <el-button icon="el-icon-upload2" :loading="importLoading" @click="importData">导入</el-button>
             <el-button icon="el-icon-download" :loading="exportLoading" @click="exportData">导出</el-button>
-            <el-button icon="el-icon-plus" type="primary" @click="addOrUpdateHandle">新建</el-button>
+            <el-button icon="el-icon-plus" type="primary" @click="addOrUpdateHandle()">新建</el-button>
             <el-tooltip effect="dark" content="刷新" placement="top">
               <el-link
                 style="margin-left: 12px;"
@@ -47,9 +67,20 @@
         <BL-table ref="BLTable" v-loading="tableLoading" :data="tableData" :cell-style="{padding: '0'}" fixed-n-o row-key="id">
           <template v-for="item in columns">
             <template v-if="item.prop === 'action'">
-              <ex-table-column :key="item.prop" :label="item.label" width="120" fixed="right">
+              <ex-table-column :key="item.prop" :label="item.label" width="150" fixed="right">
                 <template #default="scope">
-                  按钮
+                  <el-button type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
+                  <el-button class="BL-table-delBtn" type="text">删除</el-button>
+                  <BL-Dropdown style="margin-left: 8px;">
+                    <span>
+                      <el-button type="text" size="small">更多<i class="el-icon-arrow-down el-icon--right" /></el-button>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item>
+                        测试
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </BL-Dropdown>
                 </template>
               </ex-table-column>
             </template>
@@ -69,14 +100,23 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
         />
+
+        <BillForm v-if="billFormVisible" ref="BillForm" @close="closeForm" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { getShortBills } from '@/api/bill'
+
+import BillForm from '../components/BillForm'
+
 export default {
   name: 'ShortBill',
+  components: {
+    BillForm
+  },
   data() {
     return {
       params: {
@@ -85,58 +125,60 @@ export default {
         pageSize: 20
       },
       total: 100,
-      tableLoading: false,
-      tableData: [
+      treeLoading: false,
+      treeData: [
         {
-          name: '15万白油加氢',
-          code: '033',
-          pipDiameter: '40',
-          description: 'C-601顶部出口线现场排空手阀后法兰',
-          pipelineMediaName: '常顶油气',
-          pipelineMediaTemperature: '230',
-          pipelineMediaPressure: '0.1',
-          size: '8',
-          type: '8字盲板',
-          material: '钢制',
-          installTime: '2022.7',
-          operators: '木胡太尔江',
-          Manager: '王科举'
-        },
-        {
-          name: '15万白油加氢',
-          code: '033',
-          pipDiameter: '40',
-          description: 'C-601顶部出口线现场排空手阀后法兰',
-          pipelineMediaName: '常顶油气',
-          pipelineMediaTemperature: '230',
-          pipelineMediaPressure: '0.1',
-          size: '8',
-          type: '8字盲板',
-          material: '钢制',
-          installTime: '2022.7',
-          operators: '木胡太尔江',
-          Manager: '王科举'
-        },
-        {
-          name: '15万白油加氢',
-          code: '033',
-          pipDiameter: '40',
-          description: 'C-601顶部出口线现场排空手阀后法兰',
-          pipelineMediaName: '常顶油气',
-          pipelineMediaTemperature: '230',
-          pipelineMediaPressure: '0.1',
-          size: '8',
-          type: '8字盲板',
-          material: '钢制',
-          installTime: '2022.7',
-          operators: '木胡太尔江',
-          Manager: '王科举'
+          enabledMark: 1,
+          label: '全部',
+          hasChildren: true,
+          id: '402684125602906181',
+          isLeaf: false,
+          parentId: '-1',
+          children: [
+            {
+              children: null,
+              enabledMark: 1,
+              label: '一班',
+              hasChildren: false,
+              id: '403034187151441989',
+              isLeaf: true,
+              parentId: '402684125602906181'
+            },
+            {
+              children: null,
+              enabledMark: 1,
+              label: '二班',
+              hasChildren: false,
+              id: '403034187151441988',
+              isLeaf: true,
+              parentId: '402684125602906181'
+            },
+            {
+              children: null,
+              enabledMark: 1,
+              label: '三班',
+              hasChildren: false,
+              id: '403034187151441987',
+              isLeaf: true,
+              parentId: '402684125602906181'
+            }
+          ]
         }
       ],
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      },
+      tableLoading: false,
+      tableData: [],
       importLoading: false,
       exportLoading: false,
       roleButtonOptions: [],
       roleColumnOptions: [
+        {
+          label: '班组',
+          prop: 'group'
+        },
         {
           label: '装置名称',
           prop: 'name'
@@ -150,7 +192,7 @@ export default {
           prop: 'pipDiameter'
         },
         {
-          label: '盲板安装位置描述 (注明阀前或阀后)',
+          label: '盲板安装位置描述',
           prop: 'description'
         },
         {
@@ -197,7 +239,8 @@ export default {
           label: '操作',
           prop: 'action'
         }
-      ]
+      ],
+      billFormVisible: false
     }
   },
 
@@ -207,8 +250,27 @@ export default {
     }
   },
 
+  created() {
+    this.initData()
+  },
+
   methods: {
-    search() {},
+    initData() {
+      this.tableLoading = true
+      getShortBills(this.params).then((res) => {
+        this.tableData = res.data.list
+        this.total = res.data.pagination.total
+        this.tableLoading = false
+      }).catch(() => {
+        this.tableLoading = false
+      })
+    },
+
+    search() {
+      this.params.currentPage = 1
+      this.params.pageSize = 20
+      this.initData()
+    },
 
     reset() {},
 
@@ -216,7 +278,18 @@ export default {
 
     exportData() {},
 
-    addOrUpdateHandle() {},
+    handleNodeClick() {},
+
+    closeForm(isRefresh) {
+      this.billFormVisible = false
+    },
+
+    addOrUpdateHandle(id) {
+      this.billFormVisible = true
+      this.$nextTick(() => {
+        this.$refs.BillForm.init(id)
+      })
+    },
 
     handleSizeChange() {},
 

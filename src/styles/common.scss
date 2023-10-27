@@ -4,6 +4,7 @@
   display: flex;
   position: relative;
   background: #EBEEF5;
+
   .BL-common-layout-left {
     width: 220px;
     background-color: #fff;
@@ -11,7 +12,48 @@
     display: flex;
     flex-direction: column;
     margin-right: 3px;
+
+    .BL-common-title {
+      flex-shrink: 0;
+      padding: 0 10px;
+      border-bottom: 1px solid #ebeef5;
+      color: #000;
+    }
+
+    .BL-common-el-tree-scrollbar {
+      flex: 1;
+
+      .el-scrollbar__wrap {
+        overflow-x: hidden;
+      }
+    }
+
+    .custom-tree-node {
+      width: calc(100% - 30px) !important;
+    }
+
+    .BL-common-el-tree {
+      flex: 1;
+      overflow: auto;
+      overflow-x: hidden;
+
+      .el-tree-node__content {
+        height: 32px;
+        line-height: 32px;
+      }
+    }
   }
+}
+
+.BL-common-title {
+  flex-shrink: 0;
+  padding: 0 10px;
+  border-bottom: 1px solid #ebeef5;
+  color: #606266;
+}
+
+.BL-20 {
+  margin-bottom: 20px!important;
 }
 
 .BL-common-layout-center {
@@ -159,4 +201,106 @@
   .sort-caret.descending {
     bottom: 1px !important;
   }
+}
+
+.BL-table-delBtn {
+  color: #ff3a3a !important;
+
+  &.el-button--text:hover,
+  &.el-button--text:focus {
+    color: #ff3a3a !important;
+  }
+
+  &.is-disabled {
+    color: #C0C4CC !important;
+
+    &.el-button--text:hover,
+    &.el-button--text:focus {
+      color: #C0C4CC !important;
+    }
+  }
+}
+
+.BL-common-page-header {
+  padding: 14px 10px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom: 1px solid #dcdfe6;
+
+  .options {
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  .el-page-header {
+    .el-page-header__left {
+      flex-shrink: 0;
+    }
+
+    .el-page-header__content {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .steps {
+    width: 300px;
+    padding: 6px 20px;
+    background: #fff;
+    justify-items: flex-start;
+
+    .el-step__title {
+      cursor: pointer;
+    }
+  }
+}
+
+.BL-preview-main {
+  position: absolute;
+  background-color: #fff;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 100;
+  overflow: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+
+  &.nohead {
+    padding-top: 10px;
+  }
+
+  .btns {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 100;
+  }
+
+  .el-table--mini td {
+    padding: 2px 0;
+  }
+
+  .el-table {
+    flex: 1;
+  }
+
+  .BL-common-search-box {
+    margin-bottom: 0;
+  }
+
+  .main {
+    padding: 10px;
+    flex: 1;
+    overflow: auto;
+    overflow-x: hidden;
+  }
+}
+
+.el-form-item__label {
+  font-weight: 400;
 }
