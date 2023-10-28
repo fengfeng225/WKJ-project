@@ -52,20 +52,66 @@ const shortBills = [
   }
 ]
 
+const groupTree = [
+  {
+    enabledMark: 1,
+    label: '全部',
+    hasChildren: true,
+    id: '402684125602906181',
+    isLeaf: false,
+    parentId: '-1',
+    children: [
+      {
+        children: null,
+        enabledMark: 1,
+        label: '一班',
+        hasChildren: false,
+        id: '403034187151441989',
+        isLeaf: true,
+        parentId: '402684125602906181'
+      },
+      {
+        children: null,
+        enabledMark: 1,
+        label: '二班',
+        hasChildren: false,
+        id: '403034187151441988',
+        isLeaf: true,
+        parentId: '402684125602906181'
+      },
+      {
+        children: null,
+        enabledMark: 1,
+        label: '三班',
+        hasChildren: false,
+        id: '403034187151441987',
+        isLeaf: true,
+        parentId: '402684125602906181'
+      }
+    ]
+  }
+]
+
+const getBillsFromTree = function(groupId, tree, data) {
+
+}
+
 module.exports = [
   {
     url: '/api/admin/shortBills',
     type: 'get',
     response: config => {
-      const { keyword, currentPage = 1, pageSize = 20 } = config.query
+      const { groupId, keyword, currentPage = 1, pageSize = 20 } = config.query
+      const specificGroupList = getBillsFromTree(groupId, groupTree, shortBills)
+
       let list = []
       const start = (currentPage - 1) * pageSize
 
       if (!keyword) {
-        list = shortBills.slice(start, start + pageSize)
+        list = specificGroupList.slice(start, start + pageSize)
       } else {
-        const specificList = shortBills.filter(item => item.code.includes(keyword))
-        list = specificList.slice(start, start + pageSize)
+        const listIncludeKeyword = specificGroupList.filter(item => item.code.includes(keyword))
+        list = listIncludeKeyword.slice(start, start + pageSize)
       }
 
       return {
