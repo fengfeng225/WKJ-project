@@ -18,7 +18,7 @@ export function createShortBill(data) {
 
 export function updateShortBill(data) {
   return request({
-    url: `/api/admin/shortBill/${data.id}`,
+    url: `/api/admin/shortBill`,
     method: 'PUT',
     data
   })
@@ -26,14 +26,16 @@ export function updateShortBill(data) {
 
 export function deleteShortBill(id) {
   return request({
-    url: `/api/admin/shortBill/${id}`,
-    method: 'DELETE'
+    url: `/api/admin/shortBill`,
+    method: 'DELETE',
+    params: { id }
   })
 }
 
 export function getShortBillInfo(id) {
   return request({
-    url: `/api/admin/shortBill/info/${id}`,
-    method: 'GET'
+    url: `/api/admin/shortBill/info`,
+    method: 'GET',
+    data: { id }
   })
 }

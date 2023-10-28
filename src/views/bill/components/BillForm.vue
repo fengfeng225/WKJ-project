@@ -133,6 +133,8 @@
 </template>
 
 <script>
+import { getShortBillInfo, updateShortBill, createShortBill } from '@/api/bill'
+
 export default {
   data() {
     return {
@@ -140,7 +142,7 @@ export default {
       btnLoading: false,
       dataForm: {
         id: '',
-        group: '',
+        groupId: '',
         name: '',
         code: '',
         pipDiameter: 0,
@@ -165,13 +167,18 @@ export default {
     }
   },
 
-  created() {
-
-  },
-
   methods: {
     init(id) {
       this.dataForm.id = id || ''
+      if (id) {
+        this.formLoading = true
+        getShortBillInfo(id).then(res => {
+          this.dataForm = res.data
+          this.formLoading = false
+        }).catch(() => {
+          this.formLoading = false
+        })
+      }
     },
 
     goBack() {
@@ -180,7 +187,21 @@ export default {
 
     dataFormSubmit() {
       this.$refs.dataForm.validate().then(() => {
-
+        this.btnLoading = true
+        const method = this.dataForm.id ? updateShortBill : createShortBill
+        method(this.dataForm).then(res => {
+          this.$message({
+            message: res.message,
+            type: 'success',
+            duration: 1500,
+            onClose: () => {
+              this.btnLoading = false
+              this.$emit('close', true)
+            }
+          })
+        }).catch(() => {
+          this.btnLoading = false
+        })
       }).catch(() => {})
     }
   }

@@ -1,15 +1,15 @@
 const shortBills = [
   {
     id: '432701041243324485',
-    group: '一班',
+    groupId: '403034187151441989',
     name: '15万白油加氢',
     code: '033',
-    pipDiameter: '40',
+    pipDiameter: 40,
     description: 'C-601顶部出口线现场排空手阀后法兰',
     pipelineMediaName: '常顶油气',
-    pipelineMediaTemperature: '230',
-    pipelineMediaPressure: '0.1',
-    size: '8',
+    pipelineMediaTemperature: 230,
+    pipelineMediaPressure: 0.1,
+    size: 8,
     type: '8字盲板',
     material: '钢制',
     installTime: '2022.7',
@@ -18,15 +18,15 @@ const shortBills = [
   },
   {
     id: '432701041243324484',
-    group: '二班',
+    groupId: '403034187151441988',
     name: '15万白油加氢',
     code: '111',
-    pipDiameter: '40',
+    pipDiameter: 40,
     description: 'C-601顶部出口线现场排空手阀后法兰',
     pipelineMediaName: '常顶油气',
-    pipelineMediaTemperature: '230',
-    pipelineMediaPressure: '0.1',
-    size: '8',
+    pipelineMediaTemperature: 230,
+    pipelineMediaPressure: 0.1,
+    size: 8,
     type: '8字盲板',
     material: '钢制',
     installTime: '2022.7',
@@ -35,15 +35,15 @@ const shortBills = [
   },
   {
     id: '432701041243324483',
-    group: '三班',
+    groupId: '403034187151441987',
     name: '15万白油加氢',
     code: '056',
-    pipDiameter: '40',
+    pipDiameter: 40,
     description: 'C-601顶部出口线现场排空手阀后法兰',
     pipelineMediaName: '常顶油气',
-    pipelineMediaTemperature: '230',
-    pipelineMediaPressure: '0.1',
-    size: '8',
+    pipelineMediaTemperature: 230,
+    pipelineMediaPressure: 0.1,
+    size: 8,
     type: '8字盲板',
     material: '钢制',
     installTime: '2022.7',
@@ -57,7 +57,7 @@ module.exports = [
     url: '/api/admin/shortBills',
     type: 'get',
     response: config => {
-      const { keyword, currentPage, pageSize } = config.query
+      const { keyword, currentPage = 1, pageSize = 20 } = config.query
       let list = []
       const start = (currentPage - 1) * pageSize
 
@@ -78,6 +78,94 @@ module.exports = [
           },
           list
         }
+      }
+    }
+  },
+  {
+    url: '/api/admin/shortBill/info',
+    type: 'get',
+    response: config => {
+      const { id } = config.query
+      const bill = shortBills.find(item => item.id === id)
+
+      if (bill) {
+        return {
+          code: 200,
+          data: bill
+        }
+      }
+
+      return {
+        code: 404,
+        message: '找不到资源'
+      }
+    }
+  },
+  {
+    url: '/api/admin/shortBill',
+    type: 'put',
+    response: config => {
+      const bill = config.body
+      const oldBill = shortBills.find(item => item.id === bill.id)
+
+      if (oldBill) {
+        for (const key in bill) {
+          if (key !== 'id') oldBill[key] = bill[key]
+        }
+        return {
+          code: 200,
+          message: '操作成功'
+        }
+      }
+
+      return {
+        code: 404,
+        message: '找不到资源'
+      }
+    }
+  },
+  {
+    url: '/api/admin/shortBill',
+    type: 'post',
+    response: config => {
+      const bill = config.body
+
+      const res = shortBills.find(item => item.code === bill.code)
+
+      if (!res) {
+        bill.id = Math.ceil(Math.random() * 1000000000) + ''
+        shortBills.push(bill)
+        return {
+          code: 200,
+          message: '操作成功'
+        }
+      }
+
+      return {
+        code: 500,
+        message: '已经存在相同的编号'
+      }
+    }
+  },
+  {
+    url: '/api/admin/shortBill',
+    type: 'delete',
+    response: config => {
+      const { id } = config.query
+
+      const bill = shortBills.findIndex(item => item.id === id)
+
+      if (bill > 0) {
+        shortBills.splice(bill, 1)
+        return {
+          code: 200,
+          message: '操作成功'
+        }
+      }
+
+      return {
+        code: 404,
+        message: '找不到资源'
       }
     }
   }

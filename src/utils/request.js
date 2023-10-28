@@ -22,7 +22,11 @@ service.interceptors.request.use(
       config.params = config.data
     }
     const timestamp = Date.parse(new Date()) / 1000
-    config.url += `&n=${timestamp}`
+    if (config.url.indexOf('?') > -1) {
+      config.url += `&n=${timestamp}`
+    } else {
+      config.url += `?n=${timestamp}`
+    }
     return config
   },
   error => {
@@ -56,7 +60,7 @@ service.interceptors.response.use(
         type: 'error',
         duration: 1500,
         onClose: () => {
-          if (res.code === 500) {
+          if (res.code === 600 || res.code === 601) {
             // to re-login
             store.dispatch('user/resetToken').then(() => {
               location.reload()

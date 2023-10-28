@@ -59,8 +59,6 @@ export default {
     },
     logout() {
       this.$confirm('您确定要退出应用程序吗?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
         type: 'warning'
       }).then(async() => {
         await this.$store.dispatch('user/logout')

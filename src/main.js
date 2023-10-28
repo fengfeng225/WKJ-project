@@ -5,6 +5,7 @@ import Cookies from 'js-cookie'
 import 'normalize.css/normalize.css' // a modern alternative to CSS resets
 
 import Element from 'element-ui'
+import zhLocale from 'element-ui/lib/locale/lang/zh-CN'
 import './styles/element-variables.scss'
 
 import '@/styles/index.scss' // global css
@@ -33,6 +34,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 Vue.use(Element, {
+  locale: zhLocale,
   size: Cookies.get('size') || 'small' // set element-ui default size
 })
 

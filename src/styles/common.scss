@@ -133,6 +133,10 @@
       font-weight: normal;
       color: #606266;
       padding: 2px;
+      th.el-table__cell {
+        padding: 2px;
+        background-color: #f5f7fa;
+      }
     }
   }
 

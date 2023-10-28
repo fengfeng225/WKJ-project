@@ -70,7 +70,7 @@
               <ex-table-column :key="item.prop" :label="item.label" width="150" fixed="right">
                 <template #default="scope">
                   <el-button type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
-                  <el-button class="BL-table-delBtn" type="text">删除</el-button>
+                  <el-button class="BL-table-delBtn" type="text" @click="removeHandle(scope.row.id)">删除</el-button>
                   <BL-Dropdown style="margin-left: 8px;">
                     <span>
                       <el-button type="text" size="small">更多<i class="el-icon-arrow-down el-icon--right" /></el-button>
@@ -108,7 +108,7 @@
 </template>
 
 <script>
-import { getShortBills } from '@/api/bill'
+import { getShortBills, deleteShortBill } from '@/api/bill'
 
 import BillForm from '../components/BillForm'
 
@@ -120,51 +120,14 @@ export default {
   data() {
     return {
       params: {
+        groupId: '',
         keyword: '',
         currentPage: 1,
         pageSize: 20
       },
       total: 100,
       treeLoading: false,
-      treeData: [
-        {
-          enabledMark: 1,
-          label: '全部',
-          hasChildren: true,
-          id: '402684125602906181',
-          isLeaf: false,
-          parentId: '-1',
-          children: [
-            {
-              children: null,
-              enabledMark: 1,
-              label: '一班',
-              hasChildren: false,
-              id: '403034187151441989',
-              isLeaf: true,
-              parentId: '402684125602906181'
-            },
-            {
-              children: null,
-              enabledMark: 1,
-              label: '二班',
-              hasChildren: false,
-              id: '403034187151441988',
-              isLeaf: true,
-              parentId: '402684125602906181'
-            },
-            {
-              children: null,
-              enabledMark: 1,
-              label: '三班',
-              hasChildren: false,
-              id: '403034187151441987',
-              isLeaf: true,
-              parentId: '402684125602906181'
-            }
-          ]
-        }
-      ],
+      treeData: [],
       defaultProps: {
         children: 'children',
         label: 'label'
@@ -251,10 +214,65 @@ export default {
   },
 
   created() {
-    this.initData()
+    this.getGroupList()
   },
 
   methods: {
+    getGroupList(selectedId) {
+      this.treeLoading = true
+      this.treeData = [
+        {
+          enabledMark: 1,
+          label: '全部',
+          hasChildren: true,
+          id: '402684125602906181',
+          isLeaf: false,
+          parentId: '-1',
+          children: [
+            {
+              children: null,
+              enabledMark: 1,
+              label: '一班',
+              hasChildren: false,
+              id: '403034187151441989',
+              isLeaf: true,
+              parentId: '402684125602906181'
+            },
+            {
+              children: null,
+              enabledMark: 1,
+              label: '二班',
+              hasChildren: false,
+              id: '403034187151441988',
+              isLeaf: true,
+              parentId: '402684125602906181'
+            },
+            {
+              children: null,
+              enabledMark: 1,
+              label: '三班',
+              hasChildren: false,
+              id: '403034187151441987',
+              isLeaf: true,
+              parentId: '402684125602906181'
+            }
+          ]
+        }
+      ]
+
+      if (!this.treeData.length) {
+        this.treeLoading = false
+        return
+      }
+
+      this.$nextTick(() => {
+        this.params.groupId = selectedId || this.treeData[0].id
+        if (this.$refs.Tree) this.$refs.Tree.setCurrentKey(this.params.groupId)
+        this.treeLoading = false
+        this.initData()
+      })
+    },
+
     initData() {
       this.tableLoading = true
       getShortBills(this.params).then((res) => {
@@ -278,10 +296,17 @@ export default {
 
     exportData() {},
 
-    handleNodeClick() {},
+    handleNodeClick(data) {
+      if (this.params.groupId === data.id) return
+
+      this.params.groupId = data.id
+      this.initData()
+    },
 
     closeForm(isRefresh) {
       this.billFormVisible = false
+
+      if (isRefresh) this.initData()
     },
 
     addOrUpdateHandle(id) {
@@ -289,6 +314,23 @@ export default {
       this.$nextTick(() => {
         this.$refs.BillForm.init(id)
       })
+    },
+
+    removeHandle(id) {
+      this.$confirm('您确定要退出应用程序吗?', '提示', {
+        type: 'warning'
+      }).then(() => {
+        deleteShortBill(id).then(res => {
+          this.$message({
+            message: res.message,
+            type: 'success',
+            duration: 1500,
+            onClose: () => {
+              this.initData()
+            }
+          })
+        }).catch(() => {})
+      }).catch(() => {})
     },
 
     handleSizeChange() {},

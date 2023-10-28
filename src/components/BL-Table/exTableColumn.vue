@@ -33,9 +33,9 @@ export default {
       type: String,
       default: 'ex-column'
     },
-    loadNewLine: {
+    tableDataName: {
       type: String,
-      default: 'newline'
+      default: 'tableData'
     }
   },
   data() {
@@ -51,14 +51,12 @@ export default {
       return TableColumn.computed.realMinWidth.call(this)
     }
   },
-  watch: {
-
-  },
   updated() {
     this.updateAutoWidth()
   },
   mounted() {
     this.$nextTick(this.updateAutoWidth)
+    this.$watch(() => this.$parent[this.tableDataName], this.updateAutoWidth)
   },
   methods: {
     updateAutoWidth() {

@@ -30,7 +30,7 @@ module.exports = [
       // mock error
       if (!token) {
         return {
-          code: 500,
+          code: 600,
           message: '用户名或密码不正确。'
         }
       }
@@ -53,7 +53,7 @@ module.exports = [
       // mock error
       if (!info) {
         return {
-          code: 500,
+          code: 601,
           message: '登录失败，无法获取用户信息。'
         }
       }
