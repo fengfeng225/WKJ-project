@@ -84,6 +84,9 @@
                 </template>
               </ex-table-column>
             </template>
+            <template v-else-if="item.prop === 'name'">
+              <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :filters="deviceNameCategory" :filter-method="deviceNameFilter" />
+            </template>
             <template v-else>
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" />
             </template>
@@ -108,7 +111,7 @@
 </template>
 
 <script>
-import { getShortBills, deleteShortBill } from '@/api/bill'
+import { getShortBills, deleteShortBill, getDeviceNameCategory } from '@/api/bill'
 
 import BillForm from '../components/BillForm'
 
@@ -125,6 +128,7 @@ export default {
         currentPage: 1,
         pageSize: 20
       },
+      groupId: '',
       total: 100,
       treeLoading: false,
       treeData: [],
@@ -134,14 +138,11 @@ export default {
       },
       tableLoading: false,
       tableData: [],
+      deviceNameCategory: [],
       importLoading: false,
       exportLoading: false,
       roleButtonOptions: [],
       roleColumnOptions: [
-        {
-          label: '班组',
-          prop: 'group'
-        },
         {
           label: '装置名称',
           prop: 'name'
@@ -215,10 +216,11 @@ export default {
 
   created() {
     this.getGroupList()
+    this.getDeviceNameCategory()
   },
 
   methods: {
-    getGroupList(selectedId) {
+    getGroupList() {
       this.treeLoading = true
       this.treeData = [
         {
@@ -266,11 +268,28 @@ export default {
       }
 
       this.$nextTick(() => {
-        this.params.groupId = selectedId || this.treeData[0].id
+        this.params.groupId = this.treeData[0].id
+        this.groupId = this.treeData[0].id
         if (this.$refs.Tree) this.$refs.Tree.setCurrentKey(this.params.groupId)
         this.treeLoading = false
         this.initData()
       })
+    },
+
+    getDeviceNameCategory() {
+      getDeviceNameCategory().then(res => {
+        this.deviceNameCategory = res.data.map(item => {
+          return {
+            text: item,
+            value: item
+          }
+        })
+      }).catch(() => {})
+    },
+
+    deviceNameFilter(value, row, column) {
+      // const property = column['property']
+      // return row[property] === value
     },
 
     initData() {
@@ -290,7 +309,12 @@ export default {
       this.initData()
     },
 
-    reset() {},
+    reset() {
+      this.params.keyword = ''
+      this.params.currentPage = 1
+      this.params.pageSize = 20
+      this.initData()
+    },
 
     importData() {},
 
@@ -317,7 +341,7 @@ export default {
     },
 
     removeHandle(id) {
-      this.$confirm('您确定要退出应用程序吗?', '提示', {
+      this.$confirm('您确定要删除该盲板吗?', '提示', {
         type: 'warning'
       }).then(() => {
         deleteShortBill(id).then(res => {

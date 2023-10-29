@@ -162,6 +162,9 @@ export default {
       dataRule: {
         name: [
           { required: true, message: '请输入名称', trigger: 'blur' }
+        ],
+        code: [
+          { required: true, message: '请输入盲板编号', trigger: 'blur' }
         ]
       }
     }

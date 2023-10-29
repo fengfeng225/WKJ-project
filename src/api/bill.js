@@ -39,3 +39,10 @@ export function getShortBillInfo(id) {
     data: { id }
   })
 }
+
+export function getDeviceNameCategory() {
+  return request({
+    url: `/api/admin/shortBill/deviceNameCategory`,
+    method: 'GET'
+  })
+}

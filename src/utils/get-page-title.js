@@ -1,6 +1,6 @@
 import defaultSettings from '@/settings'
 
-const title = defaultSettings.title || '台账管理系统'
+const title = defaultSettings.title || '盲板管理系统'
 
 export default function getPageTitle(pageTitle) {
   if (pageTitle) {

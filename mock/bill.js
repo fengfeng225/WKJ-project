@@ -17,9 +17,26 @@ const shortBills = [
     Manager: '王科举'
   },
   {
+    id: '432701041243324480',
+    groupId: '403034187151441989',
+    name: '16万白油加氢',
+    code: '039',
+    pipDiameter: 40,
+    description: 'C-601顶部出口线现场排空手阀后法兰',
+    pipelineMediaName: '常顶油气',
+    pipelineMediaTemperature: 230,
+    pipelineMediaPressure: 0.1,
+    size: 8,
+    type: '8字盲板',
+    material: '钢制',
+    installTime: '2022.7',
+    operators: '木胡太尔江',
+    Manager: '王科举'
+  },
+  {
     id: '432701041243324484',
     groupId: '403034187151441988',
-    name: '15万白油加氢',
+    name: '16万白油加氢',
     code: '111',
     pipDiameter: 40,
     description: 'C-601顶部出口线现场排空手阀后法兰',
@@ -56,44 +73,73 @@ const groupTree = [
   {
     enabledMark: 1,
     label: '全部',
-    hasChildren: true,
     id: '402684125602906181',
     isLeaf: false,
-    parentId: '-1',
-    children: [
-      {
-        children: null,
-        enabledMark: 1,
-        label: '一班',
-        hasChildren: false,
-        id: '403034187151441989',
-        isLeaf: true,
-        parentId: '402684125602906181'
-      },
-      {
-        children: null,
-        enabledMark: 1,
-        label: '二班',
-        hasChildren: false,
-        id: '403034187151441988',
-        isLeaf: true,
-        parentId: '402684125602906181'
-      },
-      {
-        children: null,
-        enabledMark: 1,
-        label: '三班',
-        hasChildren: false,
-        id: '403034187151441987',
-        isLeaf: true,
-        parentId: '402684125602906181'
-      }
-    ]
+    parentId: '-1'
+  },
+  {
+    enabledMark: 1,
+    label: '一班',
+    id: '403034187151441989',
+    isLeaf: true,
+    parentId: '402684125602906181'
+  },
+  {
+    enabledMark: 1,
+    label: '二班',
+    id: '403034187151441988',
+    isLeaf: true,
+    parentId: '402684125602906181'
+  },
+  {
+    enabledMark: 1,
+    label: '三班',
+    id: '403034187151441987',
+    isLeaf: true,
+    parentId: '402684125602906181'
   }
 ]
 
-const getBillsFromTree = function(groupId, tree, data) {
+const getTreeData = function(list, parentId) {
+  const node = list.filter(item => item.parentId === parentId)
 
+  if (node.length === 0) return []
+
+  node.forEach(item => {
+    if (!item.isLeaf) {
+      const childNodes = getTreeData(list, item.id)
+      item.children = childNodes
+    }
+  })
+
+  return node
+}
+
+const getCurrentGroupTree = function(tree, id) {
+  for (const item of tree) {
+    if (item.id === id) return item
+    if (!item.isLeaf) return getCurrentGroupTree(item.children, id)
+  }
+}
+
+const getEveryNodeId = function(tree) {
+  const ids = []
+  ids.push(tree.id)
+
+  if (!tree.isLeaf) {
+    tree.children.forEach(item => {
+      ids.push(...getEveryNodeId(item))
+    })
+  }
+
+  return ids
+}
+
+const getBillsFromTree = function(groupId, tree, data) {
+  const treeData = getTreeData(tree, '-1')
+  const currentNodeTree = getCurrentGroupTree(treeData, groupId)
+  const ids = getEveryNodeId(currentNodeTree)
+  return data.filter(item => ids.includes(item.groupId))
 }
 
 module.exports = [
@@ -212,6 +258,21 @@ module.exports = [
       return {
         code: 404,
         message: '找不到资源'
+      }
+    }
+  },
+  {
+    url: '/api/admin/shortBill/deviceNameCategory',
+    type: 'get',
+    response: config => {
+      const list = new Set()
+      shortBills.forEach(item => {
+        list.add(item.name)
+      })
+
+      return {
+        code: 200,
+        data: [...list]
       }
     }
   }
