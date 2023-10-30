@@ -84,8 +84,25 @@
                 </template>
               </ex-table-column>
             </template>
+            <template v-else-if="item.prop === 'PipelineMedia'">
+              <ex-table-column :key="item.prop" :label="item.label">
+                <template v-for="column in item.children">
+                  <ex-table-column :key="column.prop" :label="column.label" :prop="column.prop" :width="column.prop === 'pipelineMediaName' ? '100px' : 'auto'" />
+                </template>
+              </ex-table-column>
+            </template>
+            <template v-else-if="item.prop === 'status'">
+              <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop">
+                <template #default="scope">
+                  <el-tag :type="getMBStatusStyle(scope.row.status)">{{ getMBStatusLabel(scope.row.status) }}</el-tag>
+                </template>
+              </ex-table-column>
+            </template>
             <template v-else-if="item.prop === 'name'">
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :filters="deviceNameCategory" />
+            </template>
+            <template v-else-if="item.prop === 'installTime'">
+              <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" />
             </template>
             <template v-else>
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" />
@@ -108,6 +125,7 @@
 <script>
 import { getShortBills, deleteShortBill } from '@/api/bill'
 import { getDeviceNameCategory, getGroupCategories } from '@/api/billCategory'
+import { getMBStatusStyle, getMBStatusLabel } from '@/utils/helperHandlers'
 
 import BillForm from '../components/BillForm'
 
@@ -157,16 +175,26 @@ export default {
           prop: 'description'
         },
         {
-          label: '名称',
-          prop: 'pipelineMediaName'
+          label: '盲通状态',
+          prop: 'status'
         },
         {
-          label: '温度 (℃)',
-          prop: 'pipelineMediaTemperature'
-        },
-        {
-          label: '压力 (MPa)',
-          prop: 'pipelineMediaPressure'
+          label: '管线介质',
+          prop: 'PipelineMedia',
+          children: [
+            {
+              label: '名称',
+              prop: 'pipelineMediaName'
+            },
+            {
+              label: '温度 (℃)',
+              prop: 'pipelineMediaTemperature'
+            },
+            {
+              label: '压力 (MPa)',
+              prop: 'pipelineMediaPressure'
+            }
+          ]
         },
         {
           label: '盲板规格 (mm)',
@@ -322,7 +350,11 @@ export default {
           })
         }).catch(() => {})
       }).catch(() => {})
-    }
+    },
+
+    getMBStatusStyle,
+
+    getMBStatusLabel
   }
 }
 </script>

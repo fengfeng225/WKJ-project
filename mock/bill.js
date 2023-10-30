@@ -4,6 +4,7 @@ const shortBills = [
     groupId: '403034187151441989',
     name: '15万白油加氢',
     code: '033',
+    status: 0,
     pipDiameter: 40,
     description: 'C-601顶部出口线现场排空手阀后法兰',
     pipelineMediaName: '常顶油气',
@@ -12,15 +13,17 @@ const shortBills = [
     size: 8,
     type: '8字盲板',
     material: '钢制',
-    installTime: '2022.7',
+    installTime: 1698702548000,
     operators: '木胡太尔江',
-    Manager: '王科举'
+    Manager: '王科举',
+    deleteMark: 0
   },
   {
     id: '432701041243324480',
     groupId: '403034187151441989',
     name: '16万白油加氢',
     code: '039',
+    status: 1,
     pipDiameter: 40,
     description: 'C-601顶部出口线现场排空手阀后法兰',
     pipelineMediaName: '常顶油气',
@@ -29,15 +32,17 @@ const shortBills = [
     size: 8,
     type: '8字盲板',
     material: '钢制',
-    installTime: '2022.7',
+    installTime: 1698762548000,
     operators: '木胡太尔江',
-    Manager: '王科举'
+    Manager: '王科举',
+    deleteMark: 0
   },
   {
     id: '432701041243324484',
     groupId: '403034187151441988',
     name: '16万白油加氢',
     code: '111',
+    status: 1,
     pipDiameter: 40,
     description: 'C-601顶部出口线现场排空手阀后法兰',
     pipelineMediaName: '常顶油气',
@@ -46,15 +51,17 @@ const shortBills = [
     size: 8,
     type: '8字盲板',
     material: '钢制',
-    installTime: '2022.7',
+    installTime: 1698761048000,
     operators: '木胡太尔江',
-    Manager: '王科举'
+    Manager: '王科举',
+    deleteMark: 0
   },
   {
     id: '432701041243324483',
     groupId: '403034187151441987',
     name: '15万白油加氢',
     code: '056',
+    status: 0,
     pipDiameter: 40,
     description: 'C-601顶部出口线现场排空手阀后法兰',
     pipelineMediaName: '常顶油气',
@@ -63,9 +70,10 @@ const shortBills = [
     size: 8,
     type: '8字盲板',
     material: '钢制',
-    installTime: '2022.7',
+    installTime: 1698732548000,
     operators: '木胡太尔江',
-    Manager: '王科举'
+    Manager: '王科举',
+    deleteMark: 0
   }
 ]
 
@@ -183,12 +191,13 @@ module.exports = [
     type: 'get',
     response: config => {
       const { groupId, keyword, currentPage = 1, pageSize = 20, queryJson } = config.query
+      const enableList = shortBills.filter(item => !item.deleteMark)
       let specificGroupList
       let list = []
       const start = (currentPage - 1) * pageSize
 
-      if (!groupId) specificGroupList = shortBills
-      else specificGroupList = getBillsFromTree(groupId, groupTree, shortBills)
+      if (!groupId) specificGroupList = enableList
+      else specificGroupList = getBillsFromTree(groupId, groupTree, enableList)
 
       if (queryJson) {
         const names = JSON.parse(queryJson)

@@ -11,7 +11,7 @@
 
       <div v-loading="formLoading" class="page-main" element-loading-text="正在加载中">
         <el-row class="main">
-          <el-col :span="18" :offset="2">
+          <el-col :span="22" :offset="1">
             <el-form
               ref="dataForm"
               :model="dataForm"
@@ -50,7 +50,7 @@
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="负责班组" prop="group">
-                    <el-select v-model="dataForm.group" placeholder="请选择负责班组">
+                    <el-select v-model="dataForm.group" placeholder="请选择负责班组" style="width: 100%;">
                       <el-option v-for="item in groups" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
                   </el-form-item>
@@ -82,29 +82,35 @@
                 <h2 class="bold">盲板信息</h2>
               </div>
               <el-row :gutter="20" class="custom-row">
-                <el-col :span="12">
-                  <el-form-item label="盲板规格" prop="size">
+                <el-col :span="6">
+                  <el-form-item label="盲板规格(mm)" prop="size" label-width="120px">
                     <BL-input-number v-model="dataForm.size" placeholder="请输入盲板规格" />
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="8">
                   <el-form-item label="盲板形式" prop="type">
                     <el-input v-model="dataForm.type" placeholder="请输入盲板形式" />
                   </el-form-item>
                 </el-col>
-                <el-col />
-                <el-col :span="12">
+                <el-col :span="10">
                   <el-form-item label="盲板材质" prop="material">
                     <el-input v-model="dataForm.material" placeholder="请输入盲板材质" />
                   </el-form-item>
                 </el-col>
+                <el-col />
                 <el-col :span="12">
-                  <el-form-item label="加装时间" prop="installTime">
+                  <el-form-item label="加装时间" prop="installTime" label-width="120px">
                     <el-date-picker
                       v-model="dataForm.installTime"
-                      type="month"
+                      value-format="timestamp"
+                      type="datetime"
                       placeholder="请选择加装时间"
                     />
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="盲通状态" prop="status">
+                    <el-switch v-model="dataForm.status" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0" />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -145,6 +151,7 @@ export default {
         groupId: '',
         name: '',
         code: '',
+        status: null,
         pipDiameter: 0,
         description: '',
         pipelineMediaName: '',

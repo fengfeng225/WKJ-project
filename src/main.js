@@ -20,6 +20,7 @@ import './utils/error-log' // error log
 
 import * as filters from './filters' // global filters
 
+import components from './components'
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
@@ -37,8 +38,6 @@ Vue.use(Element, {
   locale: zhLocale,
   size: Cookies.get('size') || 'small' // set element-ui default size
 })
-
-import components from './components'
 
 Vue.use(components)
 

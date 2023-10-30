@@ -10,11 +10,11 @@ const tokens = {
 const users = {
   'admin-token': {
     roles: ['admin'],
-    name: 'Super Admin'
+    name: '管理员'
   },
   'editor-token': {
     roles: ['editor'],
-    name: 'Normal Editor'
+    name: '普通用户'
   }
 }
 
