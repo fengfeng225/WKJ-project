@@ -71,7 +71,7 @@
                 <template #default="scope">
                   <el-button type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
                   <el-button class="BL-table-delBtn" type="text" @click="removeHandle(scope.row.id)">删除</el-button>
-                  <BL-Dropdown style="margin-left: 8px;">
+                  <!-- <BL-Dropdown style="margin-left: 8px;">
                     <span>
                       <el-button type="text" size="small">更多<i class="el-icon-arrow-down el-icon--right" /></el-button>
                     </span>
@@ -80,7 +80,7 @@
                         测试
                       </el-dropdown-item>
                     </el-dropdown-menu>
-                  </BL-Dropdown>
+                  </BL-Dropdown> -->
                 </template>
               </ex-table-column>
             </template>
@@ -102,7 +102,7 @@
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :filters="deviceNameCategory" />
             </template>
             <template v-else-if="item.prop === 'installTime'">
-              <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" />
+              <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :formatter="dateFormatTable" />
             </template>
             <template v-else>
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" />
@@ -126,6 +126,7 @@
 import { getShortBills, deleteShortBill } from '@/api/bill'
 import { getDeviceNameCategory, getGroupCategories } from '@/api/billCategory'
 import { getMBStatusStyle, getMBStatusLabel } from '@/utils/helperHandlers'
+import { dateFormatTable } from '@/utils'
 
 import BillForm from '../components/BillForm'
 
@@ -354,7 +355,9 @@ export default {
 
     getMBStatusStyle,
 
-    getMBStatusLabel
+    getMBStatusLabel,
+
+    dateFormatTable
   }
 }
 </script>

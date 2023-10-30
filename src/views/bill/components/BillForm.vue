@@ -172,6 +172,9 @@ export default {
         ],
         code: [
           { required: true, message: '请输入盲板编号', trigger: 'blur' }
+        ],
+        installTime: [
+          { required: true, message: '请输入加装时间', trigger: 'change' }
         ]
       }
     }
