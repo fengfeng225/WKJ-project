@@ -79,22 +79,57 @@ const groupTree = [
   },
   {
     enabledMark: 1,
-    label: '一班',
+    label: '白油一班',
     id: '403034187151441989',
     isLeaf: true,
     parentId: '402684125602906181'
   },
   {
     enabledMark: 1,
-    label: '二班',
+    label: '白油二班',
     id: '403034187151441988',
     isLeaf: true,
     parentId: '402684125602906181'
   },
   {
     enabledMark: 1,
-    label: '三班',
+    label: '白油三班',
     id: '403034187151441987',
+    isLeaf: true,
+    parentId: '402684125602906181'
+  },
+  {
+    enabledMark: 1,
+    label: '白油四班',
+    id: '403034187151441986',
+    isLeaf: true,
+    parentId: '402684125602906181'
+  },
+  {
+    enabledMark: 1,
+    label: '高加一班',
+    id: '403034187151441985',
+    isLeaf: true,
+    parentId: '402684125602906181'
+  },
+  {
+    enabledMark: 1,
+    label: '高加二班',
+    id: '403034187151441984',
+    isLeaf: true,
+    parentId: '402684125602906181'
+  },
+  {
+    enabledMark: 1,
+    label: '高加三班',
+    id: '403034187151441983',
+    isLeaf: true,
+    parentId: '402684125602906181'
+  },
+  {
+    enabledMark: 1,
+    label: '高加四班',
+    id: '403034187151441982',
     isLeaf: true,
     parentId: '402684125602906181'
   }
@@ -147,11 +182,24 @@ module.exports = [
     url: '/api/admin/shortBills',
     type: 'get',
     response: config => {
-      const { groupId, keyword, currentPage = 1, pageSize = 20 } = config.query
-      const specificGroupList = getBillsFromTree(groupId, groupTree, shortBills)
-
+      const { groupId, keyword, currentPage = 1, pageSize = 20, queryJson } = config.query
+      let specificGroupList
       let list = []
       const start = (currentPage - 1) * pageSize
+
+      if (!groupId) specificGroupList = shortBills
+      else specificGroupList = getBillsFromTree(groupId, groupTree, shortBills)
+
+      if (queryJson) {
+        const names = JSON.parse(queryJson)
+        if (!Array.isArray(names)) {
+          return {
+            code: 404,
+            message: '查询参数错误，请重试'
+          }
+        }
+        specificGroupList = specificGroupList.filter(item => names.includes(item.name))
+      }
 
       if (!keyword) {
         list = specificGroupList.slice(start, start + pageSize)
@@ -273,6 +321,18 @@ module.exports = [
       return {
         code: 200,
         data: [...list]
+      }
+    }
+  },
+  {
+    url: '/api/admin/shortBill/GroupCategories',
+    type: 'get',
+    response: config => {
+      const treeData = getTreeData(groupTree, '-1')
+
+      return {
+        code: 200,
+        data: treeData
       }
     }
   }

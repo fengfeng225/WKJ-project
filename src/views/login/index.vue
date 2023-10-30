@@ -6,9 +6,9 @@
     <div class="login-content">
       <!--        class="login-logo"-->
       <div class="login-logo">
-        <!-- <img src="../../assets/images/hg.png" alt=""> -->
+        <img src="../../assets/images/logo.png" alt="">
         <div class="login-logo-text">
-          <span class="text-zh">盲板管理系统</span>
+          <span class="text-zh">防互窜管理系统</span>
         </div>
       </div>
       <div class="login-form">
@@ -154,7 +154,7 @@ export default {
   height: 100%;
   overflow: hidden;
   position: relative;
-  background-color: #000a5f;
+  background: url('../../assets/images/bg.jpg') no-repeat;
   background-size: 100% 100%;
 
   .login-version {
@@ -191,6 +191,7 @@ export default {
     min-width: 350px;
     min-height: 350px;
     background-color: #fff;
+    opacity: 0.9;
     flex-shrink: 0;
     border-radius: 5%;
 
@@ -209,6 +210,11 @@ export default {
     .login-logo {
       margin-bottom: 35px;
       display: flex;
+      img {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+      }
       .login-logo-text {
         display: flex;
         flex-direction: column;

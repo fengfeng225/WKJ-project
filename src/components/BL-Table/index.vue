@@ -80,6 +80,16 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+::v-deep .el-table__column-filter-trigger {
+    .el-icon-arrow-down {
+        position: relative;
+        top: 4px;
+        &:before {
+            font-family: "ym-custom" !important;
+            content: '\e8a2';
+            font-size: 20px;
+        }
+    }
+}
 </style>

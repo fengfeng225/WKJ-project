@@ -64,7 +64,7 @@
       </el-row>
 
       <div class="BL-common-layout-main BL-flex-main">
-        <BL-table ref="BLTable" v-loading="tableLoading" :data="tableData" :cell-style="{padding: '0'}" fixed-n-o row-key="id">
+        <BL-table ref="BLTable" v-loading="tableLoading" :data="tableData" :cell-style="{padding: '0'}" fixed-n-o row-key="id" @filter-change="deviceNameFilter">
           <template v-for="item in columns">
             <template v-if="item.prop === 'action'">
               <ex-table-column :key="item.prop" :label="item.label" width="150" fixed="right">
@@ -85,7 +85,7 @@
               </ex-table-column>
             </template>
             <template v-else-if="item.prop === 'name'">
-              <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :filters="deviceNameCategory" :filter-method="deviceNameFilter" />
+              <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :filters="deviceNameCategory" />
             </template>
             <template v-else>
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" />
@@ -111,7 +111,8 @@
 </template>
 
 <script>
-import { getShortBills, deleteShortBill, getDeviceNameCategory } from '@/api/bill'
+import { getShortBills, deleteShortBill } from '@/api/bill'
+import { getDeviceNameCategory, getGroupCategories } from '@/api/billCategory'
 
 import BillForm from '../components/BillForm'
 
@@ -126,7 +127,8 @@ export default {
         groupId: '',
         keyword: '',
         currentPage: 1,
-        pageSize: 20
+        pageSize: 20,
+        queryJson: null
       },
       groupId: '',
       total: 100,
@@ -222,57 +224,22 @@ export default {
   methods: {
     getGroupList() {
       this.treeLoading = true
-      this.treeData = [
-        {
-          enabledMark: 1,
-          label: '全部',
-          hasChildren: true,
-          id: '402684125602906181',
-          isLeaf: false,
-          parentId: '-1',
-          children: [
-            {
-              children: null,
-              enabledMark: 1,
-              label: '一班',
-              hasChildren: false,
-              id: '403034187151441989',
-              isLeaf: true,
-              parentId: '402684125602906181'
-            },
-            {
-              children: null,
-              enabledMark: 1,
-              label: '二班',
-              hasChildren: false,
-              id: '403034187151441988',
-              isLeaf: true,
-              parentId: '402684125602906181'
-            },
-            {
-              children: null,
-              enabledMark: 1,
-              label: '三班',
-              hasChildren: false,
-              id: '403034187151441987',
-              isLeaf: true,
-              parentId: '402684125602906181'
-            }
-          ]
+      getGroupCategories().then(res => {
+        this.treeData = res.data
+
+        if (!this.treeData.length) {
+          this.treeLoading = false
+          return
         }
-      ]
 
-      if (!this.treeData.length) {
+        this.$nextTick(() => {
+          this.groupId = this.treeData[0].id
+          if (this.$refs.Tree) this.$refs.Tree.setCurrentKey(this.params.groupId)
+          this.treeLoading = false
+          this.initData()
+        })
+      }).catch(() => {
         this.treeLoading = false
-        return
-      }
-
-      this.$nextTick(() => {
-        this.params.groupId = this.treeData[0].id
-        this.groupId = this.treeData[0].id
-        if (this.$refs.Tree) this.$refs.Tree.setCurrentKey(this.params.groupId)
-        this.treeLoading = false
-        this.initData()
       })
     },
 
@@ -287,9 +254,14 @@ export default {
       }).catch(() => {})
     },
 
-    deviceNameFilter(value, row, column) {
-      // const property = column['property']
-      // return row[property] === value
+    deviceNameFilter(filters) {
+      const filterValues = Object.values(filters)[0]
+      if (filterValues.length === 0) {
+        this.params.queryJson = null
+      } else {
+        this.params.queryJson = JSON.stringify(filterValues)
+      }
+      this.initData()
     },
 
     initData() {

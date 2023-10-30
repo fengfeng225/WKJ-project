@@ -1,5 +1,5 @@
 module.exports = {
-  title: '盲板管理系统',
+  title: '防互窜管理系统',
 
   /**
    * @type {boolean} true | false
