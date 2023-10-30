@@ -329,9 +329,15 @@ export default {
       }).catch(() => {})
     },
 
-    handleSizeChange() {},
+    handleSizeChange(pageSize) {
+      this.params.pageSize = pageSize
+      this.initData()
+    },
 
-    handleCurrentChange() {}
+    handleCurrentChange(currentPage) {
+      this.params.currentPage = currentPage
+      this.initData()
+    }
   }
 }
 </script>
