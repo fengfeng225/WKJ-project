@@ -92,16 +92,11 @@
             </template>
           </template>
         </BL-table>
-        <el-pagination
-          class="BL-common-pagination"
-          background
-          :current-page="params.currentPage"
-          :page-sizes="[20, 50, 100, 500]"
-          :page-size="20"
-          layout="total, sizes, prev, pager, next, jumper"
+        <BL-pagination
+          :page.sync="params.currentPage"
+          :limit.sync="params.pageSize"
           :total="total"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
+          @pagination="initData"
         />
 
         <BillForm v-if="billFormVisible" ref="BillForm" @close="closeForm" />
@@ -327,16 +322,6 @@ export default {
           })
         }).catch(() => {})
       }).catch(() => {})
-    },
-
-    handleSizeChange(pageSize) {
-      this.params.pageSize = pageSize
-      this.initData()
-    },
-
-    handleCurrentChange(currentPage) {
-      this.params.currentPage = currentPage
-      this.initData()
     }
   }
 }
