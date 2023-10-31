@@ -48,9 +48,6 @@
 
         <div class="BL-common-head-right">
           <div>
-            <el-button icon="el-icon-upload2" :loading="importLoading" @click="importData">导入</el-button>
-            <el-button icon="el-icon-download" :loading="exportLoading" @click="exportData">导出</el-button>
-            <el-button icon="el-icon-plus" type="primary" @click="addOrUpdateHandle()">新建</el-button>
             <el-tooltip effect="dark" content="刷新" placement="top">
               <el-link
                 style="margin-left: 12px;"
@@ -67,20 +64,9 @@
         <BL-table ref="BLTable" v-loading="tableLoading" :data="tableData" fixed-n-o row-key="id" @filter-change="deviceNameFilter">
           <template v-for="item in columns">
             <template v-if="item.prop === 'action'">
-              <ex-table-column :key="item.prop" :label="item.label" width="150" fixed="right">
+              <ex-table-column :key="item.prop" :label="item.label" width="80" fixed="right">
                 <template #default="scope">
-                  <el-button type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
-                  <el-button class="BL-table-delBtn" type="text" @click="removeHandle(scope.row.id)">删除</el-button>
-                  <!-- <BL-Dropdown style="margin-left: 8px;">
-                    <span>
-                      <el-button type="text" size="small">更多<i class="el-icon-arrow-down el-icon--right" /></el-button>
-                    </span>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item>
-                        测试
-                      </el-dropdown-item>
-                    </el-dropdown-menu>
-                  </BL-Dropdown> -->
+                  <el-button type="text" @click="restore(scope.row.id, scope.row.cycleType)">还原</el-button>
                 </template>
               </ex-table-column>
             </template>
@@ -107,6 +93,9 @@
             <template v-else-if="item.prop === 'creatorTime'">
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :formatter="dateFormatTable" />
             </template>
+            <template v-else-if="item.prop === 'cycleType'">
+              <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :formatter="getCycleTypeLabel" />
+            </template>
             <template v-else>
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" />
             </template>
@@ -118,26 +107,19 @@
           :total="total"
           @pagination="initData"
         />
-
-        <BillForm v-if="billFormVisible" ref="BillForm" @close="closeForm" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getShortBills, deleteShortBill, getDeviceNameCategory } from '@/api/bill'
+import { getDeletedBills, restoreBill, getDeviceNameCategory } from '@/api/bill'
 import { getGroupCategories } from '@/api/billCategory'
-import { getMBStatusStyle, getMBStatusLabel } from '@/utils/helperHandlers'
+import { getMBStatusStyle, getMBStatusLabel, getCycleTypeLabel } from '@/utils/helperHandlers'
 import { dateFormatTable } from '@/utils'
 
-import BillForm from '../components/BillForm'
-
 export default {
-  name: 'ShortBill',
-  components: {
-    BillForm
-  },
+  name: 'DeletedBill',
   data() {
     return {
       params: {
@@ -157,8 +139,6 @@ export default {
       tableLoading: false,
       tableData: [],
       deviceNameCategory: [],
-      importLoading: false,
-      exportLoading: false,
       roleButtonOptions: [],
       roleColumnOptions: [
         {
@@ -168,6 +148,10 @@ export default {
         {
           label: '盲板编号',
           prop: 'code'
+        },
+        {
+          label: '周期',
+          prop: 'cycleType'
         },
         {
           label: '管径',
@@ -235,8 +219,7 @@ export default {
           label: '操作',
           prop: 'action'
         }
-      ],
-      billFormVisible: false
+      ]
     }
   },
 
@@ -296,13 +279,30 @@ export default {
 
     initData() {
       this.tableLoading = true
-      getShortBills(this.params).then(res => {
+      getDeletedBills(this.params).then(res => {
         this.tableData = res.data.list
         this.total = res.data.pagination.total
         this.tableLoading = false
       }).catch(() => {
         this.tableLoading = false
       })
+    },
+
+    restore(id, cycleType) {
+      this.$confirm('您确定要恢复该盲板吗?', '提示', {
+        type: 'warning'
+      }).then(() => {
+        restoreBill(id, cycleType).then(res => {
+          this.$message({
+            message: res.message,
+            type: 'success',
+            duration: 1500,
+            onClose: () => {
+              this.initData()
+            }
+          })
+        }).catch(() => {})
+      }).catch(() => {})
     },
 
     search() {
@@ -318,10 +318,6 @@ export default {
       this.initData()
     },
 
-    importData() {},
-
-    exportData() {},
-
     handleNodeClick(data) {
       if (this.params.groupId === data.id) return
 
@@ -329,39 +325,11 @@ export default {
       this.initData()
     },
 
-    closeForm(isRefresh) {
-      this.billFormVisible = false
-
-      if (isRefresh) this.initData()
-    },
-
-    addOrUpdateHandle(id) {
-      this.billFormVisible = true
-      this.$nextTick(() => {
-        this.$refs.BillForm.init(id)
-      })
-    },
-
-    removeHandle(id) {
-      this.$confirm('您确定要删除该盲板吗?', '提示', {
-        type: 'warning'
-      }).then(() => {
-        deleteShortBill(id).then(res => {
-          this.$message({
-            message: res.message,
-            type: 'success',
-            duration: 1500,
-            onClose: () => {
-              this.initData()
-            }
-          })
-        }).catch(() => {})
-      }).catch(() => {})
-    },
-
     getMBStatusStyle,
 
     getMBStatusLabel,
+
+    getCycleTypeLabel,
 
     dateFormatTable
   }

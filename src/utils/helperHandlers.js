@@ -19,3 +19,15 @@ export const getMBStatusLabel = function(value) {
       return '未知'
   }
 }
+
+// 表格专用
+export const getCycleTypeLabel = function(row, column, cellValue, index) {
+  switch (cellValue) {
+    case 'short':
+      return '短期'
+    case 'long':
+      return '长期'
+    default:
+      return '未知'
+  }
+}

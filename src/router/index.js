@@ -95,6 +95,26 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   {
+    path: '/system',
+    component: Layout,
+    name: 'System',
+    meta: { title: '系统管理', icon: 'el-icon-setting', noCache: true },
+    children: [
+      {
+        path: 'optionsConfig',
+        component: () => import('@/views/system/optionsConfig'),
+        name: 'OptionsConfig',
+        meta: { title: '选项配置', icon: 'el-icon-menu', noCache: true }
+      },
+      {
+        path: 'log',
+        component: () => import('@/views/system/log'),
+        name: 'Log',
+        meta: { title: '系统日志', icon: 'el-icon-tickets', noCache: true }
+      }
+    ]
+  },
+  {
     path: '/bill',
     component: Layout,
     name: 'Bill',
@@ -111,6 +131,18 @@ export const asyncRoutes = [
         component: () => import('@/views/bill/shortBill'),
         name: 'ShortBill',
         meta: { title: '短期台账', icon: 'el-icon-document', noCache: true }
+      },
+      {
+        path: 'deletedBill',
+        component: () => import('@/views/bill/deletedBill'),
+        name: 'DeletedBill',
+        meta: { title: '已删除台账', icon: 'el-icon-delete-solid', noCache: true }
+      },
+      {
+        path: 'groups',
+        component: () => import('@/views/bill/groups'),
+        name: 'Groups',
+        meta: { title: '班组', icon: 'ym-custom ym-custom-format-list-bulleted', noCache: true }
       }
     ]
   },

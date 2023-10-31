@@ -37,7 +37,7 @@
                     <BL-input-number v-model="dataForm.pipDiameter" placeholder="请输入管径" />
                   </el-form-item>
                 </el-col>
-                <el-col :span="16">
+                <el-col :span="14">
                   <el-form-item label="盲板安装位置" prop="description">
                     <div class="description-remark">
                       <el-input v-model="dataForm.description" type="textarea" resize="none" :autosize="{ maxRows: 3}" placeholder="请输入盲板安装位置描述" />
@@ -48,10 +48,10 @@
                     </div>
                   </el-form-item>
                 </el-col>
-                <el-col :span="8">
-                  <el-form-item label="负责班组" prop="group">
-                    <el-select v-model="dataForm.group" placeholder="请选择负责班组" style="width: 100%;">
-                      <el-option v-for="item in groups" :key="item.value" :label="item.label" :value="item.value" />
+                <el-col :span="10">
+                  <el-form-item label="负责班组" prop="groupId">
+                    <el-select v-model="dataForm.groupId" placeholder="请选择负责班组" style="width: 100%;">
+                      <el-option v-for="item in groups" :key="item.id" :label="item.label" :value="item.id" />
                     </el-select>
                   </el-form-item>
                 </el-col>
@@ -98,21 +98,26 @@
                   </el-form-item>
                 </el-col>
                 <el-col />
-                <el-col :span="12">
-                  <el-form-item label="加装时间" prop="installTime" label-width="120px">
-                    <el-date-picker
-                      v-model="dataForm.installTime"
-                      value-format="timestamp"
-                      type="datetime"
-                      placeholder="请选择加装时间"
-                    />
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12">
+                <el-col :span="6">
                   <el-form-item label="盲通状态" prop="status">
                     <el-switch v-model="dataForm.status" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0" />
                   </el-form-item>
                 </el-col>
+                <el-col :span="8">
+                  <el-form-item label="拆装时间" prop="disassembleTime">
+                    <el-date-picker
+                      v-model="dataForm.disassembleTime"
+                      value-format="timestamp"
+                      type="datetime"
+                      placeholder="请选择拆装时间"
+                    />
+                  </el-form-item>
+                </el-col>
+                <!-- <el-col :span="10">
+                  <el-form-item label="操作人">
+                    <el-input v-model="dataForm." placeholder="请选择人员" />
+                  </el-form-item>
+                </el-col> -->
               </el-row>
 
               <div class="BL-common-title BL-20">
@@ -140,6 +145,7 @@
 
 <script>
 import { getShortBillInfo, updateShortBill, createShortBill } from '@/api/bill'
+import { getGroupCategories } from '@/api/billCategory'
 
 export default {
   data() {
@@ -152,15 +158,15 @@ export default {
         name: '',
         code: '',
         status: null,
-        pipDiameter: 0,
+        pipDiameter: null,
         description: '',
         pipelineMediaName: '',
         pipelineMediaTemperature: '',
-        pipelineMediaPressure: 0,
-        size: 0,
+        pipelineMediaPressure: null,
+        size: null,
         type: '',
         material: '',
-        installTime: '',
+        disassembleTime: null,
         operators: '',
         Manager: '',
         enabledMark: 1
@@ -173,11 +179,15 @@ export default {
         code: [
           { required: true, message: '请输入盲板编号', trigger: 'blur' }
         ],
-        installTime: [
-          { required: true, message: '请输入加装时间', trigger: 'change' }
+        disassembleTime: [
+          { required: true, message: '请输入拆装时间', trigger: 'change' }
         ]
       }
     }
+  },
+
+  created() {
+    this.getGroupCategories()
   },
 
   methods: {
@@ -192,6 +202,12 @@ export default {
           this.formLoading = false
         })
       }
+    },
+
+    getGroupCategories() {
+      getGroupCategories().then(res => {
+        this.groups = res.data
+      }).catch(() => {})
     },
 
     goBack() {

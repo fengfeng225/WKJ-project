@@ -42,7 +42,51 @@ function deepClone(source) {
   return targetObj
 }
 
+const getTreeData = function(list, parentId) {
+  const node = list.filter(item => item.parentId === parentId)
+
+  if (node.length === 0) return []
+
+  node.forEach(item => {
+    if (!item.isLeaf) {
+      const childNodes = getTreeData(list, item.id)
+      item.children = childNodes
+    }
+  })
+
+  return node
+}
+
+const getCurrentGroupTree = function(tree, id) {
+  for (const item of tree) {
+    if (item.id === id) return item
+    if (!item.isLeaf) return getCurrentGroupTree(item.children, id)
+  }
+}
+
+const getEveryNodeId = function(tree) {
+  const ids = []
+  ids.push(tree.id)
+
+  if (!tree.isLeaf) {
+    tree.children.forEach(item => {
+      ids.push(...getEveryNodeId(item))
+    })
+  }
+
+  return ids
+}
+
+const getBillsFromTree = function(groupId, tree, data) {
+  const treeData = getTreeData(tree, '-1')
+  const currentNodeTree = getCurrentGroupTree(treeData, groupId)
+  const ids = getEveryNodeId(currentNodeTree)
+  return data.filter(item => ids.includes(item.groupId))
+}
+
 module.exports = {
   param2Obj,
-  deepClone
+  deepClone,
+  getTreeData,
+  getBillsFromTree
 }
