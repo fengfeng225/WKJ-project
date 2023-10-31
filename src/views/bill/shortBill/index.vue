@@ -258,7 +258,7 @@ export default {
 
         this.$nextTick(() => {
           this.groupId = this.treeData[0].id
-          if (this.$refs.Tree) this.$refs.Tree.setCurrentKey(this.params.groupId)
+          if (this.$refs.Tree) this.$refs.Tree.setCurrentKey(this.groupId)
           this.treeLoading = false
           this.initData()
         })
