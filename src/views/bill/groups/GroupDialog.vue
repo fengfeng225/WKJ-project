@@ -4,6 +4,7 @@
     :close-on-click-modal="false"
     :close-on-press-escape="false"
     :visible.sync="visible"
+    width="600px"
     @close="close"
   >
     <el-form
@@ -19,7 +20,7 @@
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
-      <el-button type="primary" :loading="btnLoading" @click="dataFormSubmit">确认</el-button>
+      <el-button type="primary" :loading="btnLoading" @click="dataFormSubmit">确定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -29,7 +30,7 @@ import {
   createGroupCategory,
   updateGroupCategory,
   getGroupCategoryInfo
-} from '@/api/billCategory'
+} from '@/api/bill/billCategory'
 
 export default {
   data() {

@@ -144,8 +144,8 @@
 </template>
 
 <script>
-import { getShortBillInfo, updateShortBill, createShortBill } from '@/api/bill'
-import { getGroupCategories } from '@/api/billCategory'
+import { getShortBillInfo, updateShortBill, createShortBill } from '@/api/bill/bill'
+import { getGroupCategories } from '@/api/bill/billCategory'
 
 export default {
   data() {

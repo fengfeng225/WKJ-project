@@ -46,10 +46,39 @@
 }
 
 .BL-common-title {
-  flex-shrink: 0;
-  padding: 0 10px;
   border-bottom: 1px solid #ebeef5;
+  display: flex;
+  justify-content: space-between;
   color: #606266;
+  align-items: center;
+
+  &.noBorder {
+    border: none;
+  }
+
+  h2 {
+    font-size: 16px;
+    line-height: 42px;
+    font-weight: 500;
+
+    &.bold {
+      font-weight: 600;
+    }
+  }
+
+  .options {
+
+    & > i,
+    .el-link {
+      font-size: 16px;
+      margin-left: 6px;
+      cursor: pointer;
+    }
+  }
+
+  & + .el-table {
+    border-top: none;
+  }
 }
 
 .BL-20 {
@@ -113,6 +142,48 @@
     align-items: center;
     padding: 3px 10px;
     flex-shrink: 0;
+  }
+}
+
+.BL-common-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 10px;
+  flex-shrink: 0;
+}
+
+.BL-common-drawer {
+  .el-drawer__header {
+    height: 60px;
+    border-bottom: 1px solid #dcdfe6;
+    padding: 0 px;
+    margin-bottom: 0;
+
+    & > span {
+      line-height: 60px;
+    }
+  }
+
+  .el-drawer__body {
+    overflow: hidden;
+  }
+
+  .BL-flex-main {
+    height: calc(100vh - 60px);
+
+    .dynamicForm {
+      flex: 1;
+      padding: 10px;
+      overflow: auto;
+    }
+
+    .drawer-footer {
+      padding: 10px 20px 20px;
+      width: 100%;
+      box-sizing: border-box;
+      text-align: right;
+    }
   }
 }
 

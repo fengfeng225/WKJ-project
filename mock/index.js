@@ -5,12 +5,14 @@ const user = require('./user')
 const role = require('./role')
 const bill = require('./bill')
 const groupCategory = require('./groupCategory')
+const dictionary = require('./dictionary')
 
 const mocks = [
   ...user,
   ...role,
   ...bill,
-  ...groupCategory
+  ...groupCategory,
+  ...dictionary
 ]
 
 // for front mock

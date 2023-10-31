@@ -31,7 +31,7 @@
               <input
                 v-model.lazy="params.keyword"
                 class="el-textarea__inner"
-                placeholder="请输入关键词"
+                placeholder="请输入关键词查询"
                 clearable
                 @keyup.enter="search"
               >
@@ -113,8 +113,8 @@
 </template>
 
 <script>
-import { getDeletedBills, restoreBill, getDeviceNameCategory } from '@/api/bill'
-import { getGroupCategories } from '@/api/billCategory'
+import { getDeletedBills, restoreBill, getDeviceNameCategory } from '@/api/bill/bill'
+import { getGroupCategories } from '@/api/bill/billCategory'
 import { getMBStatusStyle, getMBStatusLabel, getCycleTypeLabel } from '@/utils/helperHandlers'
 import { dateFormatTable } from '@/utils'
 
