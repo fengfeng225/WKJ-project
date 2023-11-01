@@ -71,16 +71,15 @@
                 <template #default="scope">
                   <el-button type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
                   <el-button class="BL-table-delBtn" type="text" @click="removeHandle(scope.row.id)">删除</el-button>
-                  <!-- <BL-Dropdown style="margin-left: 8px;">
+                  <BL-Dropdown style="margin-left: 8px;">
                     <span>
                       <el-button type="text" size="small">更多<i class="el-icon-arrow-down el-icon--right" /></el-button>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item>
-                        测试
-                      </el-dropdown-item>
+                      <el-dropdown-item>检查记录</el-dropdown-item>
+                      <el-dropdown-item>历史操作</el-dropdown-item>
                     </el-dropdown-menu>
-                  </BL-Dropdown> -->
+                  </BL-Dropdown>
                 </template>
               </ex-table-column>
             </template>

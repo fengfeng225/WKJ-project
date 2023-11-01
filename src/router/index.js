@@ -118,7 +118,7 @@ export const asyncRoutes = [
     path: '/bill',
     component: Layout,
     name: 'Bill',
-    meta: { title: '盲板台账', icon: 'el-icon-folder', noCache: true },
+    meta: { title: '盲板管理', icon: 'el-icon-folder', noCache: true },
     children: [
       {
         path: 'longBill',
