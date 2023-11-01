@@ -81,6 +81,35 @@
   }
 }
 
+.custom-tree-node {
+  width: calc(100% - 24px);
+  flex: 1;
+  display: flex;
+  font-size: 0;
+  align-items: center;
+
+  i {
+    font-size: 14px;
+  }
+
+  .text {
+    flex: 1;
+    font-size: 14px;
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  i + .text {
+    padding-left: 6px;
+  }
+
+  .more {
+    float: right;
+  }
+}
+
 .BL-20 {
   margin-bottom: 20px!important;
 }

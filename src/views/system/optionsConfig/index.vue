@@ -2,9 +2,9 @@
   <div class="BL-common-layout">
     <div class="BL-common-layout-left">
       <div class="BL-common-title">
-        <h2>分类</h2>
+        <h2>字段</h2>
         <span class="options">
-          <el-tooltip content="分类管理" placement="top">
+          <el-tooltip content="列表管理" placement="top">
             <el-link icon="el-icon-menu" :underline="false" @click="handleTypeManage" />
           </el-tooltip>
         </span>
@@ -74,6 +74,7 @@
         >
           <el-table-column prop="fullName" label="名称" />
           <el-table-column prop="entityCode" label="编码" />
+          <el-table-column prop="description" label="描述" />
           <el-table-column label="操作" width="100">
             <template slot-scope="scope">
               <el-button type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
@@ -84,16 +85,16 @@
       </div>
     </div>
 
-    <OptionDialog v-if="optionDialogVisible" ref="OptionDialog" @refreshDataList="getDictionaryList" />
+    <OptionDialog v-if="optionDialogVisible" ref="OptionDialog" @refreshDataList="getCurrentOptions" />
     <TypeList v-if="drawer" ref="TypeList" @refreshDataList="initData" />
   </div>
 </template>
 
 <script>
 import {
-  getDictionaryType,
-  getDictionaryDataList,
-  delDictionaryData
+  getDictionaryList,
+  getOptions,
+  deleteOption
 } from '@/api/systemData/dictionary'
 
 import OptionDialog from './optionDialog'
@@ -126,29 +127,29 @@ export default {
   },
   methods: {
     search() {
-      this.getDictionaryList()
+      this.getCurrentOptions()
     },
     reset() {
       this.keyword = ''
-      this.getDictionaryList()
+      this.getCurrentOptions()
     },
     initData() {
       this.treeLoading = true
-      getDictionaryType().then(res => {
+      getDictionaryList().then(res => {
         this.treeData = res.data.list
         this.$nextTick(() => {
-          this.typeId = this.treeData[0].id
+          this.typeId = this.typeId || this.treeData[0].id
           this.$refs.treeBox.setCurrentKey(this.typeId)
           this.treeLoading = false
-          this.typeId && this.getDictionaryList()
+          this.typeId && this.getCurrentOptions()
         })
       }).catch(() => {
         this.treeLoading = false
       })
     },
-    getDictionaryList() {
+    getCurrentOptions() {
       this.listLoading = true
-      getDictionaryDataList(this.typeId, this.keyword).then(res => {
+      getOptions(this.typeId, this.keyword).then(res => {
         this.tableData = res.data.list
         this.listLoading = false
       }).catch(() => {
@@ -174,17 +175,18 @@ export default {
         this.$refs.OptionDialog.init(id, this.typeId)
       })
     },
+
     handleDel(id) {
       this.$confirm('您确定要删除该条数据吗?', '提示', {
         type: 'warning'
       }).then(() => {
-        delDictionaryData(id).then(res => {
+        deleteOption(id).then(res => {
           this.$message({
             type: 'success',
             message: res.message,
             duration: 1500,
             onClose: () => {
-              this.getDictionaryList()
+              this.getCurrentOptions()
             }
           })
         })

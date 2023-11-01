@@ -104,7 +104,7 @@ export const asyncRoutes = [
         path: 'optionsConfig',
         component: () => import('@/views/system/optionsConfig'),
         name: 'OptionsConfig',
-        meta: { title: '选项配置', icon: 'el-icon-menu', noCache: true }
+        meta: { title: '选项字段', icon: 'el-icon-menu', noCache: true }
       },
       {
         path: 'log',
@@ -118,29 +118,29 @@ export const asyncRoutes = [
     path: '/bill',
     component: Layout,
     name: 'Bill',
-    meta: { title: '台账', icon: 'el-icon-folder', noCache: true },
+    meta: { title: '盲板台账', icon: 'el-icon-folder', noCache: true },
     children: [
       {
         path: 'longBill',
-        component: () => import('@/views/bill/longBill'),
+        component: () => import('@/views/bill/mb/longBill'),
         name: 'LongBill',
         meta: { title: '长期台账', icon: 'el-icon-document-copy', noCache: true }
       },
       {
         path: 'shortBill',
-        component: () => import('@/views/bill/shortBill'),
+        component: () => import('@/views/bill/mb/shortBill'),
         name: 'ShortBill',
         meta: { title: '短期台账', icon: 'el-icon-document', noCache: true }
       },
       {
         path: 'deletedBill',
-        component: () => import('@/views/bill/deletedBill'),
+        component: () => import('@/views/bill/mb/deletedBill'),
         name: 'DeletedBill',
         meta: { title: '已删除台账', icon: 'el-icon-delete-solid', noCache: true }
       },
       {
         path: 'groups',
-        component: () => import('@/views/bill/groups'),
+        component: () => import('@/views/bill/mb/groups'),
         name: 'Groups',
         meta: { title: '班组', icon: 'ym-custom ym-custom-format-list-bulleted', noCache: true }
       }

@@ -2,25 +2,27 @@ const { getGroups, getShortBills, getLongBills } = require('./sqlDatabase')
 
 module.exports = [
   {
-    url: '/api/admin/shortBill/groupCategories',
+    url: '/api/admin/mb/shortBill/groupCategories',
     type: 'get',
     response: config => {
       const list = getGroups()
 
       return {
         code: 200,
-        data: list
+        data: {
+          list
+        }
       }
     }
   },
   {
-    url: '/api/admin/groupCategory',
+    url: '/api/admin/mb/groupCategory',
     type: 'post',
     response: config => {
       const newGroup = config.body
       const groups = getGroups()
 
-      if (groups.find(item => item.label === newGroup.label)) {
+      if (groups.some(item => item.label === newGroup.label)) {
         return {
           code: 404,
           message: '该班已存在'
@@ -38,13 +40,13 @@ module.exports = [
     }
   },
   {
-    url: '/api/admin/groupCategory',
+    url: '/api/admin/mb/groupCategory',
     type: 'put',
     response: config => {
       const { id, label } = config.body
       const groups = getGroups()
 
-      if (groups.find(item => item.label === label)) {
+      if (groups.some(item => item.id !== id && item.label === label)) {
         return {
           code: 404,
           message: '该班已存在'
@@ -67,7 +69,7 @@ module.exports = [
     }
   },
   {
-    url: '/api/admin/groupCategory',
+    url: '/api/admin/mb/groupCategory',
     type: 'delete',
     response: config => {
       const { id } = config.body
@@ -97,7 +99,7 @@ module.exports = [
     }
   },
   {
-    url: '/api/admin/groupCategory/Info',
+    url: '/api/admin/mb/groupCategory/Info',
     type: 'get',
     response: config => {
       const { id } = config.query

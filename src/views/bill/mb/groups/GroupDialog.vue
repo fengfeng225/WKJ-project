@@ -30,7 +30,7 @@ import {
   createGroupCategory,
   updateGroupCategory,
   getGroupCategoryInfo
-} from '@/api/bill/billCategory'
+} from '@/api/bill/mb/group'
 
 export default {
   data() {

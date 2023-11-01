@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { getGroupCategories, deleteGroupCategory } from '@/api/bill/billCategory'
+import { getGroupCategories, deleteGroupCategory } from '@/api/bill/mb/group'
 import { dateFormatTable } from '@/utils'
 
 import GroupDialog from './GroupDialog'
@@ -66,7 +66,7 @@ export default {
     initData() {
       this.tableLoading = true
       getGroupCategories().then(res => {
-        this.tableData = res.data
+        this.tableData = res.data.list
         this.tableLoading = false
       }).catch(() => {
         this.tableLoading = false

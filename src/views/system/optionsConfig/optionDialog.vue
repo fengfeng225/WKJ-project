@@ -6,6 +6,7 @@
     :visible.sync="visible"
     lock-scroll
     width="600px"
+    @close="close"
   >
     <el-form
       ref="dataForm"
@@ -33,10 +34,9 @@
 
 <script>
 import {
-  getDictionaryDataTypeSelector,
-  getDictionaryDataInfo,
-  updateDictionaryData,
-  createDictionaryData
+  getOptionInfo,
+  updateOption,
+  createOption
 } from '@/api/systemData/dictionary'
 
 export default {
@@ -47,7 +47,7 @@ export default {
       btnLoading: false,
       dataForm: {
         id: '',
-        dictionaryTypeId: '',
+        dictionaryId: '',
         fullName: '',
         entityCode: '',
         description: ''
@@ -68,28 +68,27 @@ export default {
     init(id, typeId) {
       this.visible = true
       this.dataForm.id = id || ''
-      this.dataForm.dictionaryTypeId = typeId
-      this.formLoading = true
-      this.$nextTick(() => {
-        this.$refs.dataForm.resetFields()
-        if (this.dataForm.id) {
-          getDictionaryDataInfo(this.dataForm.id).then(res => {
-            this.dataForm = res.data
-            this.formLoading = false
-          })
-        } else {
+      this.dataForm.dictionaryId = typeId
+
+      if (this.dataForm.id) {
+        this.formLoading = true
+        getOptionInfo(this.dataForm.id).then(res => {
+          this.dataForm = res.data
           this.formLoading = false
-        }
-      })
+        }).catch(() => {
+          this.formLoading = false
+        })
+      }
     },
+
     dataFormSubmit() {
       this.$refs.dataForm.validate((valid) => {
         if (valid) {
           this.btnLoading = true
-          const formMethod = this.dataForm.id ? updateDictionaryData : createDictionaryData
+          const formMethod = this.dataForm.id ? updateOption : createOption
           formMethod(this.dataForm).then(res => {
             this.$message({
-              message: res.msg,
+              message: res.message,
               type: 'success',
               duration: 1500,
               onClose: () => {
@@ -103,6 +102,10 @@ export default {
           })
         }
       })
+    },
+
+    close() {
+      this.$refs.dataForm.resetFields()
     }
   }
 }

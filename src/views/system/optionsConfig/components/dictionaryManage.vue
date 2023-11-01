@@ -6,6 +6,7 @@
     :append-to-body="true"
     lock-scroll
     width="600px"
+    @close="close"
   >
     <el-form
       ref="dataForm"
@@ -33,10 +34,9 @@
 
 <script>
 import {
-  getDictionaryTypeSelector,
-  getDictionaryTypeInfo,
-  createDictionaryType,
-  updateDictionaryType
+  getDictionaryInfo,
+  createDictionary,
+  updateDictionary
 } from '@/api/systemData/dictionary'
 
 export default {
@@ -67,41 +67,29 @@ export default {
     init(id) {
       this.visible = true
       this.dataForm.id = id || ''
-      this.formLoading = true
-      this.$nextTick(() => {
-        this.$refs.dataForm.resetFields()
-        getDictionaryTypeSelector(id || 0).then(res => {
-          const topItem = {
-            fullName: '顶级节点',
-            hasChildren: true,
-            id: '-1',
-            children: res.data.list
-          }
-          this.treeData = [topItem]
+
+      if (this.dataForm.id) {
+        this.formLoading = true
+        getDictionaryInfo(this.dataForm.id).then(res => {
+          this.dataForm = res.data
+          this.formLoading = false
+        }).catch(() => {
+          this.formLoading = false
         })
-        if (this.dataForm.id) {
-          this.treeDisabled = true
-          getDictionaryTypeInfo(this.dataForm.id).then(res => {
-            this.dataForm = res.data
-          })
-        } else {
-          this.treeDisabled = false
-        }
-        this.formLoading = false
-      })
+      }
     },
+
     dataFormSubmit() {
-      this.$refs['dataForm'].validate((valid) => {
+      this.$refs.dataForm.validate((valid) => {
         if (valid) {
           this.btnLoading = true
-          const formMethod = this.dataForm.id ? updateDictionaryType : createDictionaryType
+          const formMethod = this.dataForm.id ? updateDictionary : createDictionary
           formMethod(this.dataForm).then(res => {
             this.$message({
-              message: res.msg,
+              message: res.message,
               type: 'success',
               duration: 1500,
               onClose: () => {
-                this.$store.commit('base/SET_DICTIONARY_LIST', [])
                 this.visible = false
                 this.btnLoading = false
                 this.$emit('refreshDataList')
@@ -112,6 +100,10 @@ export default {
           })
         }
       })
+    },
+
+    close() {
+      this.$refs.dataForm.resetFields()
     }
   }
 }

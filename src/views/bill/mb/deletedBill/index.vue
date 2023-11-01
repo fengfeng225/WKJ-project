@@ -113,8 +113,8 @@
 </template>
 
 <script>
-import { getDeletedBills, restoreBill, getDeviceNameCategory } from '@/api/bill/bill'
-import { getGroupCategories } from '@/api/bill/billCategory'
+import { getDeletedBills, restoreBill, getDeviceNameCategory } from '@/api/bill/mb/bill'
+import { getGroupCategories } from '@/api/bill/mb/group'
 import { getMBStatusStyle, getMBStatusLabel, getCycleTypeLabel } from '@/utils/helperHandlers'
 import { dateFormatTable } from '@/utils'
 
@@ -209,7 +209,7 @@ export default {
         },
         {
           label: '操作人员',
-          prop: 'operators'
+          prop: 'operator'
         },
         {
           label: '管理干部',
@@ -239,10 +239,10 @@ export default {
       this.treeLoading = true
       getGroupCategories().then(res => {
         const parent = [{
-          enabledMark: 1,
           label: '全部',
-          id: '',
-          children: res.data
+          hasChildren: true,
+          id: '-1',
+          children: res.data.list
         }]
         this.treeData = parent
 
@@ -258,7 +258,7 @@ export default {
 
     getDeviceNameCategory() {
       getDeviceNameCategory().then(res => {
-        this.deviceNameCategory = res.data.map(item => {
+        this.deviceNameCategory = res.data.list.map(item => {
           return {
             text: item,
             value: item

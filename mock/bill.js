@@ -2,7 +2,7 @@ const { getShortBills, getLongBills } = require('./sqlDatabase')
 
 module.exports = [
   {
-    url: '/api/admin/shortBills',
+    url: '/api/admin/mb/shortBills',
     type: 'get',
     response: config => {
       const { groupId, keyword, currentPage = 1, pageSize = 20, queryJson } = config.query
@@ -11,7 +11,7 @@ module.exports = [
       let list = []
       const start = (currentPage - 1) * pageSize
 
-      if (!groupId) specificGroupList = enableList
+      if (!groupId || groupId === '-1') specificGroupList = enableList
       else specificGroupList = enableList.filter(item => item.groupId === groupId)
 
       if (queryJson) {
@@ -46,7 +46,7 @@ module.exports = [
     }
   },
   {
-    url: '/api/admin/shortBill/info',
+    url: '/api/admin/mb/shortBill/info',
     type: 'get',
     response: config => {
       const { id } = config.query
@@ -66,7 +66,7 @@ module.exports = [
     }
   },
   {
-    url: '/api/admin/shortBill',
+    url: '/api/admin/mb/shortBill',
     type: 'put',
     response: config => {
       const bill = config.body
@@ -74,7 +74,7 @@ module.exports = [
 
       if (oldBill) {
         for (const key in bill) {
-          if (key !== 'id') oldBill[key] = bill[key]
+          oldBill[key] = bill[key]
         }
         return {
           code: 200,
@@ -89,7 +89,7 @@ module.exports = [
     }
   },
   {
-    url: '/api/admin/shortBill',
+    url: '/api/admin/mb/shortBill',
     type: 'post',
     response: config => {
       const bill = config.body
@@ -104,7 +104,7 @@ module.exports = [
     }
   },
   {
-    url: '/api/admin/shortBill',
+    url: '/api/admin/mb/shortBill',
     type: 'delete',
     response: config => {
       const { id } = config.query
@@ -126,7 +126,7 @@ module.exports = [
     }
   },
   {
-    url: '/api/admin/shortBill/deviceNameCategory',
+    url: '/api/admin/mb/shortBill/deviceNameCategory',
     type: 'get',
     response: config => {
       const list = new Set()
@@ -136,13 +136,15 @@ module.exports = [
 
       return {
         code: 200,
-        data: [...list]
+        data: {
+          list
+        }
       }
     }
   },
 
   {
-    url: '/api/admin/deletedBills',
+    url: '/api/admin/mb/deletedBills',
     type: 'get',
     response: config => {
       const { groupId, keyword, currentPage = 1, pageSize = 20, queryJson } = config.query
@@ -188,7 +190,7 @@ module.exports = [
     }
   },
   {
-    url: '/api/admin/restoreBill',
+    url: '/api/admin/mb/restoreBill',
     type: 'get',
     response: config => {
       const { id, cycleType } = config.query

@@ -101,6 +101,16 @@
             <template v-else-if="item.prop === 'name'">
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :filters="deviceNameCategory" />
             </template>
+            <template v-else-if="item.prop === 'size'">
+              <el-table-column :key="item.prop" :label="item.label" :prop="item.prop" width="75" />
+            </template>
+            <template v-else-if="item.prop === 'operator'">
+              <ex-table-column :key="item.prop" :label="item.label">
+                <template #default="scope">
+                  {{ getOperatorName(scope.row.operator) }}
+                </template>
+              </ex-table-column>
+            </template>
             <template v-else-if="item.prop === 'disassembleTime'">
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :formatter="dateFormatTable" />
             </template>
@@ -126,12 +136,13 @@
 </template>
 
 <script>
-import { getShortBills, deleteShortBill, getDeviceNameCategory } from '@/api/bill/bill'
-import { getGroupCategories } from '@/api/bill/billCategory'
+import { getShortBills, deleteShortBill, getDeviceNameCategory } from '@/api/bill/mb/bill'
+import { getGroupCategories } from '@/api/bill/mb/group'
+import { getOptionsByCode } from '@/api/systemData/dictionary'
 import { getMBStatusStyle, getMBStatusLabel } from '@/utils/helperHandlers'
 import { dateFormatTable } from '@/utils'
 
-import BillForm from '../components/BillForm'
+import BillForm from '../BillForm'
 
 export default {
   name: 'ShortBill',
@@ -156,6 +167,7 @@ export default {
       },
       tableLoading: false,
       tableData: [],
+      operatorData: [],
       deviceNameCategory: [],
       importLoading: false,
       exportLoading: false,
@@ -225,7 +237,7 @@ export default {
         },
         {
           label: '操作人员',
-          prop: 'operators'
+          prop: 'operator'
         },
         {
           label: '管理干部',
@@ -247,6 +259,9 @@ export default {
   },
 
   created() {
+    getOptionsByCode('operator').then(res => {
+      this.operatorData = res.data.list
+    })
     this.getGroupList()
     this.getDeviceNameCategory()
   },
@@ -256,10 +271,10 @@ export default {
       this.treeLoading = true
       getGroupCategories().then(res => {
         const parent = [{
-          enabledMark: 1,
           label: '全部',
-          id: '',
-          children: res.data
+          hasChildren: true,
+          id: '-1',
+          children: res.data.list
         }]
         this.treeData = parent
 
@@ -275,7 +290,7 @@ export default {
 
     getDeviceNameCategory() {
       getDeviceNameCategory().then(res => {
-        this.deviceNameCategory = res.data.map(item => {
+        this.deviceNameCategory = res.data.list.map(item => {
           return {
             text: item,
             value: item
@@ -316,6 +331,17 @@ export default {
       this.params.currentPage = 1
       this.params.pageSize = 20
       this.initData()
+    },
+
+    getOperatorName(code) {
+      if (this.operatorData) {
+        const operator = this.operatorData.find(x => x.entityCode === code)
+        if (operator) {
+          return operator.fullName
+        }
+      }
+
+      return ''
     },
 
     importData() {},

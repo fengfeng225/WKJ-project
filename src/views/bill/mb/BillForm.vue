@@ -125,8 +125,15 @@
               </div>
               <el-row :gutter="20" class="custom-row">
                 <el-col :span="12">
-                  <el-form-item label="操作人员" prop="operators">
-                    <el-input v-model="dataForm.operators" placeholder="请输入操作人员" />
+                  <el-form-item label="操作人员" prop="operator">
+                    <el-select v-model="dataForm.operator" placeholder="请选择操作人员">
+                      <el-option
+                        v-for="item in operatorData"
+                        :key="item.entityCode"
+                        :label="item.fullName"
+                        :value="item.entityCode"
+                      />
+                    </el-select>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -144,8 +151,9 @@
 </template>
 
 <script>
-import { getShortBillInfo, updateShortBill, createShortBill } from '@/api/bill/bill'
-import { getGroupCategories } from '@/api/bill/billCategory'
+import { getShortBillInfo, updateShortBill, createShortBill } from '@/api/bill/mb/bill'
+import { getGroupCategories } from '@/api/bill/mb/group'
+import { getOptionsByCode } from '@/api/systemData/dictionary'
 
 export default {
   data() {
@@ -167,11 +175,12 @@ export default {
         type: '',
         material: '',
         disassembleTime: null,
-        operators: '',
+        operator: '',
         Manager: '',
         enabledMark: 1
       },
       groups: [],
+      operatorData: [],
       dataRule: {
         name: [
           { required: true, message: '请输入名称', trigger: 'blur' }
@@ -187,6 +196,9 @@ export default {
   },
 
   created() {
+    getOptionsByCode('operator').then(res => {
+      this.operatorData = res.data.list
+    })
     this.getGroupCategories()
   },
 
@@ -206,7 +218,7 @@ export default {
 
     getGroupCategories() {
       getGroupCategories().then(res => {
-        this.groups = res.data
+        this.groups = res.data.list
       }).catch(() => {})
     },
 

@@ -1,4 +1,5 @@
-const longBills = [
+// 表1 长期盲板台账
+const mbLongBills = [
   {
     id: '432701041243324333',
     groupId: '403034187151441989',
@@ -14,7 +15,7 @@ const longBills = [
     type: '8字盲板',
     material: '钢制',
     disassembleTime: 1698702548000,
-    operators: '木胡太尔江',
+    operator: 'mhtej',
     Manager: '王科举',
     creatorTime: 1638702548000,
     deleteMark: 0,
@@ -22,7 +23,8 @@ const longBills = [
   }
 ]
 
-const shortBills = [
+// 表2 短期盲板台账
+const mbShortBills = [
   {
     id: '432701041243324485',
     groupId: '403034187151441989',
@@ -38,7 +40,7 @@ const shortBills = [
     type: '8字盲板',
     material: '钢制',
     disassembleTime: 1698702548000,
-    operators: '木胡太尔江',
+    operator: 'mhtej',
     Manager: '王科举',
     creatorTime: 1638702548000,
     deleteMark: 0,
@@ -59,7 +61,7 @@ const shortBills = [
     type: '8字盲板',
     material: '钢制',
     disassembleTime: 1698762548000,
-    operators: '木胡太尔江',
+    operator: 'mhtej',
     Manager: '王科举',
     creatorTime: 1638702548000,
     deleteMark: 0,
@@ -80,7 +82,7 @@ const shortBills = [
     type: '8字盲板',
     material: '钢制',
     disassembleTime: 1698761048000,
-    operators: '木胡太尔江',
+    operator: 'mhtej',
     Manager: '王科举',
     creatorTime: 1638702548000,
     deleteMark: 0,
@@ -101,7 +103,7 @@ const shortBills = [
     type: '8字盲板',
     material: '钢制',
     disassembleTime: 1698732548000,
-    operators: '木胡太尔江',
+    operator: 'mhtej',
     Manager: '王科举',
     creatorTime: 1638702548000,
     deleteMark: 0,
@@ -109,71 +111,123 @@ const shortBills = [
   }
 ]
 
-const groups = [
+// 表3 已删除盲板台账
+
+// 表4 盲板班组
+const mbGroups = [
   {
-    enabledMark: 1,
     label: '白油一班',
     id: '403034187151441989',
     creatorTime: 1638702548000
   },
   {
-    enabledMark: 1,
     label: '白油二班',
     id: '403034187151441988',
     creatorTime: 1638702548000
   },
   {
-    enabledMark: 1,
     label: '白油三班',
     id: '403034187151441987',
     creatorTime: 1638702548000
   },
   {
-    enabledMark: 1,
     label: '白油四班',
     id: '403034187151441986',
     creatorTime: 1638702548000
   },
   {
-    enabledMark: 1,
     label: '高加一班',
     id: '403034187151441985',
     creatorTime: 1638702548000
   },
   {
-    enabledMark: 1,
     label: '高加二班',
     id: '403034187151441984',
     creatorTime: 1638702548000
   },
   {
-    enabledMark: 1,
     label: '高加三班',
     id: '403034187151441983',
     creatorTime: 1638702548000
   },
   {
-    enabledMark: 1,
     label: '高加四班',
     id: '403034187151441982',
     creatorTime: 1638702548000
   }
 ]
 
+// 表5 需配置选项的所有字段
+const dictionaryList = [
+  {
+    fullName: '盲板材质',
+    entityCode: 'mb-material',
+    description: 'for test',
+    id: '456992670183587908'
+  },
+  {
+    fullName: '盲板形式',
+    entityCode: 'mb-style',
+    description: 'for test',
+    id: '456992670183587909'
+  },
+  {
+    fullName: '操作人员',
+    entityCode: 'operator',
+    description: 'for test',
+    id: '456992670183587910'
+  }
+]
+
+// 表6 所有选项
+const options = [
+  {
+    fullName: '小明',
+    entityCode: 'xm',
+    description: 'for test',
+    id: '456992823711891525',
+    dictionaryId: '456992670183587910'
+  },
+  {
+    fullName: '小王',
+    entityCode: 'xw',
+    description: 'for test',
+    id: '456992823711891524',
+    dictionaryId: '456992670183587910'
+  },
+  {
+    fullName: '木胡太尔江',
+    entityCode: 'mhtej',
+    description: 'for test',
+    id: '456992823711891523',
+    dictionaryId: '456992670183587910'
+  }
+]
+
 const getShortBills = function() {
-  return shortBills
+  return mbShortBills
 }
 
 const getLongBills = function() {
-  return longBills
+  return mbLongBills
 }
 
 const getGroups = function() {
-  return groups
+  return mbGroups
+}
+
+const getDictionaryList = function() {
+  return dictionaryList
+}
+
+const getOptions = function() {
+  return options
 }
 
 module.exports = {
   getShortBills,
   getLongBills,
-  getGroups
+  getGroups,
+  getDictionaryList,
+  getOptions
 }
