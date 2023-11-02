@@ -77,7 +77,6 @@
                     </span>
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item>检查记录</el-dropdown-item>
-                      <el-dropdown-item>历史操作</el-dropdown-item>
                     </el-dropdown-menu>
                   </BL-Dropdown>
                 </template>
