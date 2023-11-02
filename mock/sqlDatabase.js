@@ -111,7 +111,31 @@ const mbShortBills = [
   }
 ]
 
-// 表3 已删除盲板台账
+// 表3 盲板拆装明细
+const mbDisassembleDetails = [
+  {
+    id: '899516549894656',
+    groupId: '403034187151441987',
+    name: '15万白油加氢',
+    code: '056',
+    status: 0,
+    pipDiameter: 40,
+    description: 'C-601顶部出口线现场排空手阀后法兰',
+    pipelineMediaName: '常顶油气',
+    pipelineMediaTemperature: 230,
+    pipelineMediaPressure: 0.1,
+    size: 8,
+    type: '8字盲板',
+    material: '钢制',
+    disassembleTime: 1698732548000,
+    operator: 'mhtej',
+    Manager: '王科举',
+    creatorTime: 1638702548000,
+    deleteMark: 0,
+    cycleType: 'short',
+    remark: '新建盲板'
+  }
+]
 
 // 表4 盲板班组
 const mbGroups = [
@@ -212,6 +236,10 @@ const getLongBills = function() {
   return mbLongBills
 }
 
+const getDisassembleDetails = function() {
+  return mbDisassembleDetails
+}
+
 const getGroups = function() {
   return mbGroups
 }
@@ -227,6 +255,7 @@ const getOptions = function() {
 module.exports = {
   getShortBills,
   getLongBills,
+  getDisassembleDetails,
   getGroups,
   getDictionaryList,
   getOptions

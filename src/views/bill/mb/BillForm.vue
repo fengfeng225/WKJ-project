@@ -113,11 +113,6 @@
                     />
                   </el-form-item>
                 </el-col>
-                <!-- <el-col :span="10">
-                  <el-form-item label="操作人">
-                    <el-input v-model="dataForm." placeholder="请选择人员" />
-                  </el-form-item>
-                </el-col> -->
               </el-row>
 
               <div class="BL-common-title BL-20">
@@ -189,7 +184,10 @@ export default {
           { required: true, message: '请输入盲板编号', trigger: 'blur' }
         ],
         disassembleTime: [
-          { required: true, message: '请输入拆装时间', trigger: 'change' }
+          { required: true, message: '请选择拆装时间', trigger: 'change' }
+        ],
+        operator: [
+          { required: true, message: '请选择操作人员', trigger: 'change' }
         ]
       }
     }

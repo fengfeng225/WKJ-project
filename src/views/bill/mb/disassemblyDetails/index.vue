@@ -63,35 +63,18 @@
       <div class="BL-common-layout-main BL-flex-main">
         <BL-table ref="BLTable" v-loading="tableLoading" :data="tableData" fixed-n-o row-key="id" @filter-change="deviceNameFilter">
           <template v-for="item in columns">
-            <template v-if="item.prop === 'action'">
-              <ex-table-column :key="item.prop" :label="item.label" width="80" fixed="right">
-                <template #default="scope">
-                  <el-button type="text" @click="restore(scope.row.id, scope.row.cycleType)">还原</el-button>
-                </template>
-              </ex-table-column>
-            </template>
-            <template v-else-if="item.prop === 'PipelineMedia'">
-              <ex-table-column :key="item.prop" :label="item.label">
-                <template v-for="column in item.children">
-                  <ex-table-column :key="column.prop" :label="column.label" :prop="column.prop" :width="column.prop === 'pipelineMediaName' ? '100px' : 'auto'" />
-                </template>
-              </ex-table-column>
-            </template>
-            <template v-else-if="item.prop === 'status'">
-              <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop">
-                <template #default="scope">
-                  <el-tag :type="getMBStatusStyle(scope.row.status)">{{ getMBStatusLabel(scope.row.status) }}</el-tag>
-                </template>
-              </ex-table-column>
-            </template>
-            <template v-else-if="item.prop === 'name'">
+            <template v-if="item.prop === 'name'">
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :filters="deviceNameCategory" />
             </template>
             <template v-else-if="item.prop === 'disassembleTime'">
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :formatter="dateFormatTable" />
             </template>
-            <template v-else-if="item.prop === 'creatorTime'">
-              <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :formatter="dateFormatTable" />
+            <template v-else-if="item.prop === 'operator'">
+              <ex-table-column :key="item.prop" :label="item.label">
+                <template #default="scope">
+                  {{ getOperatorName(scope.row.operator) }}
+                </template>
+              </ex-table-column>
             </template>
             <template v-else-if="item.prop === 'cycleType'">
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :formatter="getCycleTypeLabel" />
@@ -113,13 +96,14 @@
 </template>
 
 <script>
-import { getDeletedBills, restoreBill, getDeviceNameCategory } from '@/api/bill/mb/bill'
+import { getDeviceNameCategory, getDisassembleDetails } from '@/api/bill/mb/bill'
 import { getGroupCategories } from '@/api/bill/mb/group'
+import { getOptionsByCode } from '@/api/systemData/dictionary'
 import { getMBStatusStyle, getMBStatusLabel, getCycleTypeLabel } from '@/utils/helperHandlers'
 import { dateFormatTable } from '@/utils'
 
 export default {
-  name: 'DeletedBill',
+  name: 'DisassembleDetail',
   data() {
     return {
       params: {
@@ -138,8 +122,8 @@ export default {
       },
       tableLoading: false,
       tableData: [],
+      operatorData: [],
       deviceNameCategory: [],
-      roleButtonOptions: [],
       roleColumnOptions: [
         {
           label: '装置名称',
@@ -150,62 +134,16 @@ export default {
           prop: 'code'
         },
         {
-          label: '周期',
+          label: '类型',
           prop: 'cycleType'
         },
         {
-          label: '管径',
-          prop: 'pipDiameter'
-        },
-        {
-          label: '盲板安装位置描述',
-          prop: 'description'
-        },
-        {
-          label: '盲通状态',
-          prop: 'status'
+          label: '拆装操作',
+          prop: 'remark'
         },
         {
           label: '拆装时间',
           prop: 'disassembleTime'
-        },
-        {
-          label: '管线介质',
-          prop: 'PipelineMedia',
-          children: [
-            {
-              label: '名称',
-              prop: 'pipelineMediaName'
-            },
-            {
-              label: '温度 (℃)',
-              prop: 'pipelineMediaTemperature'
-            },
-            {
-              label: '压力 (MPa)',
-              prop: 'pipelineMediaPressure'
-            }
-          ]
-        },
-        {
-          label: '盲板规格 (mm)',
-          prop: 'size'
-        },
-        {
-          label: '盲板形式',
-          prop: 'type'
-        },
-        {
-          label: '盲板材质',
-          prop: 'material'
-        },
-        // {
-        //   label: '界区系统/装置内部',
-        //   prop: 'material'
-        // },
-        {
-          label: '创建时间',
-          prop: 'creatorTime'
         },
         {
           label: '操作人员',
@@ -214,10 +152,6 @@ export default {
         {
           label: '管理干部',
           prop: 'Manager'
-        },
-        {
-          label: '操作',
-          prop: 'action'
         }
       ]
     }
@@ -230,6 +164,9 @@ export default {
   },
 
   created() {
+    getOptionsByCode('operator').then(res => {
+      this.operatorData = res.data.list
+    })
     this.getGroupList()
     this.getDeviceNameCategory()
   },
@@ -279,30 +216,13 @@ export default {
 
     initData() {
       this.tableLoading = true
-      getDeletedBills(this.params).then(res => {
+      getDisassembleDetails(this.params).then(res => {
         this.tableData = res.data.list
         this.total = res.data.pagination.total
         this.tableLoading = false
       }).catch(() => {
         this.tableLoading = false
       })
-    },
-
-    restore(id, cycleType) {
-      this.$confirm('您确定要恢复该盲板吗?', '提示', {
-        type: 'warning'
-      }).then(() => {
-        restoreBill(id, cycleType).then(res => {
-          this.$message({
-            message: res.message,
-            type: 'success',
-            duration: 1500,
-            onClose: () => {
-              this.initData()
-            }
-          })
-        }).catch(() => {})
-      }).catch(() => {})
     },
 
     search() {
@@ -323,6 +243,17 @@ export default {
 
       this.params.groupId = data.id
       this.initData()
+    },
+
+    getOperatorName(code) {
+      if (this.operatorData) {
+        const operator = this.operatorData.find(x => x.entityCode === code)
+        if (operator) {
+          return operator.fullName
+        }
+      }
+
+      return ''
     },
 
     getMBStatusStyle,

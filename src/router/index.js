@@ -133,10 +133,10 @@ export const asyncRoutes = [
         meta: { title: '短期台账', icon: 'el-icon-document', noCache: true }
       },
       {
-        path: 'deletedBill',
-        component: () => import('@/views/bill/mb/deletedBill'),
-        name: 'DeletedBill',
-        meta: { title: '已删除台账', icon: 'el-icon-delete-solid', noCache: true }
+        path: 'disassemblyDetails',
+        component: () => import('@/views/bill/mb/disassemblyDetails'),
+        name: 'DisassemblyDetails',
+        meta: { title: '拆装明细', icon: 'el-icon-notebook-2', noCache: true }
       },
       {
         path: 'groups',
