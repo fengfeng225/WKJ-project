@@ -18,7 +18,7 @@
           </div>
         </div>
       </el-card>
-      <el-card>Check Plan</el-card>
+      <el-card style="margin-top: 5px;">Check Plan</el-card>
     </div>
     <div class="card-box">
       <el-card>Charts</el-card>
