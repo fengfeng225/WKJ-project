@@ -66,6 +66,13 @@
             <template v-if="item.prop === 'name'">
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :filters="deviceNameCategory" />
             </template>
+            <template v-else-if="item.prop === 'remark'">
+              <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop">
+                <template #default="scope">
+                  {{ getRemarkStatus(scope.row.remark) }}
+                </template>
+              </ex-table-column>
+            </template>
             <template v-else-if="item.prop === 'disassembleTime'">
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :formatter="dateFormatTable" />
             </template>
@@ -254,6 +261,13 @@ export default {
       }
 
       return ''
+    },
+
+    getRemarkStatus(content) {
+      if (content.includes('0')) return content.replace('0', '盲')
+      if (content.includes('1')) return content.replace('1', '通')
+
+      return content
     },
 
     getMBStatusStyle,

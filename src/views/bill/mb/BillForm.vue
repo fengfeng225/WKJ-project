@@ -100,7 +100,7 @@
                 <el-col />
                 <el-col :span="6">
                   <el-form-item label="盲通状态" prop="status">
-                    <el-switch v-model="dataForm.status" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0" />
+                    <el-switch v-model="dataForm.status" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0" @change="changeStatus" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
@@ -218,6 +218,11 @@ export default {
       getGroupCategories().then(res => {
         this.groups = res.data.list
       }).catch(() => {})
+    },
+
+    changeStatus() {
+      this.dataForm.disassembleTime = null
+      this.dataForm.operator = ''
     },
 
     goBack() {

@@ -83,7 +83,7 @@ module.exports = [
       if (oldBill.status !== bill.status) {
         const disassembleDetail = deepClone(bill)
         disassembleDetail.id = Math.ceil(Math.random() * 1000000000000000) + ''
-        disassembleDetail.remark = `切换盲板状态为 ${bill.status}`
+        disassembleDetail.remark = `切换为 ${bill.status}`
         getDisassembleDetails().unshift(disassembleDetail)
       }
 
@@ -132,6 +132,7 @@ module.exports = [
 
         const disassembleDetail = deepClone(shortBills[currentIndex])
         disassembleDetail.id = Math.ceil(Math.random() * 1000000000000000) + ''
+        disassembleDetail.disassembleTime = Date.now()
         disassembleDetail.remark = '删除盲板'
         getDisassembleDetails().unshift(disassembleDetail)
 
