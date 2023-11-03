@@ -9,12 +9,17 @@
           <div class="rule">
             <span class="text-left">公告</span>
             <el-divider direction="vertical" />
-            <el-link type="primary">炼油第三联合车间防互窜管理规定</el-link>
+            <el-link type="primary" @click="showContent(1)">炼油第三联合车间防互窜管理规定</el-link>
           </div>
-          <div>
+          <div class="rule">
             <span class="text-left">公告</span>
             <el-divider direction="vertical" />
-            <el-link type="primary">关于修订印发《中石油克拉玛依石化有限责任公司盲板、放空阀封堵管理办法》的通知</el-link>
+            <el-link type="primary" @click="showContent(2)">关于修订印发《中石油克拉玛依石化有限责任公司盲板、放空阀封堵管理办法》的通知</el-link>
+          </div>
+          <div class="rule">
+            <span class="text-left">公告</span>
+            <el-divider direction="vertical" />
+            <el-link type="primary" @click="showContent(3)">中石油克拉玛依石化有限责任公司 盲板、放空阀封堵管理办法</el-link>
           </div>
         </div>
       </el-card>
@@ -23,12 +28,35 @@
     <div class="card-box">
       <el-card>Charts</el-card>
     </div>
+
+    <FileContent v-if="fileContentVisible" ref="FileContent" />
   </div>
 </template>
 
 <script>
-export default {
+import FileContent from './components/FileContent'
 
+export default {
+  name: 'Dashboard',
+
+  components: {
+    FileContent
+  },
+
+  data() {
+    return {
+      fileContentVisible: false
+    }
+  },
+
+  methods: {
+    showContent(type) {
+      this.fileContentVisible = true
+      this.$nextTick(() => {
+        this.$refs.FileContent.init(type)
+      })
+    }
+  }
 }
 </script>
 
