@@ -106,9 +106,11 @@ module.exports = [
       const disassembleDetail = deepClone(bill)
 
       bill.id = Math.ceil(Math.random() * 1000000000000000) + ''
+      bill.cycleType = 'short'
       getShortBills().push(bill)
 
       disassembleDetail.id = Math.ceil(Math.random() * 1000000000000000) + ''
+      disassembleDetail.cycleType = 'short'
       disassembleDetail.remark = '新建盲板'
       getDisassembleDetails().unshift(disassembleDetail)
 
@@ -160,7 +162,7 @@ module.exports = [
       return {
         code: 200,
         data: {
-          list
+          list: [...list]
         }
       }
     }

@@ -61,10 +61,14 @@
       </el-row>
 
       <div class="BL-common-layout-main BL-flex-main">
-        <BL-table ref="BLTable" v-loading="tableLoading" :data="tableData" fixed-n-o row-key="id" @filter-change="deviceNameFilter">
+        <BL-table ref="BLTable" v-loading="tableLoading" :data="tableData" fixed-n-o row-key="id">
           <template v-for="item in columns">
             <template v-if="item.prop === 'name'">
-              <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :filters="deviceNameCategory" />
+              <ex-table-column :key="item.prop" :label="item.label">
+                <template #default="scope">
+                  {{ getDeviceName(scope.row.name) }}
+                </template>
+              </ex-table-column>
             </template>
             <template v-else-if="item.prop === 'remark'">
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop">
@@ -73,15 +77,18 @@
                 </template>
               </ex-table-column>
             </template>
-            <template v-else-if="item.prop === 'disassembleTime'">
-              <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :formatter="dateFormatTable" />
-            </template>
-            <template v-else-if="item.prop === 'operator'">
+            <template v-else-if="item.prop === 'PipelineMedia'">
               <ex-table-column :key="item.prop" :label="item.label">
-                <template #default="scope">
-                  {{ getOperatorName(scope.row.operator) }}
+                <template v-for="column in item.children">
+                  <ex-table-column :key="column.prop" :label="column.label" :prop="column.prop" :width="column.prop === 'pipelineMediaName' ? '100px' : 'auto'" />
                 </template>
               </ex-table-column>
+            </template>
+            <template v-else-if="item.prop === 'size'">
+              <el-table-column :key="item.prop" :label="item.label" :prop="item.prop" width="75" />
+            </template>
+            <template v-else-if="item.prop === 'disassembleTime'">
+              <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :formatter="dateFormatTable" />
             </template>
             <template v-else-if="item.prop === 'cycleType'">
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :formatter="getCycleTypeLabel" />
@@ -103,7 +110,7 @@
 </template>
 
 <script>
-import { getDeviceNameCategory, getDisassembleDetails } from '@/api/bill/mb/bill'
+import { getDisassembleDetails } from '@/api/bill/mb/bill'
 import { getGroupCategories } from '@/api/bill/mb/group'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 import { getMBStatusStyle, getMBStatusLabel, getCycleTypeLabel } from '@/utils/helperHandlers'
@@ -117,8 +124,7 @@ export default {
         groupId: '',
         keyword: '',
         currentPage: 1,
-        pageSize: 20,
-        queryJson: null
+        pageSize: 20
       },
       total: 0,
       treeLoading: false,
@@ -129,8 +135,7 @@ export default {
       },
       tableLoading: false,
       tableData: [],
-      operatorData: [],
-      deviceNameCategory: [],
+      deviceNameList: [],
       roleColumnOptions: [
         {
           label: '装置名称',
@@ -145,12 +150,50 @@ export default {
           prop: 'cycleType'
         },
         {
+          label: '管径',
+          prop: 'pipDiameter'
+        },
+        {
+          label: '盲板安装位置描述',
+          prop: 'description'
+        },
+        {
           label: '拆装操作',
           prop: 'remark'
         },
         {
           label: '拆装时间',
           prop: 'disassembleTime'
+        },
+        {
+          label: '管线介质',
+          prop: 'PipelineMedia',
+          children: [
+            {
+              label: '名称',
+              prop: 'pipelineMediaName'
+            },
+            {
+              label: '温度 (℃)',
+              prop: 'pipelineMediaTemperature'
+            },
+            {
+              label: '压力 (MPa)',
+              prop: 'pipelineMediaPressure'
+            }
+          ]
+        },
+        {
+          label: '盲板规格 (mm)',
+          prop: 'size'
+        },
+        {
+          label: '盲板形式',
+          prop: 'type'
+        },
+        {
+          label: '盲板材质',
+          prop: 'material'
         },
         {
           label: '操作人员',
@@ -171,11 +214,10 @@ export default {
   },
 
   created() {
-    getOptionsByCode('operator').then(res => {
-      this.operatorData = res.data.list
+    getOptionsByCode('deviceName').then(res => {
+      this.deviceNameList = res.data.list
     })
     this.getGroupList()
-    this.getDeviceNameCategory()
   },
 
   methods: {
@@ -198,27 +240,6 @@ export default {
       }).catch(() => {
         this.treeLoading = false
       })
-    },
-
-    getDeviceNameCategory() {
-      getDeviceNameCategory().then(res => {
-        this.deviceNameCategory = res.data.list.map(item => {
-          return {
-            text: item,
-            value: item
-          }
-        })
-      }).catch(() => {})
-    },
-
-    deviceNameFilter(filters) {
-      const filterValues = Object.values(filters)[0]
-      if (filterValues.length === 0) {
-        this.params.queryJson = null
-      } else {
-        this.params.queryJson = JSON.stringify(filterValues)
-      }
-      this.initData()
     },
 
     initData() {
@@ -252,11 +273,11 @@ export default {
       this.initData()
     },
 
-    getOperatorName(code) {
-      if (this.operatorData) {
-        const operator = this.operatorData.find(x => x.entityCode === code)
-        if (operator) {
-          return operator.fullName
+    getDeviceName(code) {
+      if (this.deviceNameList) {
+        const res = this.deviceNameList.find(x => x.entityCode === code)
+        if (res) {
+          return res.fullName
         }
       }
 

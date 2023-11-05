@@ -255,7 +255,7 @@ export default {
     }
   }
   ::v-deep .el-input__suffix-inner {
-    margin-right: 20px;
+    margin-right: 25px;
   }
 }
 

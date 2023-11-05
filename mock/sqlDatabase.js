@@ -3,7 +3,7 @@ const mbLongBills = [
   {
     id: '432701041243324333',
     groupId: '403034187151441989',
-    name: '15万白油加氢',
+    name: 'byjq',
     code: '001',
     status: 0,
     pipDiameter: 40,
@@ -15,7 +15,7 @@ const mbLongBills = [
     type: '8字盲板',
     material: '钢制',
     disassembleTime: 1698702548000,
-    operator: 'mhtej',
+    operator: '木胡太尔江',
     Manager: '王科举',
     creatorTime: 1638702548000,
     deleteMark: 0,
@@ -28,7 +28,7 @@ const mbShortBills = [
   {
     id: '432701041243324485',
     groupId: '403034187151441989',
-    name: '15万白油加氢',
+    name: 'byjq',
     code: '033',
     status: 0,
     pipDiameter: 40,
@@ -40,7 +40,7 @@ const mbShortBills = [
     type: '8字盲板',
     material: '钢制',
     disassembleTime: 1698702548000,
-    operator: 'mhtej',
+    operator: '木胡太尔江',
     Manager: '王科举',
     creatorTime: 1638702548000,
     deleteMark: 0,
@@ -49,7 +49,7 @@ const mbShortBills = [
   {
     id: '432701041243324480',
     groupId: '403034187151441989',
-    name: '16万白油加氢',
+    name: 'gyjq',
     code: '039',
     status: 1,
     pipDiameter: 40,
@@ -61,7 +61,7 @@ const mbShortBills = [
     type: '8字盲板',
     material: '钢制',
     disassembleTime: 1698762548000,
-    operator: 'mhtej',
+    operator: '木胡太尔江',
     Manager: '王科举',
     creatorTime: 1638702548000,
     deleteMark: 0,
@@ -70,7 +70,7 @@ const mbShortBills = [
   {
     id: '432701041243324484',
     groupId: '403034187151441988',
-    name: '16万白油加氢',
+    name: 'gyjq',
     code: '111',
     status: 1,
     pipDiameter: 40,
@@ -82,7 +82,7 @@ const mbShortBills = [
     type: '8字盲板',
     material: '钢制',
     disassembleTime: 1698761048000,
-    operator: 'mhtej',
+    operator: '木胡太尔江',
     Manager: '王科举',
     creatorTime: 1638702548000,
     deleteMark: 0,
@@ -91,7 +91,7 @@ const mbShortBills = [
   {
     id: '432701041243324483',
     groupId: '403034187151441987',
-    name: '15万白油加氢',
+    name: 'byjq',
     code: '056',
     status: 0,
     pipDiameter: 40,
@@ -103,7 +103,7 @@ const mbShortBills = [
     type: '8字盲板',
     material: '钢制',
     disassembleTime: 1698732548000,
-    operator: 'mhtej',
+    operator: '木胡太尔江',
     Manager: '王科举',
     creatorTime: 1638702548000,
     deleteMark: 0,
@@ -116,7 +116,7 @@ const mbDisassembleDetails = [
   {
     id: '899516549894656',
     groupId: '403034187151441987',
-    name: '15万白油加氢',
+    name: 'byjq',
     code: '056',
     status: 0,
     pipDiameter: 40,
@@ -128,7 +128,7 @@ const mbDisassembleDetails = [
     type: '8字盲板',
     material: '钢制',
     disassembleTime: 1698732548000,
-    operator: 'mhtej',
+    operator: '木胡太尔江',
     Manager: '王科举',
     creatorTime: 1638702548000,
     deleteMark: 0,
@@ -184,47 +184,28 @@ const mbGroups = [
 // 表5 需配置选项的所有字段
 const dictionaryList = [
   {
-    fullName: '盲板材质',
-    entityCode: 'mb-material',
-    description: 'for test',
+    fullName: '装置名称',
+    entityCode: 'deviceName',
+    description: '',
     id: '456992670183587908'
-  },
-  {
-    fullName: '盲板形式',
-    entityCode: 'mb-style',
-    description: 'for test',
-    id: '456992670183587909'
-  },
-  {
-    fullName: '操作人员',
-    entityCode: 'operator',
-    description: 'for test',
-    id: '456992670183587910'
   }
 ]
 
 // 表6 所有选项
 const options = [
   {
-    fullName: '小明',
-    entityCode: 'xm',
-    description: 'for test',
+    fullName: '15万白油加氢',
+    entityCode: 'byjq',
+    description: '',
     id: '456992823711891525',
-    dictionaryId: '456992670183587910'
+    dictionaryId: '456992670183587908'
   },
   {
-    fullName: '小王',
-    entityCode: 'xw',
-    description: 'for test',
-    id: '456992823711891524',
-    dictionaryId: '456992670183587910'
-  },
-  {
-    fullName: '木胡太尔江',
-    entityCode: 'mhtej',
-    description: 'for test',
-    id: '456992823711891523',
-    dictionaryId: '456992670183587910'
+    fullName: 'Ⅰ套高压加氢',
+    entityCode: 'gyjq',
+    description: '',
+    id: '456992823711891526',
+    dictionaryId: '456992670183587908'
   }
 ]
 

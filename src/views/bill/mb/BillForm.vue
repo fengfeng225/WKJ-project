@@ -22,9 +22,11 @@
                 <h2 class="bold">基础信息</h2>
               </div>
               <el-row :gutter="20" class="custom-row">
-                <el-col :span="10">
+                <el-col :span="8">
                   <el-form-item label="装置名称" prop="name">
-                    <el-input v-model="dataForm.name" placeholder="请输入装置名称" />
+                    <el-select v-model="dataForm.name" placeholder="请输入装置名称">
+                      <el-option v-for="item in deviceNameList" :key="item.id" :label="item.fullName" :value="item.entityCode" />
+                    </el-select>
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
@@ -32,9 +34,11 @@
                     <el-input v-model="dataForm.code" placeholder="请输入盲板编号" />
                   </el-form-item>
                 </el-col>
-                <el-col :span="6">
+                <el-col :span="8">
                   <el-form-item label="管径" prop="pipDiameter" label-width="60px">
-                    <BL-input-number v-model="dataForm.pipDiameter" placeholder="请输入管径" />
+                    <BL-input-number v-model="dataForm.pipDiameter" placeholder="请输入管径">
+                      <template #suffix>DN</template>
+                    </BL-input-number>
                   </el-form-item>
                 </el-col>
                 <el-col :span="14">
@@ -121,14 +125,7 @@
               <el-row :gutter="20" class="custom-row">
                 <el-col :span="12">
                   <el-form-item label="操作人员" prop="operator">
-                    <el-select v-model="dataForm.operator" placeholder="请选择操作人员">
-                      <el-option
-                        v-for="item in operatorData"
-                        :key="item.entityCode"
-                        :label="item.fullName"
-                        :value="item.entityCode"
-                      />
-                    </el-select>
+                    <el-input v-model="dataForm.operator" placeholder="请输入操作人员" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -175,10 +172,10 @@ export default {
         enabledMark: 1
       },
       groups: [],
-      operatorData: [],
+      deviceNameList: [],
       dataRule: {
         name: [
-          { required: true, message: '请输入名称', trigger: 'blur' }
+          { required: true, message: '请选择装置名称', trigger: 'change' }
         ],
         code: [
           { required: true, message: '请输入盲板编号', trigger: 'blur' }
@@ -187,15 +184,15 @@ export default {
           { required: true, message: '请选择拆装时间', trigger: 'change' }
         ],
         operator: [
-          { required: true, message: '请选择操作人员', trigger: 'change' }
+          { required: true, message: '请输入操作人员', trigger: 'blur' }
         ]
       }
     }
   },
 
   created() {
-    getOptionsByCode('operator').then(res => {
-      this.operatorData = res.data.list
+    getOptionsByCode('deviceName').then(res => {
+      this.deviceNameList = res.data.list
     })
     this.getGroupCategories()
   },

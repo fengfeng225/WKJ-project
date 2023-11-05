@@ -67,18 +67,18 @@
         <BL-table ref="BLTable" v-loading="tableLoading" :data="tableData" fixed-n-o row-key="id" @filter-change="deviceNameFilter">
           <template v-for="item in columns">
             <template v-if="item.prop === 'action'">
-              <ex-table-column :key="item.prop" :label="item.label" width="150" fixed="right">
+              <ex-table-column :key="item.prop" :label="item.label" width="100" fixed="right">
                 <template #default="scope">
                   <el-button type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
                   <el-button class="BL-table-delBtn" type="text" @click="removeHandle(scope.row.id)">删除</el-button>
-                  <BL-Dropdown style="margin-left: 8px;">
+                  <!-- <BL-Dropdown style="margin-left: 8px;">
                     <span>
                       <el-button type="text" size="small">更多<i class="el-icon-arrow-down el-icon--right" /></el-button>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item>检查记录</el-dropdown-item>
+                      <el-dropdown-item>其他</el-dropdown-item>
                     </el-dropdown-menu>
-                  </BL-Dropdown>
+                  </BL-Dropdown> -->
                 </template>
               </ex-table-column>
             </template>
@@ -97,17 +97,14 @@
               </ex-table-column>
             </template>
             <template v-else-if="item.prop === 'name'">
-              <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :filters="deviceNameCategory" />
+              <ex-table-column :key="item.prop" :label="item.label" :filters="deviceNameCategory">
+                <template #default="scope">
+                  {{ getDeviceName(scope.row.name) }}
+                </template>
+              </ex-table-column>
             </template>
             <template v-else-if="item.prop === 'size'">
               <el-table-column :key="item.prop" :label="item.label" :prop="item.prop" width="75" />
-            </template>
-            <template v-else-if="item.prop === 'operator'">
-              <ex-table-column :key="item.prop" :label="item.label">
-                <template #default="scope">
-                  {{ getOperatorName(scope.row.operator) }}
-                </template>
-              </ex-table-column>
             </template>
             <template v-else-if="item.prop === 'disassembleTime'">
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :formatter="dateFormatTable" />
@@ -165,7 +162,7 @@ export default {
       },
       tableLoading: false,
       tableData: [],
-      operatorData: [],
+      deviceNameList: [],
       deviceNameCategory: [],
       importLoading: false,
       exportLoading: false,
@@ -225,10 +222,6 @@ export default {
           label: '盲板材质',
           prop: 'material'
         },
-        // {
-        //   label: '界区系统/装置内部',
-        //   prop: 'material'
-        // },
         {
           label: '创建时间',
           prop: 'creatorTime'
@@ -258,8 +251,8 @@ export default {
   },
 
   created() {
-    getOptionsByCode('operator').then(res => {
-      this.operatorData = res.data.list
+    getOptionsByCode('deviceName').then(res => {
+      this.deviceNameList = res.data.list
     })
     this.getGroupList()
     this.getDeviceNameCategory()
@@ -291,7 +284,7 @@ export default {
       getDeviceNameCategory().then(res => {
         this.deviceNameCategory = res.data.list.map(item => {
           return {
-            text: item,
+            text: this.getDeviceName(item),
             value: item
           }
         })
@@ -332,11 +325,11 @@ export default {
       this.initData()
     },
 
-    getOperatorName(code) {
-      if (this.operatorData) {
-        const operator = this.operatorData.find(x => x.entityCode === code)
-        if (operator) {
-          return operator.fullName
+    getDeviceName(code) {
+      if (this.deviceNameList) {
+        const res = this.deviceNameList.find(x => x.entityCode === code)
+        if (res) {
+          return res.fullName
         }
       }
 
