@@ -24,7 +24,7 @@
       <div class="BL-common-layout-main BL-flex-main">
         <div class="box">
           <div class="BL-common-head">
-            <topOpts @add="addOrUpdateHandle()" />
+            <el-button type="primary" icon="el-icon-plus" @add="addOrUpdateHandle()">新建</el-button>
             <div class="BL-common-head-right">
               <el-tooltip effect="dark" content="折叠" placement="top">
                 <el-link

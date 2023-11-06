@@ -6,10 +6,10 @@
       :visible.sync="buttonAuthorizeListDrawer"
       :wrapper-closable="false"
       size="700px"
-      class="HG-common-drawer"
+      class="BL-common-drawer"
     >
-      <div class="HG-flex-main">
-        <div class="HG-common-head">
+      <div class="BL-flex-main">
+        <div class="BL-common-head">
           <div>
             <topOpts @add="addOrUpdateHandle('')" />
             <el-dropdown style="margin-left: 10px">
@@ -25,17 +25,17 @@
               </el-dropdown-menu>
             </el-dropdown>
           </div>
-          <div class="HG-common-head-right">
+          <div class="BL-common-head-right">
             <el-tooltip effect="dark" :content="$t('common.refresh')" placement="top">
               <el-link
-                icon="icon-ym icon-ym-Refresh HG-common-head-icon"
+                icon="icon-ym icon-ym-Refresh BL-common-head-icon"
                 :underline="false"
                 @click="getList()"
               />
             </el-tooltip>
           </div>
         </div>
-        <HG-table
+        <BL-table
           v-loading="listLoading"
           :data="treeList"
           row-key="id"
@@ -57,7 +57,7 @@
               <tableOpts @edit="addOrUpdateHandle(scope.row.id)" @del="handleDel(scope.row.id)" />
             </template>
           </el-table-column>
-        </HG-table>
+        </BL-table>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="visible = false">{{ $t('system.closeButton') }}</el-button>
