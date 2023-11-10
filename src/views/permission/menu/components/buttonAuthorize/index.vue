@@ -11,24 +11,12 @@
       <div class="BL-flex-main">
         <div class="BL-common-head">
           <div>
-            <topOpts @add="addOrUpdateHandle('')" />
-            <el-dropdown style="margin-left: 10px">
-              <el-button icon="el-icon-plus" :loading="loading" type="text">
-                {{ $t('system.commonButtonPermissions') }}<i class="el-icon-arrow-down el-icon--right" />
-              </el-button>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item
-                  v-for="item in computedBtnList"
-                  :key="item.entityCode"
-                  @click.native="addHandle(item)"
-                >{{ item.fullName }}</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
+            <el-button type="primary" icon="el-icon-plus" @click="addOrUpdateHandle()" />
           </div>
           <div class="BL-common-head-right">
             <el-tooltip effect="dark" :content="$t('common.refresh')" placement="top">
               <el-link
-                icon="icon-ym icon-ym-Refresh BL-common-head-icon"
+                icon="el-icon-refresh"
                 :underline="false"
                 @click="getList()"
               />
@@ -42,26 +30,24 @@
           default-expand-all
           :tree-props="{children: 'children', hasChildren: ''}"
         >
-          <el-table-column prop="fullName" :label="$t('system.buttonName')" width="160" />
-          <el-table-column prop="entityCode" :label="$t('system.buttonCode')" />
-          <el-table-column prop="sortCode" :label="$t('system.ordering')" width="90" align="center" />
-          <el-table-column :label="$t('system.status')" width="90">
+          <el-table-column prop="fullName" label="按钮名称" width="160" />
+          <el-table-column prop="entityCode" label="按钮编码" />
+          <el-table-column prop="sortCode" label="排序" width="90" align="center" />
+          <el-table-column label="状态" width="90">
             <template slot-scope="scope">
               <el-tag :type="scope.row.enabledMark == 1 ? 'success' : 'danger'" disable-transitions>
-                {{ scope.row.enabledMark == 1 ? $t('system.statusNormal') : $t('system.statusInactive') }}
+                {{ scope.row.enabledMark == 1 ? '正常' : '停用' }}
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column :label="$t('system.action')" width="100">
+          <el-table-column label="操作" width="100">
             <template slot-scope="scope">
-              <tableOpts @edit="addOrUpdateHandle(scope.row.id)" @del="handleDel(scope.row.id)" />
+              <el-button type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
+              <el-button type="text" class="HG-table-delBtn" @click="handleDel(scope.row.id)">删除</el-button>
             </template>
           </el-table-column>
         </BL-table>
       </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="visible = false">{{ $t('system.closeButton') }}</el-button>
-      </span>
     </el-drawer>
     <ButtonAuthorizeForm
       v-if="buttonAuthorizeFormVisible"

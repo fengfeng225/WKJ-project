@@ -84,33 +84,33 @@
             </el-table-column>
             <el-table-column label="操作" width="150">
               <template slot-scope="scope">
-                <tableOpts @edit="addOrUpdateHandle(scope.row.id)" @del="handleDel(scope.row.id)">
-                  <template v-if="scope.row.type && scope.row.type!=1">
-                    <el-dropdown>
-                      <span class="el-dropdown-link">
-                        <el-button type="text" size="mini">
-                          更多<i class="el-icon-arrow-down el-icon--right" />
-                        </el-button>
-                      </span>
-                      <el-dropdown-menu slot="dropdown">
-                        <template v-if="scope.row.type === 2">
-                          <el-dropdown-item
-                            v-if="scope.row.isButtonAuthorize === 1"
-                            @click.native="handleButtonAuthorize(scope.row)"
-                          >
-                            按钮权限
-                          </el-dropdown-item>
-                          <el-dropdown-item
-                            v-if="scope.row.isColumnAuthorize === 1"
-                            @click.native="handleColumnAuthorize(scope.row)"
-                          >
-                            列表权限
-                          </el-dropdown-item>
-                        </template>
-                      </el-dropdown-menu>
-                    </el-dropdown>
-                  </template>
-                </tableOpts>
+                <el-button type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
+                <el-button type="text" class="HG-table-delBtn" @click="handleDel(scope.row.id)">删除</el-button>
+                <template v-if="scope.row.type && scope.row.type!=1">
+                  <BL-dropdown style="margin-left: 8px;">
+                    <span class="el-dropdown-link">
+                      <el-button type="text" size="mini">
+                        更多<i class="el-icon-arrow-down el-icon--right" />
+                      </el-button>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                      <template v-if="scope.row.type === 2">
+                        <el-dropdown-item
+                          v-if="scope.row.isButtonAuthorize === 1"
+                          @click.native="handleButtonAuthorize(scope.row)"
+                        >
+                          按钮权限
+                        </el-dropdown-item>
+                        <el-dropdown-item
+                          v-if="scope.row.isColumnAuthorize === 1"
+                          @click.native="handleColumnAuthorize(scope.row)"
+                        >
+                          列表权限
+                        </el-dropdown-item>
+                      </template>
+                    </el-dropdown-menu>
+                  </BL-dropdown>
+                </template>
               </template>
             </el-table-column>
           </BL-table>
