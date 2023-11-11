@@ -71,8 +71,6 @@
   </transition>
 </template>
 <script>
-import { getDepartmentSelector } from '@/api/permission/department'
-import { getPositionSelector } from '@/api/permission/position'
 import { getRoleSelector } from '@/api/permission/role'
 import { createUser, updateUser, getUserInfo } from '@/api/permission/user'
 export default {

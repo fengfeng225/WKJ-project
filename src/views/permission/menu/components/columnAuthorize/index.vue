@@ -73,7 +73,6 @@
 <script>
 import {
   getColumnAuthorizeList,
-  updateColumnState,
   delColumn
 } from '@/api/system/columnAuthorize'
 import ColumnAuthorizeForm from './Form'

@@ -81,7 +81,7 @@ import {
 import { dateFormatTable } from '@/utils'
 
 import Form from './Form'
-import AuthorizeForm from '@/views/permission/authorize/AuthorizeForm'
+import AuthorizeForm from '@/views/permission/role/AuthorizeForm'
 
 export default {
   name: 'PermissionRole',
