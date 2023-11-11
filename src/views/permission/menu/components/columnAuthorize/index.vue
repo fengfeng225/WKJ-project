@@ -6,62 +6,56 @@
       :visible.sync="columnAuthorizeListDrawer"
       :wrapper-closable="false"
       size="700px"
-      class="HG-common-drawer"
+      class="BL-common-drawer"
     >
-      <div class="HG-flex-main">
-        <div class="HG-common-head">
-          <topOpts @add="addOrUpdateHandle('')">
-            <el-button type="text" icon="el-icon-copy-document" @click="handleBatchAdd">
-              {{ $t('system.bulkAdditions') }}
-            </el-button>
-          </topOpts>
-          <div class="HG-common-head-right">
-            <el-tooltip effect="dark" :content="$t('common.export')" placement="top">
+      <div class="BL-flex-main">
+        <div class="BL-common-head">
+          <div>
+            <el-button type="primary" icon="el-icon-plus" @click="addOrUpdateHandle()">新增</el-button>
+            <el-button type="text" icon="el-icon-copy-document" @click="handleBatchAdd">批量新增</el-button>
+          </div>
+          <div class="BL-common-head-right">
+            <el-tooltip effect="dark" content="导出" placement="top">
               <el-link
-                icon="icon-ym icon-ym-btn-export
-              HG-common-head-icon"
+                icon="icon-ym icon-ym-btn-export BL-common-head-icon"
                 :underline="false"
-                @click="exportList()"
+                @click="exportList"
               />
             </el-tooltip>
-            <el-tooltip effect="dark" :content="$t('common.refresh')" placement="top">
+            <el-tooltip effect="dark" content="刷新" placement="top">
               <el-link
-                icon="icon-ym icon-ym-Refresh
-              HG-common-head-icon"
+                icon="el-icon-refresh"
                 :underline="false"
-                @click="getList()"
+                @click="getList"
               />
             </el-tooltip>
           </div>
         </div>
-        <HG-table
+        <BL-table
           v-loading="listLoading"
-          :data="treeList"
+          :data="columnList"
           row-key="id"
-          default-expand-all
-          :tree-props="{children: 'children', hasChildren: ''}"
         >
-          <el-table-column prop="entityCode" :label="$t('system.fieldName')" width="160" />
-          <el-table-column prop="fullName" :label="$t('system.fieldDescription')" />
-          <el-table-column prop="sortCode" :label="$t('system.ordering')" width="90" align="center" />
-          <el-table-column :label="$t('system.status')" width="90">
+          <el-table-column prop="entityCode" label="字段名称" width="160" />
+          <el-table-column prop="fullName" label="字段说明" />
+          <el-table-column prop="sortCode" label="排序" width="90" align="center" />
+          <el-table-column label="状态" width="90">
             <template slot-scope="scope">
               <el-tag :type="scope.row.enabledMark == 1 ? 'success' : 'danger'" disable-transitions>
-                {{ scope.row.enabledMark == 1 ? $t('system.statusNormal') : $t('system.statusInactive') }}
+                {{ scope.row.enabledMark == 1 ? '正常' : '停用' }}
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column :label="$t('system.action')" width="100">
+          <el-table-column label="操作" width="100">
             <template slot-scope="scope">
-              <tableOpts @edit="addOrUpdateHandle(scope.row.id)" @del="handleDel(scope.row.id)" />
+              <el-button type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
+              <el-button type="text" class="BL-table-delBtn" @click="handleDel(scope.row.id)">删除</el-button>
             </template>
           </el-table-column>
-        </HG-table>
+        </BL-table>
       </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="visible = false">{{ $t('system.closeButton') }}</el-button>
-      </span>
     </el-drawer>
+
     <ColumnAuthorizeForm
       v-if="columnAuthorizeFormVisible"
       ref="ColumnAuthorizeForm"
@@ -99,60 +93,27 @@ export default {
       columnAuthorizeBatchFormVisible: false,
       columnExportFormVisible: false,
       dialogTitle: '',
-      params: {
-        keyword: ''
-      },
       moduleId: '',
-      loading: false,
-      btnLoading: false,
       listLoading: false,
-      treeList: []
+      columnList: []
     }
   },
   methods: {
     init(moduleId, fullName) {
       this.columnAuthorizeListDrawer = true
       this.moduleId = moduleId
-      this.dialogTitle = `${this.$t('system.listPermissions')} - ${fullName}`
-      this.$nextTick(() => {
-        this.params.keyword = ''
-        this.getList()
-      })
+      this.dialogTitle = `列表权限 - ${fullName}`
+      this.getList()
     },
 
     getList() {
       this.listLoading = true
-      getColumnAuthorizeList(this.moduleId, this.params).then(res => {
-        this.treeList = res.data.list
+      getColumnAuthorizeList(this.moduleId).then(res => {
+        this.columnList = res.data.list
         this.listLoading = false
-        this.btnLoading = false
       }).catch(() => {
         this.listLoading = false
-        this.btnLoading = false
       })
-    },
-
-    handleReLoad() {
-      this.btnLoading = true
-      this.getList()
-    },
-
-    handleUpdateState(row) {
-      const txt = row.enabledMark ? '禁用' : '开启'
-      this.$confirm(`您确定要${txt}当前列表权限吗, 是否继续?`, '提示', {
-        type: 'warning'
-      }).then(() => {
-        updateColumnState(row.id).then(res => {
-          this.$message({
-            type: 'success',
-            message: res.msg,
-            duration: 1000,
-            onClose: () => {
-              row.enabledMark = row.enabledMark ? 0 : 1
-            }
-          })
-        })
-      }).catch(() => { })
     },
 
     addOrUpdateHandle(id) {
@@ -170,13 +131,13 @@ export default {
     },
 
     handleDel(id) {
-      this.$confirm(this.$t('common.delTip'), this.$t('common.tipTitle'), {
+      this.$confirm('您确定要删除该条数据吗?', '提示', {
         type: 'warning'
       }).then(() => {
         delColumn(id).then(res => {
           this.$message({
             type: 'success',
-            message: res.msg,
+            message: res.message,
             duration: 1500,
             onClose: () => {
               this.getList()
@@ -194,11 +155,11 @@ export default {
     },
 
     createDefinition() {
-      if (this.treeList && this.treeList.length > 0) {
+      if (this.columnList && this.columnList.length > 0) {
         var definition = '[\r\n'
 
-        for (let i = 0; i < this.treeList.length; i++) {
-          var item = this.treeList[i]
+        for (let i = 0; i < this.columnList.length; i++) {
+          var item = this.columnList[i]
 
           // Opening {
           definition += '  {\r\n'
@@ -207,15 +168,12 @@ export default {
           definition += `    "entityCode": "${item.entityCode}"\r\n`
 
           // Closing }
-          if (i != this.treeList.length - 1) {
+          if (i != this.columnList.length - 1) {
             definition += '  },\r\n'
           } else {
             definition += '  }\r\n'
           }
         }
-
-        this.treeList.forEach(item => {
-        })
 
         definition += ']'
 

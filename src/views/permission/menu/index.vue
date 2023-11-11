@@ -39,14 +39,14 @@
                 <el-link
                   v-show="expands"
                   type="text"
-                  icon="icon-ym icon-ym-btn-collapse HG-common-head-icon"
+                  icon="icon-ym icon-ym-btn-collapse BL-common-head-icon"
                   :underline="false"
                   @click="toggleExpand"
                 />
               </el-tooltip>
               <el-tooltip effect="dark" content="刷新" placement="top">
                 <el-link
-                  icon="icon-ym icon-ym-Refresh HG-common-head-icon"
+                  icon="icon-ym icon-ym-Refresh BL-common-head-icon"
                   :underline="false"
                   @click="reset"
                 />
@@ -85,7 +85,7 @@
             <el-table-column label="操作" width="150">
               <template slot-scope="scope">
                 <el-button type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
-                <el-button type="text" class="HG-table-delBtn" @click="handleDel(scope.row.id)">删除</el-button>
+                <el-button type="text" class="BL-table-delBtn" @click="handleDel(scope.row.id)">删除</el-button>
                 <template v-if="scope.row.type && scope.row.type!=1">
                   <BL-dropdown style="margin-left: 8px;">
                     <span class="el-dropdown-link">
@@ -138,7 +138,9 @@ export default {
 
   data() {
     return {
-      keyword: '',
+      params: {
+        keyword: ''
+      },
       treeList: [],
       listLoading: true,
       formVisible: false,
@@ -155,7 +157,7 @@ export default {
 
   methods: {
     reset() {
-      this.keyword = ''
+      this.params.keyword = ''
       this.initData()
     },
     initData() {

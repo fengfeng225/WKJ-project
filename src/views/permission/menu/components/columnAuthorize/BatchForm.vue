@@ -1,27 +1,20 @@
 <template>
   <el-dialog
-    :title="$t('system.bulkAdditions')"
+    title="批量新增"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
     :visible.sync="visible"
     lock-scroll
-    class="HG-dialog HG-dialog_center"
     width="600px"
+    @close="close"
   >
     <el-form
       ref="dataForm"
       v-loading="formLoading"
       :model="dataForm"
-      :rules="dataRule"
       label-width="80px"
       label-position="top"
     >
-      <!--      <el-form-item label="绑定表格" prop="bindTable">-->
-      <!--        <el-input v-model="dataForm.bindTable" placeholder="输入绑定表格" />-->
-      <!--      </el-form-item>-->
-      <!--      <el-form-item label="表格描述" prop="bindTableName">-->
-      <!--        <el-input v-model="dataForm.bindTableName" placeholder="绑定表格描述" />-->
-      <!--      </el-form-item>-->
       <div class="json-demo">
         <pre>
           // 示例
@@ -33,26 +26,25 @@
           ]
         </pre>
       </div>
-      <el-form-item :label="$t('system.jsonField')" prop="columnJson">
+      <el-form-item label="字段Json">
         <div class="formCodeEditor">
-          <HGCodeEditor ref="CodeEditor" v-model="content" :options="options" />
+          <BLCodeEditor ref="CodeEditor" v-model="content" :options="options" />
         </div>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="visible = false">{{ $t('common.cancelButton') }}</el-button>
-      <el-button type="primary" :loading="btnLoading" @click="dataFormSubmit()">
-        {{ $t('common.confirmButton') }}</el-button>
+      <el-button @click="visible = false">取消</el-button>
+      <el-button type="primary" :loading="btnLoading" @click="dataFormSubmit">确定</el-button>
     </span>
   </el-dialog>
 </template>
 
 <script>
 import { batchCreateColumn } from '@/api/system/columnAuthorize'
-import HGCodeEditor from '@/components/HGEditor/monaco'
+import BLCodeEditor from '@/components/BLEditor'
 
 export default {
-  components: { HGCodeEditor },
+  components: { BLCodeEditor },
   data() {
     return {
       options: {
@@ -65,11 +57,8 @@ export default {
       content: '',
       dataForm: {
         moduleId: '',
-        bindTable: '',
-        bindTableName: '',
         columnJson: []
-      },
-      dataRule: {}
+      }
     }
   },
   methods: {
@@ -78,8 +67,6 @@ export default {
       this.visible = true
       this.formLoading = true
       this.$nextTick(() => {
-        this.content = ''
-        this.$refs['dataForm'].resetFields()
         this.$refs.CodeEditor.changeEditor({
           value: '',
           options: this.options
@@ -88,29 +75,30 @@ export default {
       })
     },
     dataFormSubmit() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          const rtnData = this.content
-          if (!rtnData) return this.$message.warning('请输入字段JSON')
-          const fixedRtnData = rtnData.replace(/("\w+":)(?=[},])/g, '$1null')
-          const jsonData = JSON.parse(fixedRtnData)
-          this.dataForm.columnJson = jsonData
-          this.btnLoading = true
-          batchCreateColumn(this.dataForm).then(res => {
-            this.$message({
-              message: res.msg,
-              type: 'success',
-              duration: 1500,
-              onClose: () => {
-                this.visible = false
-                this.btnLoading = false
-                this.content = ''
-                this.$emit('refreshDataList')
-              }
-            })
-          }).catch(() => { this.btnLoading = false })
-        }
-      })
+      const rtnData = this.content
+      if (!rtnData) return this.$message.warning('请输入字段JSON')
+
+      const fixedRtnData = rtnData.replace(/("\w+":)(?=[},])/g, '$1null')
+      const jsonData = JSON.parse(fixedRtnData)
+      this.dataForm.columnJson = jsonData
+
+      this.btnLoading = true
+      batchCreateColumn(this.dataForm).then(res => {
+        this.$message({
+          message: res.message,
+          type: 'success',
+          duration: 1500,
+          onClose: () => {
+            this.visible = false
+            this.btnLoading = false
+            this.$emit('refreshDataList')
+          }
+        })
+      }).catch(() => { this.btnLoading = false })
+    },
+
+    close() {
+      this.content = ''
     }
   }
 }

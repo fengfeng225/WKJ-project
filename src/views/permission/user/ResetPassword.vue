@@ -1,12 +1,12 @@
 <template>
   <el-dialog
-    :title="$t(`user.resetPassword`)"
+    title="重置密码"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
     :visible.sync="visible"
     lock-scroll
-    class="HG-dialog HG-dialog_center"
     width="600px"
+    @close="close"
   >
     <el-form
       ref="dataForm"
@@ -15,31 +15,29 @@
       :rules="dataRule"
       label-width="100px"
     >
-      <el-form-item :label="$t('permission.account')" prop="account">
-        <el-input v-model="dataForm.account" :placeholder="$t('permission.account')" readonly />
+      <el-form-item label="账户" prop="account">
+        <el-input v-model="dataForm.account" placeholder="请输入账户" readonly />
       </el-form-item>
-      <el-form-item :label="$t('permission.newPassword')" prop="userPassword">
+      <el-form-item label="新密码" prop="userPassword">
         <el-input
           v-model="dataForm.userPassword"
-          type="password"
-          autocomplete="off"
-          :placeholder="$t('permission.newPasswordHint')"
+          show-password
+          autocomplete="new-password"
+          placeholder="输入新密码"
         />
       </el-form-item>
-      <el-form-item :label="$t('permission.newPasswordConfirm')" prop="validatePassword">
+      <el-form-item label="确认新密码" prop="validatePassword">
         <el-input
           v-model="dataForm.validatePassword"
-          type="password"
-          autocomplete="off"
-          :placeholder="$t('permission.newPasswordConfirmHint')"
+          show-password
+          autocomplete="new-password"
+          placeholder="确认新密码"
         />
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="visible = false">{{ $t('common.cancelButton') }}</el-button>
-      <el-button type="primary" :loading="btnLoading" @click="dataFormSubmit()">
-        {{ $t('common.confirmButton') }}
-      </el-button>
+      <el-button @click="visible = false">取消</el-button>
+      <el-button type="primary" :loading="btnLoading" @click="dataFormSubmit">确定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -52,31 +50,30 @@ import md5 from 'js-md5'
 
 export default {
   data() {
-    // const validateUserPassword = (rule, value, callback) => {
-    //   const passwordreg = /(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{6,16}/
-    //   if (!value) {
-    //     callback(new Error('请输入新密码'))
-    //   } else if (!passwordreg.test(value)) {
-    //     callback(new Error('密码必须由数字、字母、特殊字符组合,请输入6-16位'))
-    //   } else {
-    //     if (this.dataForm.userPassword !== '') {
-    //       this.$refs.dataForm.validateField('validatePassword')
-    //     }
-    //     callback()
-    //   }
-    // }
-    // const validatePassword = (rule, value, callback) => {
-    //   if (value === '') {
-    //     callback(new Error('请再次输入新密码'))
-    //   } else if (value !== this.dataForm.userPassword) {
-    //     callback(new Error('两次输入密码不一致!'))
-    //   } else {
-    //     callback()
-    //   }
-    // }
+    const validateUserPassword = (rule, value, callback) => {
+      const passwordreg = /(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{6,16}/
+      if (!value) {
+        callback(new Error('请输入新密码'))
+      } else if (!passwordreg.test(value)) {
+        callback(new Error('密码必须由数字、字母、特殊字符组合,请输入6-16位'))
+      } else {
+        if (this.dataForm.userPassword !== '') {
+          this.$refs.dataForm.validateField('validatePassword')
+        }
+        callback()
+      }
+    }
+    const validatePassword = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入新密码'))
+      } else if (value !== this.dataForm.userPassword) {
+        callback(new Error('两次输入密码不一致!'))
+      } else {
+        callback()
+      }
+    }
     return {
       visible: false,
-      formLoading: false,
       btnLoading: false,
       dataForm: {
         id: '',
@@ -86,10 +83,10 @@ export default {
       },
       dataRule: {
         userPassword: [
-          // { required: true, validator: validateUserPassword, trigger: 'blur' }
+          { required: true, validator: validateUserPassword, trigger: 'blur' }
         ],
         validatePassword: [
-          // { required: true, validator: validatePassword, trigger: 'blur' }
+          { required: true, validator: validatePassword, trigger: 'blur' }
         ]
       }
     }
@@ -97,13 +94,8 @@ export default {
   methods: {
     init(id, account) {
       this.visible = true
-      this.formLoading = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].resetFields()
-        this.dataForm.id = id
-        this.dataForm.account = account
-        this.formLoading = false
-      })
+      this.dataForm.id = id
+      this.dataForm.account = account
     },
     dataFormSubmit() {
       this.$refs['dataForm'].validate((valid) => {
@@ -116,7 +108,7 @@ export default {
           }
           resetUserPassword(formData).then(res => {
             this.$message({
-              message: res.msg,
+              message: res.message,
               type: 'success',
               duration: 1500,
               onClose: () => {
@@ -130,6 +122,10 @@ export default {
           })
         }
       })
+    },
+
+    close() {
+      this.$refs['dataForm'].resetFields()
     }
   }
 }

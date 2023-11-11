@@ -1,45 +1,13 @@
 <template>
-  <div class="HG-common-layout">
-    <div class="HG-common-layout-left">
-      <div class="HG-common-title">
-        <h2>{{ $t('common.organization') }}</h2>
-        <span class="options">
-          <el-tooltip :content="$t('permission.organizationChart')" placement="top">
-            <el-link icon="el-icon-menu" :underline="false" @click="showDiagram" />
-          </el-tooltip>
-        </span>
-      </div>
-      <el-scrollbar
-        v-loading="treeLoading"
-        class="HG-common-el-tree-scrollbar"
-        :element-loading-text="$t('common.loadingText')"
-      >
-        <el-tree
-          ref="treeBox"
-          :data="treeData"
-          :props="defaultProps"
-          default-expand-all
-          highlight-current
-          :expand-on-click-node="false"
-          node-key="id"
-          class="HG-common-el-tree"
-          @node-click="handleNodeClick"
-        >
-          <span slot-scope="{ data, node }" class="custom-tree-node" :title="data.fullName">
-            <i :class="data.icon" />
-            <span class="text">{{ node.label }}</span>
-          </span>
-        </el-tree>
-      </el-scrollbar>
-    </div>
-    <div class="HG-common-layout-center HG-flex-main">
-      <el-row class="HG-common-search-box" :gutter="16">
+  <div class="BL-common-layout">
+    <div class="BL-common-layout-center BL-flex-main">
+      <el-row class="BL-common-search-box" :gutter="16">
         <el-form @submit.native.prevent>
           <el-col :span="6">
-            <el-form-item :label="$t('common.keyWord')">
+            <el-form-item label="关键词">
               <el-input
                 v-model="params.keyword"
-                :placeholder="$t('common.enterKeyword')"
+                placeholder="请输入关键词查询"
                 clearable
                 @keyup.enter.native="search()"
               />
@@ -47,72 +15,55 @@
           </el-col>
           <el-col :span="6">
             <el-form-item>
-              <el-button type="primary" icon="el-icon-search" @click="search()">
-                {{ $t('common.search') }}</el-button>
-              <el-button icon="el-icon-refresh-right" @click="reset()">{{ $t('common.reset') }}
-              </el-button>
+              <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
+              <el-button icon="el-icon-refresh-right" @click="reset">重置</el-button>
             </el-form-item>
           </el-col>
         </el-form>
       </el-row>
-      <div class="HG-common-layout-main HG-flex-main">
-        <div class="HG-common-head">
-          <topOpts @add="addOrUpdateHandle()" />
-          <div class="HG-common-head-right">
-            <el-tooltip effect="dark" :content="$t('common.refresh')" placement="top">
+      <div class="BL-common-layout-main BL-flex-main">
+        <div class="BL-common-head">
+          <el-button type="primary" icon="el-icon-plus" @add="addOrUpdateHandle()">新建</el-button>
+          <div class="BL-common-head-right">
+            <el-tooltip effect="dark" content="刷新" placement="top">
               <el-link
-                icon="icon-ym icon-ym-Refresh HG-common-head-icon"
+                icon="icon-ym icon-ym-Refresh BL-common-head-icon"
                 :underline="false"
                 @click="reset()"
               />
             </el-tooltip>
           </div>
         </div>
-        <HG-table v-loading="listLoading" :data="tableData">
-          <el-table-column prop="account" :label="$t('permission.accountNumber')" width="100" />
-          <el-table-column prop="realName" :label="$t('permission.name')" width="100" />
-          <!-- <el-table-column :label="$t('permission.gender')" width="90" align="center">
-            <template slot-scope="scope" sortable>
-              <span>{{ scope.row.gender == 1 ? $t('permission.genderMale'): ( scope.row.gender == 2 ? $t('permission.genderFemale') : $t('permission.genderConfidential')) }}</span>
-            </template>
-          </el-table-column> -->
-          <el-table-column prop="mobilePhone" :label="$t('permission.mobilePhone')" width="120" />
-          <el-table-column prop="department" :label="$t('permission.affiliation')" />
-          <el-table-column
-            prop="creatorTime"
-            :label="$t('permission.createdTime')"
-            :formatter="hg.tableDateFormat"
-            width="120"
-          />
-          <el-table-column prop="sortCode" :label="$t('permission.ordering')" width="70" align="center" />
-          <el-table-column :label="$t('permission.status')" width="70" align="center">
+        <BL-table v-loading="listLoading" :data="tableData">
+          <el-table-column prop="account" label="账号" width="100" />
+          <el-table-column prop="realName" label="名称" width="100" />
+          <el-table-column prop="creatorTime" label="创建时间" :formatter="dateFormatTable" width="120" />
+          <el-table-column prop="sortCode" label="排序" width="70" align="center" />
+          <el-table-column label="状态" width="70" align="center">
             <template slot-scope="scope">
               <el-tag :type="scope.row.enabledMark == 1 ? 'success' : 'danger'" disable-transitions>
-                {{ scope.row.enabledMark == 1 ? $t('permission.statusNormal') : $t('permission.statusInactive') }}
+                {{ scope.row.enabledMark == 1 ? '正常' : '禁用' }}
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column :label="$t('permission.action')" width="150">
+          <el-table-column label="操作" width="150">
             <template v-if="!scope.row.isAdministrator" slot-scope="scope">
-              <tableOpts @edit="addOrUpdateHandle(scope.row.id)" @del="handleDel(scope.row.id)">
-                <el-dropdown hide-on-click>
-                  <span class="el-dropdown-link">
-                    <el-button size="mini" type="text">
-                      {{ $t('common.moreBtn') }}<i class="el-icon-arrow-down el-icon--right" />
-                    </el-button>
-                  </span>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item
-                      @click.native="handleResetPwd(scope.row.id, scope.row.account)"
-                    >
-                      {{ $t('user.resetPassword') }}
-                    </el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
-              </tableOpts>
+
+              <el-button type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
+              <el-button class="BL-table-delBtn" type="text" @click="handleDel(scope.row.id)">删除</el-button>
+              <BL-Dropdown style="margin-left: 8px;">
+                <span>
+                  <el-button type="text" size="small">更多<i class="el-icon-arrow-down el-icon--right" /></el-button>
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item @click.native="handleResetPwd(scope.row.id, scope.row.account)">重置密码</el-dropdown-item>
+                </el-dropdown-menu>
+              </BL-Dropdown>
+
             </template>
           </el-table-column>
-        </HG-table>
+        </BL-table>
+
         <pagination
           :total="total"
           :page.sync="params.currentPage"
@@ -121,66 +72,47 @@
         />
       </div>
     </div>
-    <Form v-show="formVisible" ref="Form" @close="removeForm" />
-    <Diagram v-if="diagramVisible" ref="Diagram" @close="diagramVisible = false" />
+    <Form v-show="formVisible" ref="Form" @close="closeForm" />
     <ResetPwdForm v-if="resetFormVisible" ref="ResetPwdForm" @refreshDataList="initData" />
   </div>
 </template>
 <script>
 import {
-  getDepartmentSelector
-} from '@/api/permission/department'
-import {
   getUserList,
-  updateUserState,
   delUser
 } from '@/api/permission/user'
+
+import { dateFormatTable } from '@/utils'
+
 import Form from './Form'
-import Diagram from './Diagram'
 import ResetPwdForm from './ResetPassword'
 
 export default {
   name: 'PermissionUser',
   components: {
     Form,
-    Diagram,
     ResetPwdForm
   },
   data() {
     return {
-      keyword: '',
-      treeData: [],
       tableData: [],
-      treeLoading: false,
       listLoading: true,
       params: {
-        organizeId: '',
         keyword: '',
         currentPage: 1,
         pageSize: 20
       },
-      defaultProps: {
-        children: 'children',
-        label: 'fullName'
-      },
       total: 0,
-      type: '',
       formVisible: false,
-      diagramVisible: false,
-      resetFormVisible: false,
-      authorizeFormVisible: false
+      resetFormVisible: false
     }
   },
+
   created() {
-    this.getOrganizeList()
+    this.initData()
   },
+
   methods: {
-    showDiagram() {
-      this.diagramVisible = true
-      this.$nextTick(() => {
-        this.$refs.Diagram.init()
-      })
-    },
     search() {
       this.params.currentPage = 1
       this.params.pageSize = 20
@@ -191,16 +123,7 @@ export default {
       this.params.keyword = ''
       this.search()
     },
-    getOrganizeList() {
-      this.treeLoading = true
-      getDepartmentSelector().then(res => {
-        this.treeData = res.data.list
-        this.treeLoading = false
-        this.initData()
-      }).catch(() => {
-        this.treeLoading = false
-      })
-    },
+
     initData() {
       this.listLoading = true
       getUserList(this.params).then(res => {
@@ -211,57 +134,27 @@ export default {
         this.listLoading = false
       })
     },
-    handleNodeClick(data) {
-      if (this.params.organizeId === data.id) return
-      this.params.organizeId = data.id
-      this.type = data.type
-      this.reset()
-    },
+
     addOrUpdateHandle(id) {
       this.formVisible = true
       this.$nextTick(() => {
-        this.$refs.Form.init(id, this.type === 'department' ? this.params.organizeId : '')
+        this.$refs.Form.init(id)
       })
     },
-    removeForm(isRefresh) {
+    closeForm(isRefresh) {
       this.formVisible = false
-      if (isRefresh) {
-        this.keyword = ''
-        this.initData()
-      }
+
+      if (isRefresh) this.initData()
     },
-    removeAuthorizeForm(isRefresh) {
-      this.authorizeFormVisible = false
-      if (isRefresh) {
-        this.keyword = ''
-        this.initData()
-      }
-    },
-    handleUpdateState(row) {
-      const txt = row.enabledMark ? this.$t('permission.actionDisable') : this.$t('permission.enable')
-      this.$confirm(`您确定要${txt}当前用户吗, 是否继续?`, this.$t('permission.questionHint'), {
-        type: 'warning'
-      }).then(() => {
-        updateUserState(row.id).then(res => {
-          this.$message({
-            type: 'success',
-            message: res.msg,
-            duration: 1000,
-            onClose: () => {
-              row.enabledMark = row.enabledMark ? 0 : 1
-            }
-          })
-        })
-      }).catch(() => { })
-    },
+
     handleDel(id) {
-      this.$confirm(this.$t('permission.deleteUserMessage'), this.$t('permission.questionHint'), {
+      this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
         type: 'warning'
       }).then(() => {
         delUser(id).then(res => {
           this.$message({
             type: 'success',
-            message: res.msg,
+            message: res.message,
             duration: 1500,
             onClose: () => {
               this.initData()
@@ -270,12 +163,15 @@ export default {
         })
       }).catch(() => { })
     },
+
     handleResetPwd(id, account) {
       this.resetFormVisible = true
       this.$nextTick(() => {
         this.$refs.ResetPwdForm.init(id, account)
       })
-    }
+    },
+
+    dateFormatTable
   }
 }
 </script>

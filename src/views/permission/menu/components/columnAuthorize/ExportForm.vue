@@ -1,38 +1,36 @@
 <template>
   <el-dialog
-    :title="$t('system.exportColumns')"
+    title="导出列"
     :close-on-click-modal="false"
     :close-on-press-escape="false"
     :visible.sync="visible"
     lock-scroll
-    class="HG-dialog HG-dialog_center"
     width="600px"
   >
     <el-form
       ref="dataForm"
       v-loading="formLoading"
       :model="dataForm"
-      :rules="dataRule"
       label-width="80px"
       label-position="top"
     >
-      <el-form-item :label="$t('system.jsonField')" prop="columnJson">
+      <el-form-item label="字段Json" prop="columnJson">
         <div class="formCodeEditor">
-          <HGCodeEditor ref="CodeEditor" :options="options" />
+          <BLCodeEditor ref="CodeEditor" :options="options" />
         </div>
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="visible = false">{{ $t('system.closeButton') }}</el-button>
+      <el-button @click="visible = false">取消</el-button>
     </span>
   </el-dialog>
 </template>
 
 <script>
-import HGCodeEditor from '@/components/HGEditor/monaco'
+import BLCodeEditor from '@/components/BLEditor'
 
 export default {
-  components: { HGCodeEditor },
+  components: { BLCodeEditor },
   data() {
     return {
       options: {
@@ -41,14 +39,10 @@ export default {
       },
       visible: false,
       formLoading: false,
-      btnLoading: false,
       dataForm: {
         moduleId: '',
-        bindTable: '',
-        bindTableName: '',
         columnJson: []
-      },
-      dataRule: {}
+      }
     }
   },
   methods: {

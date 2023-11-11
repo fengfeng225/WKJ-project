@@ -15,7 +15,7 @@
       label-width="80px"
     >
       <el-form-item label="上级" prop="parentId">
-        <HG-TreeSelect
+        <BL-TreeSelect
           v-model="dataForm.parentId"
           :options="treeData"
           placeholder="选择上级菜单"
@@ -30,7 +30,7 @@
       <el-form-item label="图标" prop="icon">
         <el-input
           v-model="dataForm.icon"
-          placeholder="请选择图标"
+          placeholder="请输入图标编码"
           readonly
           :suffix-icon="dataForm.icon"
         />
