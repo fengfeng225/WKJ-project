@@ -1,3 +1,8 @@
+// 新增需要查重
+// 更新需要查重
+// 有外键的禁止删除
+// id禁止更新
+
 // 表1 长期盲板台账
 const mbLongBills = [
   {
@@ -204,6 +209,114 @@ const options = [
   }
 ]
 
+// 表
+const menuList = [
+  {
+    'enabledMark': 1,
+    'fullName': '代码生成',
+    'icon': 'icon-ym icon-ym-codeGeneration',
+    'urlAddress': '',
+    'type': 1,
+    'sortCode': 2,
+    'id': '76975bee62074937b8e3ab76e53b0797',
+    'parentId': '-1'
+  },
+  {
+    'enabledMark': 1,
+    'fullName': '功能表单',
+    'icon': 'icon-ym icon-ym-webForm',
+    'urlAddress': 'generator/webForm',
+    'type': 2,
+    'sortCode': 15,
+    'id': 'f32e517a0a9e4cf7b2eb80a589a6da9d',
+    'parentId': '76975bee62074937b8e3ab76e53b0797'
+  },
+  {
+    'enabledMark': 1,
+    'fullName': '移动表单',
+    'icon': 'icon-ym icon-ym-appForm',
+    'urlAddress': 'generator/appForm',
+    'type': 2,
+    'sortCode': 16,
+    'id': 'aad12c217ea047e0814c631c4784f489',
+    'parentId': '76975bee62074937b8e3ab76e53b0797'
+  },
+  {
+    'enabledMark': 1,
+    'fullName': '流程表单',
+    'icon': 'icon-ym icon-ym-flowForm',
+    'urlAddress': 'generator/flowForm',
+    'type': 2,
+    'sortCode': 17,
+    'id': '8ee6ec6db2ac4a5e9b010100c7690798',
+    'parentId': '76975bee62074937b8e3ab76e53b0797'
+  }
+]
+
+// 表
+const buttons = [
+  {
+    'fullName': 'Add',
+    'entityCode': 'btn_add',
+    'enabledMark': 1,
+    'sortCode': 0,
+    'id': '398656638363369541',
+    'moduleId': 'f32e517a0a9e4cf7b2eb80a589a6da9d'
+  },
+  {
+    'fullName': 'Edit',
+    'entityCode': 'btn_edit',
+    'enabledMark': 1,
+    'sortCode': 0,
+    'id': '398672252515647557',
+    'moduleId': 'f32e517a0a9e4cf7b2eb80a589a6da9d'
+  },
+  {
+    'fullName': 'Add',
+    'entityCode': 'btn_add',
+    'enabledMark': 1,
+    'sortCode': 0,
+    'id': '398656638363369542',
+    'moduleId': '8ee6ec6db2ac4a5e9b010100c7690798'
+  }
+]
+
+// 表
+const columns = [
+  {
+    'id': '398677119342739526',
+    'entityCode': 'targetName',
+    'fullName': 'Target Name',
+    'enabledMark': 1,
+    'sortCode': null,
+    'moduleId': 'f32e517a0a9e4cf7b2eb80a589a6da9d'
+  },
+  {
+    'id': '398677119342739527',
+    'entityCode': 'ipAddress',
+    'fullName': 'IP Address',
+    'enabledMark': 1,
+    'sortCode': null,
+    'moduleId': 'f32e517a0a9e4cf7b2eb80a589a6da9d'
+  },
+  {
+    'id': '398677119342739528',
+    'entityCode': 'targetType',
+    'fullName': 'Target Type',
+    'enabledMark': 1,
+    'sortCode': null,
+    'moduleId': 'f32e517a0a9e4cf7b2eb80a589a6da9d'
+  },
+  {
+    'id': '398677119342739529',
+    'entityCode': 'remarkJson',
+    'fullName': 'Remark',
+    'enabledMark': 1,
+    'sortCode': null,
+    'moduleId': 'f32e517a0a9e4cf7b2eb80a589a6da9d'
+  }
+]
+
 const getShortBills = function() {
   return mbShortBills
 }
@@ -224,10 +337,25 @@ const getOptions = function() {
   return options
 }
 
+const getMenuList = function() {
+  return menuList
+}
+
+const getButtons = function() {
+  return buttons
+}
+
+const getColumns = function() {
+  return columns
+}
+
 module.exports = {
   getShortBills,
   getLongBills,
   getGroups,
   getDictionaryList,
-  getOptions
+  getOptions,
+  getMenuList,
+  getButtons,
+  getColumns
 }

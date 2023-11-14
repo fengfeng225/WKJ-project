@@ -1,25 +1,25 @@
 <template>
-  <div class="HG-common-layout systemLogs">
-    <div class="HG-common-layout-center">
-      <el-row class="HG-common-search-box" :gutter="16">
+  <div class="BL-common-layout systemLogs">
+    <div class="BL-common-layout-center">
+      <el-row class="BL-common-search-box" :gutter="16">
         <el-form @submit.native.prevent>
           <el-col :span="6">
-            <el-form-item :label="$t('common.keyWord')">
+            <el-form-item label="关键词">
               <el-input
                 v-model="params.keyword"
-                :placeholder="$t('common.enterKeyword')"
+                placeholder="请输入关键词"
                 clearable
                 @keyup.enter.native="search()"
               />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item :label="$t('system.time')">
+            <el-form-item label="时间">
               <el-date-picker
                 v-model="pickerVal"
                 type="daterange"
-                :start-placeholder="$t('system.startDate')"
-                :end-placeholder="$t('system.endDate')"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
                 :picker-options="pickerOptions"
                 value-format="timestamp"
                 clearable
@@ -29,57 +29,39 @@
           </el-col>
           <el-col :span="6">
             <el-form-item>
-              <el-button type="primary" icon="el-icon-search" @click="search()">
-                {{ $t('common.search') }}</el-button>
-              <el-button icon="el-icon-refresh-right" @click="reset()">{{ $t('common.reset') }}
+              <el-button type="primary" icon="el-icon-search" @click="search">
+                查询</el-button>
+              <el-button icon="el-icon-refresh-right" @click="reset">重置
               </el-button>
             </el-form-item>
           </el-col>
         </el-form>
       </el-row>
-      <div class="HG-common-layout-main HG-flex-main">
+      <div class="BL-common-layout-main BL-flex-main">
         <el-tabs
           v-model="activeName"
           type="border-card"
           class="logTabs"
           @tab-click="handleTabClick"
         >
-          <div class="HG-common-head">
+          <div class="BL-common-head">
             <div class="left-btn">
               <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDel">
-                {{ $t('common.delete') }}
+                删除
               </el-button>
             </div>
-            <div class="HG-common-head-right">
-              <el-tooltip effect="dark" :content="$t('common.refresh')" placement="top">
+            <div class="BL-common-head-right">
+              <el-tooltip effect="dark" content="刷新" placement="top">
                 <el-link
-                  icon="icon-ym icon-ym-Refresh HG-common-head-icon"
+                  icon="icon-ym icon-ym-Refresh BL-common-head-icon"
                   :underline="false"
-                  @click="reset()"
+                  @click="reset"
                 />
               </el-tooltip>
             </div>
           </div>
-          <el-tab-pane :label="$t('system.loginLogs')" name="1">
-            <HG-table
-              v-loading="listLoading"
-              :data="loginLogData"
-              has-c
-              @selection-change="handleSelectionChange"
-            >
-              <el-table-column
-                prop="creatorTime"
-                :formatter="hg.tableDateFormat"
-                :label="$t('system.loginTime')"
-                width="120"
-              />
-              <el-table-column prop="userName" :label="$t('system.loginUserName')" width="120" />
-              <el-table-column prop="ipaddress" :label="$t('system.loginIP')" width="120" />
-              <el-table-column prop="platForm" :label="$t('system.loginAgent')" show-overflow-tooltip />
-            </HG-table>
-          </el-tab-pane>
-          <el-tab-pane :label="$t('system.requestLogs')" name="5">
-            <HG-table
+          <el-tab-pane label="请求日志" name="1">
+            <BL-table
               v-loading="listLoading"
               :data="requestLogData"
               has-c
@@ -87,20 +69,17 @@
             >
               <el-table-column
                 prop="creatorTime"
-                :formatter="hg.tableDateFormat"
-                :label="$t('system.requestTime')"
+                :formatter="dateFormatTable"
+                label="请求时间"
                 width="120"
               />
-              <el-table-column prop="userName" :label="$t('system.requestUserName')" width="120" />
-              <el-table-column prop="ipaddress" :label="$t('system.requestIp')" width="120" />
-              <el-table-column prop="platForm" :label="$t('system.requestAgent')" width="120" show-overflow-tooltip />
-              <el-table-column prop="requestURL" :label="$t('system.requestUrl')" show-overflow-tooltip />
-              <el-table-column prop="requestMethod" :label="$t('system.requestMethod')" width="120" />
-              <el-table-column prop="requestDuration" :label="$t('system.requestDuration')" width="120" />
-            </HG-table>
+              <el-table-column prop="userName" label="请求用户" width="120" />
+              <el-table-column prop="requestURL" label="请求地址" show-overflow-tooltip />
+              <el-table-column prop="requestMethod" label="请求类型" width="120" />
+            </BL-table>
           </el-tab-pane>
-          <el-tab-pane :label="$t('system.exceptionLogs')" name="4">
-            <HG-table
+          <el-tab-pane label="异常日志" name="2">
+            <BL-table
               v-loading="listLoading"
               :data="errorLogData"
               has-c
@@ -108,21 +87,19 @@
             >
               <el-table-column
                 prop="creatorTime"
-                :formatter="hg.tableDateFormat"
-                :label="$t('system.creationTime')"
+                :formatter="dateFormatTable"
+                label="创建时间"
                 width="120"
               />
-              <el-table-column prop="userName" :label="$t('system.creationUser')" width="120" />
-              <el-table-column prop="ipaddress" :label="$t('system.abnormalIp')" width="120" />
-              <el-table-column prop="moduleName" :label="$t('system.abnormalFunctionality')" width="120" />
-              <el-table-column prop="json" :label="$t('system.exceptionDescription')">
+              <el-table-column prop="userName" label="创建用户" width="120" />
+              <el-table-column prop="json" label="异常描述">
                 <template slot-scope="scope">
                   <el-link style="font-size:12px" @click="goDetail(scope.row.json)">
                     <p class="line1">{{ scope.row.json }}</p>
                   </el-link>
                 </template>
               </el-table-column>
-            </HG-table>
+            </BL-table>
           </el-tab-pane>
           <pagination
             :total="total"
@@ -139,7 +116,10 @@
 
 <script>
 import { getLogList, delLog } from '@/api/system/log'
+import { dateFormatTable } from '@/utils'
+
 import Form from './Form'
+
 export default {
   name: 'SystemLog',
   components: { Form },
@@ -147,10 +127,7 @@ export default {
     return {
       formVisible: false,
       listLoading: true,
-      startTime: '',
-      endTime: '',
       activeName: '1',
-      loginLogData: [],
       errorLogData: [],
       requestLogData: [],
       multipleSelection: [],
@@ -200,9 +177,8 @@ export default {
       const activeId = this.activeName
       this.listLoading = true
       getLogList(activeId, this.params).then(res => {
-        if (activeId === '1') this.loginLogData = res.data.list
-        if (activeId === '5') this.requestLogData = res.data.list
-        if (activeId === '4') this.errorLogData = res.data.list
+        if (activeId === '1') this.requestLogData = res.data.list
+        if (activeId === '2') this.errorLogData = res.data.list
         this.total = res.data.pagination.total
         this.listLoading = false
       }).catch(() => {
@@ -240,7 +216,7 @@ export default {
         delLog(data).then(res => {
           this.$message({
             type: 'success',
-            message: res.msg,
+            message: res.message,
             duration: 1500,
             onClose: () => {
               this.initData()
@@ -271,14 +247,15 @@ export default {
       this.params.pageSize = 20
       this.params.sort = 'desc'
       this.initData()
-    }
+    },
+    dateFormatTable
   }
 }
 </script>
 
 <style lang="scss" scoped>
   .systemLogs {
-    .HG-common-layout-main {
+    .BL-common-layout-main {
       padding: 0;
     }
 

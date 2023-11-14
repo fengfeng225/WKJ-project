@@ -194,8 +194,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+::v-deep .el-dialog {
+  margin-top: 8vh !important;
+  .el-dialog__body {
+    padding-top: 8px;
+  }
+}
 .content {
-  height: 60vh;
+  height: 70vh;
   overflow: scroll;
   color: #000 !important;
   font-size: 16px;

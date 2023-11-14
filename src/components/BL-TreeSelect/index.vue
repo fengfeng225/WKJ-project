@@ -5,6 +5,7 @@
     :clearable="clearable"
     :disabled="disabled"
     :placeholder="placeholder"
+    popper-class="BL-select-tree"
     :filterable="filterable"
     :filter-method="selectFilter"
     class="BL-selectTree"

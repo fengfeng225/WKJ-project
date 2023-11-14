@@ -6,6 +6,7 @@
     :visible.sync="visible"
     lock-scroll
     width="600px"
+    @close="close"
   >
     <el-form
       ref="dataForm"
@@ -24,14 +25,10 @@
       <el-form-item label="名称" prop="fullName">
         <el-input v-model="dataForm.fullName" placeholder="输入名称" />
       </el-form-item>
-      <el-form-item label="编码" prop="entityCode">
-        <el-input v-model="dataForm.entityCode" placeholder="输入编码" />
-      </el-form-item>
       <el-form-item label="图标" prop="icon">
         <el-input
           v-model="dataForm.icon"
           placeholder="请输入图标编码"
-          readonly
           :suffix-icon="dataForm.icon"
         />
       </el-form-item>
@@ -81,6 +78,7 @@
 
 <script>
 import { getMenuSelector, createMenu, updateMenu, getMenuInfo } from '@/api/system/menu'
+import { getTreeData } from '@/utils/util'
 
 export default {
   data() {
@@ -103,41 +101,26 @@ export default {
         id: '',
         parentId: '',
         fullName: '',
-        entityCode: '',
-        sortCode: 0,
         icon: '',
         type: null,
         urlAddress: '',
-        linkTarget: '_self',
-        isButtonAuthorize: 0,
-        isColumnAuthorize: 0,
-        enabledMark: 1,
         description: '',
-        propertyJson: {
-          moduleId: '',
-          isTree: 0
-        }
+        sortCode: 0,
+        enabledMark: 1
       },
       dataRule: {
         parentId: [
-          { required: true, message: '上级菜单不能为空', trigger: 'input' }
+          { required: true, message: '上级菜单不能为空', trigger: 'change' }
         ],
         fullName: [
           { required: true, message: '菜单名称不能为空', trigger: 'blur' },
           { max: 50, message: '菜单名称最多为50个字符！', trigger: 'blur' }
         ],
-        entityCode: [
-          { required: true, message: '菜单编码不能为空', trigger: 'blur' },
-          { max: 50, message: '菜单编码最多为50个字符！', trigger: 'blur' }
-        ],
         icon: [
-          { required: true, message: '菜单图标不能为空', trigger: 'click' }
+          { required: true, message: '菜单图标不能为空', trigger: 'blur' }
         ],
         type: [
           { required: true, message: '请选择菜单类型', trigger: 'change' }
-        ],
-        category: [
-          { required: true, message: '请选择菜单分类', trigger: 'input' }
         ],
         urlAddress: [
           { required: true, message: '地址不能为空', trigger: 'blur' }
@@ -147,57 +130,38 @@ export default {
   },
   methods: {
     init(id) {
-      Object.assign(this.$data, this.$options.data())
+      // Object.assign(this.$data, this.$options.data())
       this.dataForm.id = id || ''
       this.visible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].resetFields()
-        // 获取上级菜单
-        getMenuSelector(id || 0).then(res => {
-          const topItem = {
-            fullName: '顶级节点',
-            hasChildren: true,
-            id: '-1',
-            children: res.data.list
-          }
-          this.treeData = [topItem]
-        })
 
-        // 获取表单数据
-        if (this.dataForm.id) {
-          this.formLoading = true
-          getMenuInfo(this.dataForm.id).then(res => {
-            this.dataForm = res.data
-            const propertyJson = res.data.propertyJson ? JSON.parse(res.data.propertyJson) : null
-            this.dataForm.propertyJson = propertyJson || { moduleId: '' }
-            const menuType = this.dataForm.type
-            if (menuType === 2) {
-              this.dataForm.isButtonAuthorize = 1
-              this.dataForm.isColumnAuthorize = 1
-            }
-            this.$nextTick(() => {
-              this.formLoading = false
-            })
-          }).catch(() => {
-            this.formLoading = false
-          })
+      // 获取上级菜单
+      getMenuSelector(id || 0).then(res => {
+        const children = getTreeData(res.data.list, '-1')
+        const topItem = {
+          fullName: '顶级节点',
+          hasChildren: true,
+          id: '-1',
+          children
         }
+        this.treeData = [topItem]
       })
+
+      if (this.dataForm.id) {
+        this.formLoading = true
+        getMenuInfo(this.dataForm.id).then(res => {
+          this.dataForm = res.data
+          this.formLoading = false
+        }).catch(() => {
+          this.formLoading = false
+        })
+      }
     },
 
     // 切换类型
-    changeMenuType(val) {
+    changeMenuType() {
       // 重置关联下拉框的值及链接处理
-      this.dataForm.propertyJson.moduleId = ''
       const menuId = this.dataForm.id
       if (menuId) this.dataForm.urlAddress = ''
-      if (val === 2) {
-        this.dataForm.isButtonAuthorize = 1
-        this.dataForm.isColumnAuthorize = 1
-      } else {
-        this.dataForm.isButtonAuthorize = 0
-        this.dataForm.isColumnAuthorize = 0
-      }
     },
 
     dataFormSubmit() {
@@ -205,11 +169,7 @@ export default {
         if (valid) {
           this.btnLoading = true
           const formMethod = this.dataForm.id ? updateMenu : createMenu
-          const query = {
-            ...this.dataForm,
-            propertyJson: JSON.stringify(this.dataForm.propertyJson)
-          }
-          formMethod(query).then(res => {
+          formMethod(this.dataForm).then(res => {
             this.$message({
               message: res.message,
               type: 'success',
@@ -225,6 +185,10 @@ export default {
           })
         }
       })
+    },
+
+    close() {
+      this.$refs['dataForm'].resetFields()
     }
   }
 }

@@ -23,7 +23,7 @@
       </el-row>
       <div class="BL-common-layout-main BL-flex-main">
         <div class="BL-common-head">
-          <el-button type="primary" icon="el-icon-plus" @add="addOrUpdateHandle()">新建</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click="addOrUpdateHandle()">新建</el-button>
           <div class="BL-common-head-right">
             <el-tooltip effect="dark" content="刷新" placement="top">
               <el-link

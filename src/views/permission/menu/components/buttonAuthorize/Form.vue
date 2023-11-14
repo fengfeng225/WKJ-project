@@ -56,9 +56,9 @@ export default {
       visible: false,
       formLoading: false,
       btnLoading: false,
-      moduleId: '',
       dataForm: {
         id: '',
+        moduleId: '',
         fullName: '',
         entityCode: '',
         sortCode: 0,

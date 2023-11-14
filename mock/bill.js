@@ -94,6 +94,9 @@ module.exports = [
     response: config => {
       const bill = config.body
 
+      // 判断重复 班组id和编号都相同
+      // code
+
       bill.id = Math.ceil(Math.random() * 1000000000000000) + ''
       bill.creatorTime = Date.now()
       getShortBills().push(bill)

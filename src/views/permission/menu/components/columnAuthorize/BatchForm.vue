@@ -21,7 +21,7 @@
           [
             {
               "fullName":"名称",
-              "entityCode":"fullName"
+              "entityCode":"编码"
             }
           ]
         </pre>
@@ -41,7 +41,7 @@
 
 <script>
 import { batchCreateColumn } from '@/api/system/columnAuthorize'
-import BLCodeEditor from '@/components/BLEditor'
+import BLCodeEditor from '@/components/BL-Editor'
 
 export default {
   components: { BLCodeEditor },

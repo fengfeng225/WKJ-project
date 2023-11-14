@@ -36,8 +36,8 @@
           :data="columnList"
           row-key="id"
         >
-          <el-table-column prop="entityCode" label="字段名称" width="160" />
-          <el-table-column prop="fullName" label="字段说明" />
+          <el-table-column prop="fullName" label="字段名称" />
+          <el-table-column prop="entityCode" label="字段编码" width="160" />
           <el-table-column prop="sortCode" label="排序" width="90" align="center" />
           <el-table-column label="状态" width="90">
             <template slot-scope="scope">

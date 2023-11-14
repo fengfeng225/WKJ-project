@@ -15,11 +15,11 @@
       :rules="dataRule"
       label-width="80px"
     >
-      <el-form-item label="字段名称" prop="entityCode">
-        <el-input v-model="dataForm.entityCode" placeholder="请输入字段名称" />
-      </el-form-item>
-      <el-form-item label="字段说明" prop="fullName">
+      <el-form-item label="字段名称" prop="fullName">
         <el-input v-model="dataForm.fullName" placeholder="请输入字段名称" />
+      </el-form-item>
+      <el-form-item label="字段编码" prop="entityCode">
+        <el-input v-model="dataForm.entityCode" placeholder="请输入字段名称" />
       </el-form-item>
       <el-form-item label="排序" prop="sortCode">
         <el-input-number
@@ -67,10 +67,10 @@ export default {
       },
       dataRule: {
         entityCode: [
-          { required: true, message: '字段名称不能为空', trigger: 'blur' }
+          { required: true, message: '字段编码不能为空', trigger: 'blur' }
         ],
         fullName: [
-          { required: true, message: '字段说明不能为空', trigger: 'blur' }
+          { required: true, message: '字段名称不能为空', trigger: 'blur' }
         ]
       }
     }

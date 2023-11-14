@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import BLCodeEditor from '@/components/BLEditor'
+import BLCodeEditor from '@/components/BL-Editor'
 
 export default {
   components: { BLCodeEditor },

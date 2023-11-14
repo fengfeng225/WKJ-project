@@ -104,13 +104,45 @@ export const asyncRoutes = [
         path: 'optionsConfig',
         component: () => import('@/views/system/optionsConfig'),
         name: 'OptionsConfig',
-        meta: { title: '选项字段', icon: 'el-icon-menu', noCache: true }
+        meta: { title: '选项字段', icon: 'icon-ym icon-ym-options', noCache: true }
+      },
+      {
+        path: 'systemIcon',
+        component: () => import('@/views/system/systemIcon'),
+        name: 'SystemIcon',
+        meta: { title: '系统图标', icon: 'icon-ym icon-ym-sysIcon', noCache: true }
       },
       {
         path: 'log',
         component: () => import('@/views/system/log'),
         name: 'Log',
         meta: { title: '系统日志', icon: 'el-icon-tickets', noCache: true }
+      }
+    ]
+  },
+  {
+    path: '/permission',
+    component: Layout,
+    name: 'Permission',
+    meta: { title: '权限管理', icon: 'icon-ym icon-ym-permission', noCache: true },
+    children: [
+      {
+        path: 'menu',
+        component: () => import('@/views/permission/menu'),
+        name: 'Menu',
+        meta: { title: '菜单管理', icon: 'el-icon-menu', noCache: true }
+      },
+      {
+        path: 'role',
+        component: () => import('@/views/permission/role'),
+        name: 'Role',
+        meta: { title: '角色管理', icon: 'icon-ym icon-ym-role', noCache: true }
+      },
+      {
+        path: 'user',
+        component: () => import('@/views/permission/user'),
+        name: 'User',
+        meta: { title: '用户管理', icon: 'icon-ym icon-ym-user', noCache: true }
       }
     ]
   },

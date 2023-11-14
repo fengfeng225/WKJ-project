@@ -1,10 +1,10 @@
 <template>
   <transition name="el-zoom-in-center">
-    <div class="HG-preview-main">
-      <div class="HG-common-page-header">
-        <el-page-header :content="$t('system.exceptionDescription')" @back="goBack" />
+    <div class="BL-preview-main">
+      <div class="BL-common-page-header">
+        <el-page-header content="异常描述" @back="goBack" />
         <div class="options">
-          <el-button @click="goBack()">{{ $t('common.cancelButton') }}</el-button>
+          <el-button @click="goBack">取消</el-button>
         </div>
       </div>
       <el-form label-width="100px" class="main">

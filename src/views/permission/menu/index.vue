@@ -1,7 +1,7 @@
 <template>
   <div class="BL-common-layout menu-list">
     <div class="BL-common-layout-center">
-      <el-row class="BL-common-search-box" :gutter="16">
+      <!-- <el-row class="BL-common-search-box" :gutter="16">
         <el-form @submit.native.prevent>
           <el-col :span="6">
             <el-form-item label="关键词">
@@ -20,11 +20,11 @@
             </el-form-item>
           </el-col>
         </el-form>
-      </el-row>
+      </el-row> -->
       <div class="BL-common-layout-main BL-flex-main">
         <div class="box">
           <div class="BL-common-head">
-            <el-button type="primary" icon="el-icon-plus" @add="addOrUpdateHandle()">新建</el-button>
+            <el-button type="primary" icon="el-icon-plus" @click="addOrUpdateHandle()">新建</el-button>
             <div class="BL-common-head-right">
               <el-tooltip effect="dark" content="折叠" placement="top">
                 <el-link
@@ -96,13 +96,11 @@
                     <el-dropdown-menu slot="dropdown">
                       <template v-if="scope.row.type === 2">
                         <el-dropdown-item
-                          v-if="scope.row.isButtonAuthorize === 1"
                           @click.native="handleButtonAuthorize(scope.row)"
                         >
                           按钮权限
                         </el-dropdown-item>
                         <el-dropdown-item
-                          v-if="scope.row.isColumnAuthorize === 1"
                           @click.native="handleColumnAuthorize(scope.row)"
                         >
                           列表权限
@@ -124,9 +122,11 @@
 </template>
 <script>
 import { getMenuList, delMenu } from '@/api/system/menu'
+import { getTreeData } from '@/utils/util'
+
 import Form from './Form'
-import ButtonAuthorizeListDrawer from './components/buttonAuthorize/index'
-import ColumnAuthorizeListDrawer from './components/columnAuthorize/index'
+import ButtonAuthorizeListDrawer from './components/buttonAuthorize'
+import ColumnAuthorizeListDrawer from './components/columnAuthorize'
 
 export default {
   name: 'SystemMenu',
@@ -163,7 +163,7 @@ export default {
     initData() {
       this.listLoading = true
       getMenuList(this.params).then(res => {
-        this.treeList = res.data.list
+        this.treeList = getTreeData(res.data.list, '-1')
         this.listLoading = false
       }).catch(() => {
         this.listLoading = false
