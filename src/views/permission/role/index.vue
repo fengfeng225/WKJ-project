@@ -6,7 +6,7 @@
           <el-col :span="6">
             <el-form-item label="关键词">
               <el-input
-                v-model="keyword"
+                v-model="params.keyword"
                 placeholder="请输入关键词查询"
                 clearable
                 @keyup.enter.native="search()"
@@ -92,11 +92,8 @@ export default {
   data() {
     return {
       roleList: [],
-      keyword: '',
-      listQuery: {
-        currentPage: 1,
-        pageSize: 20,
-        sort: 'desc'
+      params: {
+        keyword: ''
       },
       listLoading: true,
       formVisible: false,
@@ -108,25 +105,16 @@ export default {
   },
   methods: {
     reset() {
-      this.keyword = ''
+      this.params.keyword = ''
       this.search()
     },
     search() {
-      this.listQuery = {
-        currentPage: 1,
-        pageSize: 20,
-        sort: 'desc'
-      }
       this.initData()
     },
 
     initData() {
       this.listLoading = true
-      const query = {
-        ...this.listQuery,
-        keyword: this.keyword
-      }
-      getRoleList(query).then(res => {
+      getRoleList(this.params).then(res => {
         this.roleList = res.data.list
         this.listLoading = false
       }).catch(() => {

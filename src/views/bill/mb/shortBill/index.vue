@@ -48,7 +48,6 @@
 
         <div class="BL-common-head-right">
           <div>
-            <el-button icon="el-icon-upload2" :loading="importLoading" @click="importData">导入</el-button>
             <el-button icon="el-icon-download" :loading="exportLoading" @click="exportData">导出</el-button>
             <el-button icon="el-icon-plus" type="primary" @click="addOrUpdateHandle()">新建</el-button>
             <el-tooltip effect="dark" content="刷新" placement="top">
@@ -341,8 +340,6 @@ export default {
 
       return ''
     },
-
-    importData() {},
 
     exportData() {},
 

@@ -35,18 +35,18 @@
           </div>
         </div>
         <BL-table v-loading="listLoading" :data="tableData">
-          <el-table-column prop="account" label="账号" width="100" />
-          <el-table-column prop="realName" label="名称" width="100" />
-          <el-table-column prop="creatorTime" label="创建时间" :formatter="dateFormatTable" width="120" />
-          <el-table-column prop="sortCode" label="排序" width="70" align="center" />
-          <el-table-column label="状态" width="70" align="center">
+          <el-table-column prop="account" label="账号" />
+          <el-table-column prop="realName" label="名称" />
+          <el-table-column prop="creatorTime" label="创建时间" :formatter="dateFormatTable" />
+          <el-table-column prop="sortCode" label="排序" align="center" />
+          <el-table-column label="状态" align="center">
             <template slot-scope="scope">
               <el-tag :type="scope.row.enabledMark == 1 ? 'success' : 'danger'" disable-transitions>
                 {{ scope.row.enabledMark == 1 ? '正常' : '禁用' }}
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="150">
+          <el-table-column label="操作" width="150" fixed="right">
             <template v-if="!scope.row.isAdministrator" slot-scope="scope">
 
               <el-button type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
@@ -64,7 +64,7 @@
           </el-table-column>
         </BL-table>
 
-        <pagination
+        <BL-pagination
           :total="total"
           :page.sync="params.currentPage"
           :limit.sync="params.pageSize"
@@ -116,7 +116,6 @@ export default {
     search() {
       this.params.currentPage = 1
       this.params.pageSize = 20
-      this.params.sort = 'desc'
       this.initData()
     },
     reset() {

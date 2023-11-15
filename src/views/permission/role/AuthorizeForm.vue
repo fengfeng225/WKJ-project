@@ -19,7 +19,7 @@
           <el-button
             type="primary"
             :loading="btnLoading"
-            :disabled="active < 4"
+            :disabled="active < 2"
             @click="handleConfirm"
           >确定</el-button>
           <el-button @click="goBack">取消</el-button>
@@ -59,7 +59,8 @@
 import {
   getAuthorizeValues,
   updateAuthorizeList
-} from '@/api/permission/authorize'
+} from '@/api/permission/role'
+import { getTreeData } from '@/utils/util'
 
 export default {
   data() {
@@ -67,8 +68,8 @@ export default {
       treeLoading: false,
       btnLoading: false,
       checkStrictly: true,
-      objectId: '',
       params: {
+        roleId: '',
         type: 'menu',
         menuIds: ''
       },
@@ -95,19 +96,19 @@ export default {
   },
   methods: {
     init(id) {
-      this.objectId = id
+      this.params.roleId = id
       this.getAuthorizeList()
     },
 
     getAuthorizeList() {
       this.treeLoading = true
       this.authorizeTreeData = []
-      getAuthorizeValues(this.objectId, this.params).then(res => {
+      getAuthorizeValues(this.params).then(res => {
         switch (this.active) {
           case 0:
             this.menuAuthorizeTree = res.data.list
             this.menuAllData = res.data.all
-            this.authorizeTreeData = this.menuAuthorizeTree
+            this.authorizeTreeData = getTreeData(this.menuAuthorizeTree, '-1')
             this.dataForm.menus = [...new Set([...this.menuIdsTemp, ...res.data.ids])]
             this.menuIdsTemp = this.dataForm.menus
             this.$refs.authorizeTree.setCheckedKeys(this.dataForm.menus)
@@ -115,15 +116,15 @@ export default {
           case 1:
             this.buttonAuthorizeTree = res.data.list
             this.buttonAllData = res.data.all
-            this.authorizeTreeData = this.buttonAuthorizeTree
-            this.dataForm.buttons = [...this.dataForm.buttons, ...res.data.ids, ...this.menuIdsTemp]
+            this.authorizeTreeData = getTreeData(this.buttonAuthorizeTree, '-1', ['moduleId', 'parentId'])
+            this.dataForm.buttons = [...new Set([...this.dataForm.buttons, ...res.data.ids, ...this.menuIdsTemp])]
             this.$refs.authorizeTree.setCheckedKeys(this.dataForm.buttons)
             break
           case 2:
             this.columnAuthorizeTree = res.data.list
             this.columnAllData = res.data.all
-            this.authorizeTreeData = this.columnAuthorizeTree
-            this.dataForm.columns = [...this.dataForm.columns, ...res.data.ids, ...this.menuIdsTemp]
+            this.authorizeTreeData = getTreeData(this.columnAuthorizeTree, '-1', ['moduleId', 'parentId'])
+            this.dataForm.columns = [...new Set([...this.dataForm.columns, ...res.data.ids, ...this.menuIdsTemp])]
             this.$refs.authorizeTree.setCheckedKeys(this.dataForm.columns)
             break
         }
@@ -217,7 +218,7 @@ export default {
     },
     handleConfirm() {
       this.btnLoading = true
-      updateAuthorizeList(this.objectId, this.dataForm).then(res => {
+      updateAuthorizeList(this.params.roleId, this.dataForm).then(res => {
         this.$message({
           message: res.message,
           type: 'success',

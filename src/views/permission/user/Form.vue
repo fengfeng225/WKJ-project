@@ -27,10 +27,10 @@
                 <el-input v-model="dataForm.realName" placeholder="请输入名称" />
               </el-form-item>
             </el-col>
-            <el-col :sm="12" :xs="24">
+            <el-col :sm="24" :xs="24">
               <el-form-item label="角色" prop="roleId">
                 <el-select
-                  v-model="roleId"
+                  v-model="dataForm.roleId"
                   multiple
                   placeholder="请选择角色"
                   filterable
@@ -71,7 +71,7 @@
   </transition>
 </template>
 <script>
-import { getRoleSelector } from '@/api/permission/role'
+import { getRoleList } from '@/api/permission/role'
 import { createUser, updateUser, getUserInfo } from '@/api/permission/user'
 export default {
   data() {
@@ -102,7 +102,7 @@ export default {
   },
 
   created() {
-    getRoleSelector().then(res => {
+    getRoleList().then(res => {
       this.roleList = res.data.list
     }).catch(() => {})
   },

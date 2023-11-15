@@ -78,10 +78,10 @@ export default {
       loginRules: {
         account: [
           { required: true, trigger: 'blur', message: '请输入账号' }
+        ],
+        password: [
+          { required: true, trigger: 'blur', message: '请输入密码' }
         ]
-        // password: [
-        //   {required: true, trigger: 'blur', message: this.$t('login.passwordTip')}
-        // ]
       },
       capsTooltip: false,
       loading: false,
@@ -120,8 +120,7 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store
-            .dispatch('user/login', this.loginForm)
+          this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
               this.$router.push({
                 path: this.redirect || '/',

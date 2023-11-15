@@ -10,7 +10,6 @@
   >
     <el-form
       ref="dataForm"
-      v-loading="formLoading"
       :model="dataForm"
       :rules="dataRule"
       label-width="100px"
@@ -50,19 +49,19 @@ import md5 from 'js-md5'
 
 export default {
   data() {
-    const validateUserPassword = (rule, value, callback) => {
-      const passwordreg = /(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{6,16}/
-      if (!value) {
-        callback(new Error('请输入新密码'))
-      } else if (!passwordreg.test(value)) {
-        callback(new Error('密码必须由数字、字母、特殊字符组合,请输入6-16位'))
-      } else {
-        if (this.dataForm.userPassword !== '') {
-          this.$refs.dataForm.validateField('validatePassword')
-        }
-        callback()
-      }
-    }
+    // const validateUserPassword = (rule, value, callback) => {
+    //   const passwordreg = /(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{6,16}/
+    //   if (!value) {
+    //     callback(new Error('请输入新密码'))
+    //   } else if (!passwordreg.test(value)) {
+    //     callback(new Error('密码必须由数字、字母、特殊字符组合,请输入6-16位'))
+    //   } else {
+    //     if (this.dataForm.userPassword !== '') {
+    //       this.$refs.dataForm.validateField('validatePassword')
+    //     }
+    //     callback()
+    //   }
+    // }
     const validatePassword = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请再次输入新密码'))
@@ -83,7 +82,9 @@ export default {
       },
       dataRule: {
         userPassword: [
-          { required: true, validator: validateUserPassword, trigger: 'blur' }
+          { required: true, message: '请输入新密码', trigger: 'blur' },
+          { min: 6, message: '最小长度6位', trigger: 'blur' },
+          { max: 16, message: '最大长度16位', trigger: 'blur' }
         ],
         validatePassword: [
           { required: true, validator: validatePassword, trigger: 'blur' }
