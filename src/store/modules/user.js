@@ -1,23 +1,31 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import router, { resetRouter } from '@/router'
+import { resetRouter } from '@/router'
 import md5 from 'js-md5'
+import Layout from '@/layout'
 
 const state = {
   token: getToken(),
-  name: '',
-  roles: []
+  menuList: [],
+  permissionList: [],
+  userInfo: {}
 }
 
 const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
   },
-  SET_NAME: (state, name) => {
-    state.name = name
+  SET_MENULIST: (state, menuList) => {
+    state.menuList = menuList
   },
-  SET_ROLES: (state, roles) => {
-    state.roles = roles
+  SET_PERMISSION_LIST: (state, permissionList) => {
+    state.permissionList = permissionList
+  },
+  SET_USERINFO: (state, userInfo) => {
+    state.userInfo = userInfo
+  },
+  SET_USERINFO_USERNAME: (state, userName) => {
+    state.userInfo.userName = userName
   }
 }
 
@@ -43,21 +51,62 @@ const actions = {
       getInfo().then(response => {
         const { data } = response
 
-        if (!data) {
-          reject('验证失败，请重新登录。')
-        }
+        if (!data) reject('验证失败，请重新登录。')
 
-        const { roles, name } = data
+        const { menuList, userInfo, permissionList } = data
 
         // roles must be a non-empty array
-        if (!roles || roles.length <= 0) {
+        if (!menuList.length) {
           reject('您的权限不足，请联系管理员')
           return false
         }
 
-        commit('SET_ROLES', roles)
-        commit('SET_NAME', name)
-        resolve(data)
+        const routerList = []
+
+        function setData(list, childrenList) {
+          for (let i = 0; i < list.length; i++) {
+            const e = list[i]
+
+            if (e.type === 1) {
+              const newObj = {
+                path: '/' + e.entityCode,
+                component: Layout,
+                name: e.entityCode,
+                meta: {
+                  title: e.fullName,
+                  icon: e.icon,
+                  menuId: e.id
+                }
+              }
+              if (e.children && e.children.length) {
+                const children = []
+                setData(e.children, children)
+                newObj.children = children
+              }
+              routerList.push(newObj)
+            }
+            if (e.type === 2) {
+              childrenList.push(
+                {
+                  path: e.entityCode,
+                  component: (resolve) => require([`@/views/${e.urlAddress}`], resolve),
+                  name: e.entityCode,
+                  meta: {
+                    title: e.fullName,
+                    icon: e.icon,
+                    menuId: e.id
+                  }
+                }
+              )
+            }
+          }
+        }
+
+        setData(menuList)
+        commit('SET_MENULIST', menuList)
+        commit('SET_USERINFO', userInfo)
+        commit('SET_PERMISSION_LIST', permissionList)
+        resolve(routerList)
       }).catch(error => {
         reject(error)
       })
@@ -69,7 +118,9 @@ const actions = {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
         commit('SET_TOKEN', '')
-        commit('SET_ROLES', [])
+        commit('SET_MENULIST', [])
+        commit('SET_USERINFO', {})
+        commit('SET_PERMISSION_LIST', [])
         removeToken()
         resetRouter()
 
@@ -88,30 +139,12 @@ const actions = {
   resetToken({ commit }) {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
-      commit('SET_ROLES', [])
+      commit('SET_MENULIST', [])
+      commit('SET_USERINFO', {})
+      commit('SET_PERMISSION_LIST', [])
       removeToken()
       resolve()
     })
-  },
-
-  // dynamically modify permissions
-  async changeRoles({ commit, dispatch }, role) {
-    const token = role + '-token'
-
-    commit('SET_TOKEN', token)
-    setToken(token)
-
-    const { roles } = await dispatch('getInfo')
-
-    resetRouter()
-
-    // generate accessible routes map based on roles
-    const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true })
-    // dynamically add accessible routes
-    router.addRoutes(accessRoutes)
-
-    // reset visited views and cached views
-    dispatch('tagsView/delAllViews', null, { root: true })
   }
 }
 

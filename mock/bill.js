@@ -105,6 +105,9 @@ module.exports = [
 
       const disassembleDetail = deepClone(bill)
 
+      // 判断重复 班组id和编号都相同
+      // code
+
       bill.id = Math.ceil(Math.random() * 1000000000000000) + ''
       bill.cycleType = 'short'
       getShortBills().push(bill)

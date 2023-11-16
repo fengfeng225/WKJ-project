@@ -11,7 +11,7 @@
     </el-tabs>
     <div class="head">
       <el-avatar :size="50" icon="el-icon-user-solid" class="user-avatar" />
-      <span class="username">{{ name }}</span>
+      <span class="username">{{ userInfo.userName }}</span>
     </div>
   </div>
 </template>
@@ -31,7 +31,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'name'
+      'userInfo'
     ])
   },
   methods: {

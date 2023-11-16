@@ -1,6 +1,7 @@
 'use strict'
 const path = require('path')
 const defaultSettings = require('./src/settings.js')
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 
 function resolve(dir) {
   return path.join(__dirname, dir)
@@ -12,8 +13,8 @@ const name = defaultSettings.title || '' // page title
 // use administrator privileges to execute the command line.
 // For example, Mac: sudo npm run
 // You can change the port by the following method:
-// port = 9527 npm run dev OR npm run dev --port = 9527
-const port = process.env.port || process.env.npm_config_port || 9527 // dev port
+// port = 9001 npm run dev OR npm run dev --port = 9001
+const port = process.env.port || process.env.npm_config_port || 9001 // dev port
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
@@ -54,9 +55,16 @@ module.exports = {
     name: name,
     resolve: {
       alias: {
-        '@': resolve('src')
+        '@': resolve('src'),
+        'static': resolve('static')
       }
-    }
+    },
+    plugins: [
+      new MonacoWebpackPlugin({
+        // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
+        languages: ['javascript', 'css', 'html', 'typescript', 'json', 'java', 'sql']
+      })
+    ]
   },
   chainWebpack(config) {
     // it can improve the speed of the first screen, it is recommended to turn on preload

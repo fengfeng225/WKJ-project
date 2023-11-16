@@ -180,6 +180,18 @@
   align-items: center;
   padding: 3px 10px;
   flex-shrink: 0;
+  .BL-common-head-right {
+    flex-shrink: 0;
+    font-size: 0;
+
+    .el-link {
+      margin-left: 12px;
+    }
+
+    .BL-common-head-icon {
+      color: #606266;
+    }
+  }
 }
 
 .BL-common-drawer {

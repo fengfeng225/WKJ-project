@@ -63,7 +63,8 @@ service.interceptors.response.use(
           if (res.code === 600 || res.code === 601) {
             // to re-login
             store.dispatch('user/resetToken').then(() => {
-              location.reload()
+              if (window.location.pathname.indexOf('login') > -1) return
+              setTimeout(() => { location.reload() }, 100)
             })
           }
         }
