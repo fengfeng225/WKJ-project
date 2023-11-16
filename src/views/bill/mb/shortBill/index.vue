@@ -130,11 +130,11 @@
 </template>
 
 <script>
-import { getShortBills, deleteShortBill, getDeviceNameCategory } from '@/api/bill/mb/bill'
+import { getAllShortBills, getShortBills, deleteShortBill, getDeviceNameCategory } from '@/api/bill/mb/bill'
 import { getGroupCategories } from '@/api/bill/mb/group'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 import { getMBStatusStyle, getMBStatusLabel } from '@/utils/helperHandlers'
-import { dateFormatTable } from '@/utils'
+import { dateFormatTable, transToTDArray } from '@/utils'
 
 import BillForm from '../BillForm'
 
@@ -337,7 +337,98 @@ export default {
       return ''
     },
 
-    exportData() {},
+    exportData() {
+      this.exportLoading = true
+
+      // 定义表头对应关系
+      const headers = {
+        '班组': 'groupId',
+        '装置名称': 'name',
+        '盲板编号': 'code',
+        '管径': 'pipDiameter',
+        '盲板安装位置描述（注明阀前或阀后）': 'description',
+        '盲通状态': 'status',
+        '拆装时间': 'disassembleTime',
+        '名称': 'pipelineMediaName',
+        '温度 (℃)': 'pipelineMediaTemperature',
+        '压力 (MPa)': 'pipelineMediaPressure',
+        '盲板规格 (mm)': 'size',
+        '盲板形式': 'type',
+        '盲板材质': 'material',
+        '创建时间': 'creatorTime',
+        '操作人员': 'operator',
+        '管理干部': 'Manager'
+      }
+
+      const groups = {}
+      this.treeData[0].children.forEach(item => {
+        groups[item.id] = item.label
+      })
+
+      const deviceNames = {}
+      this.deviceNameList.forEach(item => {
+        deviceNames[item.entityCode] = item.fullName
+      })
+
+      import('@/vendor/Export2Excel').then(async excel => {
+        try {
+          const { data: { list }} = await getAllShortBills()
+          list.forEach(row => {
+            row.groupId = groups[row.groupId]
+            row.name = deviceNames[row.name]
+            row.status = row.status ? '通' : '盲'
+          })
+
+          const data = transToTDArray(headers, list)
+          const multiHeader = [[
+            '班组',
+            '装置名称',
+            '盲板编号',
+            '管径',
+            '盲板安装位置描述（注明阀前或阀后）',
+            '盲通状态',
+            '拆装时间',
+            '管线介质',
+            '',
+            '',
+            '盲板规格 (mm)',
+            '盲板形式',
+            '盲板材质',
+            '创建时间',
+            '操作人员',
+            '管理干部'
+          ]]
+          const merges = [
+            'A1:A2',
+            'B1:B2',
+            'C1:C2',
+            'D1:D2',
+            'E1:E2',
+            'F1:F2',
+            'G1:G2',
+            'H1:J1',
+            'K1:K2',
+            'L1:L2',
+            'M1:M2',
+            'N1:N2',
+            'O1:O2',
+            'P1:P2'
+          ]
+          excel.export_json_to_excel({
+            header: Object.keys(headers),
+            data,
+            filename: '短期盲板台账',
+            multiHeader,
+            merges,
+            autoWidth: true,
+            bookType: 'xlsx'
+          })
+          this.exportLoading = false
+        } catch (error) {
+          this.exportLoading = false
+        }
+      })
+    },
 
     handleNodeClick(data) {
       if (this.params.groupId === data.id) return

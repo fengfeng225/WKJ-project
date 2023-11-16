@@ -43,7 +43,7 @@ export function parseTime(time, cFormat) {
   const time_str = format.replace(/{([ymdhisa])+}/g, (result, key) => {
     const value = formatObj[key]
     // Note: getDay() returns 0 on Sunday
-    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value ] }
+    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value] }
     return value.toString().padStart(2, '0')
   })
   return time_str
@@ -368,3 +368,15 @@ export function dateFormatTable(row, column, cellValue, index, format) {
   return dayjs(cellValue).format(format)
 }
 
+// 将对象格式的数组转化成二维数组
+export function transToTDArray(headers, rows) {
+  // 首先遍历数组
+  return rows.map(item => {
+    return Object.keys(headers).map(key => {
+      if (headers[key] === 'disassembleTime' || headers[key] === 'creatorTime') {
+        return dateFormat(item[headers[key]])
+      }
+      return item[headers[key]]
+    })
+  })
+}
