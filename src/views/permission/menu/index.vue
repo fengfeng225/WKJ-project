@@ -86,7 +86,7 @@
               <template slot-scope="scope">
                 <el-button type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
                 <el-button type="text" class="BL-table-delBtn" @click="handleDel(scope.row.id)">删除</el-button>
-                <template v-if="scope.row.type && scope.row.type!=1">
+                <template v-if="scope.row.type && scope.row.type !== 1">
                   <BL-dropdown style="margin-left: 8px;">
                     <span class="el-dropdown-link">
                       <el-button type="text" size="mini">

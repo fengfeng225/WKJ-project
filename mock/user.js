@@ -1,4 +1,5 @@
-const { getUsers } = require('./sqlDatabase')
+const { getUsers, getUserRelation, getRoleRelation, getMenuList, getButtons, getColumns } = require('./sqlDatabase')
+const { getTreeData } = require('./utils')
 
 module.exports = [
   // user login
@@ -21,7 +22,7 @@ module.exports = [
       return {
         code: 200,
         data: {
-          token: currentUser.token
+          token: currentUser.id
         }
       }
     }
@@ -33,20 +34,89 @@ module.exports = [
     type: 'get',
     response: config => {
       const token = config.headers.authorization
+
+      // 根据token获取当前用户
+      // code 简写
+      const userId = token
+
       const users = getUsers()
-      const userInfo = users.find(item => item.token === token)
+      const currentUser = users.find(item => item.id === userId)
 
       // mock error
-      if (!userInfo) {
+      if (!currentUser) {
         return {
           code: 601,
           message: '登录失败，无法获取用户信息。'
         }
       }
 
+      const menus = getMenuList()
+      const buttons = getButtons()
+      const columns = getColumns()
+
+      const userInfo = currentUser
+      let menuList, permissionList
+
+      if (userId === 'admin') {
+        menuList = getTreeData(menus, '-1')
+        permissionList = menus.map(menu => {
+          return {
+            button: buttons.filter(button => button.moduleId === menu.id),
+            column: columns.filter(column => column.moduleId === menu.id),
+            menuId: menu.id,
+            menuName: menu.fullName
+          }
+        })
+        return {
+          code: 200,
+          data: {
+            menuList,
+            permissionList,
+            userInfo
+          }
+        }
+      }
+
+      // 获取对应关系的中间表
+      const userRelation = getUserRelation()
+      const roleRelation = getRoleRelation()
+
+      // 获取当前用户拥有的角色id
+      const roleIds = userRelation.filter(item => item.userId === userId).map(item => item.roleId)
+      // 获取角色所有的权限id
+      const hasPermissionList = roleRelation.filter(item => roleIds.includes(item.roleId))
+
+      // menu 必须处理成tree结构
+      const menuIds = hasPermissionList.filter(item => item.itemType === 'menu').maps(item => item.itemId)
+      const hasPermissionMenus = menus.filter(item => menuIds.includes(item.id))
+      menuList = getTreeData(hasPermissionMenus, '-1')
+
+      // permissionList
+
+      // button 只需 entityCode fullName id
+      const buttonIds = hasPermissionList.filter(item => item.itemType === 'button').maps(item => item.itemId)
+      const buttonList = buttons.filter(item => buttonIds.includes(item.id))
+
+      // column
+      const columnIds = hasPermissionList.filter(item => item.itemType === 'column').maps(item => item.itemId)
+      const columnList = columns.filter(item => columnIds.includes(item.id))
+
+      permissionList = hasPermissionMenus.map(menu => {
+        return {
+          button: buttonList.filter(button => button.moduleId === menu.id),
+          column: columnList.filter(column => column.moduleId === menu.id),
+          menuId: menu.id,
+          menuName: menu.fullName
+        }
+      })
+
       return {
         code: 200,
-        data: userInfo
+        data: {
+          menuList,
+          permissionList,
+          userInfo
+        }
       }
     }
   },

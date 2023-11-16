@@ -42,24 +42,32 @@ export const constantRoutes = [
     children: [
       {
         path: '/redirect/:path(.*)',
-        component: () => import('@/views/redirect/index')
+        component: (resolve) => require(['@/views/redirect/index'], resolve)
       }
     ]
   },
   {
     path: '/login',
-    component: () => import('@/views/login'),
+    component: (resolve) => require(['@/views/login'], resolve),
     hidden: true
   },
   {
     path: '/auth-redirect',
-    component: () => import('@/views/login/auth-redirect'),
+    component: (resolve) => require(['@/views/login/auth-redirect'], resolve),
     hidden: true
   },
   {
-    path: '/404',
-    component: () => import('@/views/error-page/404'),
-    hidden: true
+    path: '/profile',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '',
+        component: (resolve) => require(['@/views/profile'], resolve),
+        name: 'profile',
+        meta: { title: '个人信息', noCache: true }
+      }
+    ]
   },
   {
     path: '/',
@@ -68,22 +76,9 @@ export const constantRoutes = [
     children: [
       {
         path: 'dashboard',
-        component: () => import('@/views/dashboard'),
+        component: (resolve) => require(['@/views/dashboard'], resolve),
         name: 'Dashboard',
         meta: { title: '首页', icon: 'el-icon-s-home', affix: true }
-      }
-    ]
-  },
-  {
-    path: '/profile',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: '/',
-        component: () => import('@/views/profile'),
-        name: 'Profile',
-        meta: { title: '个人信息', icon: 'user', noCache: true }
       }
     ]
   }
@@ -93,94 +88,6 @@ export const constantRoutes = [
  * asyncRoutes
  * the routes that need to be dynamically loaded based on user roles
  */
-export const asyncRoutes = [
-  {
-    path: '/system',
-    component: Layout,
-    name: 'System',
-    meta: { title: '系统管理', icon: 'el-icon-setting', noCache: true },
-    children: [
-      {
-        path: 'optionsConfig',
-        component: () => import('@/views/system/optionsConfig'),
-        name: 'OptionsConfig',
-        meta: { title: '选项字段', icon: 'icon-ym icon-ym-options', noCache: true }
-      },
-      {
-        path: 'systemIcon',
-        component: () => import('@/views/system/systemIcon'),
-        name: 'SystemIcon',
-        meta: { title: '系统图标', icon: 'icon-ym icon-ym-sysIcon', noCache: true }
-      },
-      {
-        path: 'log',
-        component: () => import('@/views/system/log'),
-        name: 'Log',
-        meta: { title: '系统日志', icon: 'el-icon-tickets', noCache: true }
-      }
-    ]
-  },
-  {
-    path: '/permission',
-    component: Layout,
-    name: 'Permission',
-    meta: { title: '权限管理', icon: 'icon-ym icon-ym-permission', noCache: true },
-    children: [
-      {
-        path: 'menu',
-        component: () => import('@/views/permission/menu'),
-        name: 'Menu',
-        meta: { title: '菜单管理', icon: 'el-icon-menu', noCache: true }
-      },
-      {
-        path: 'role',
-        component: () => import('@/views/permission/role'),
-        name: 'Role',
-        meta: { title: '角色管理', icon: 'icon-ym icon-ym-role', noCache: true }
-      },
-      {
-        path: 'user',
-        component: () => import('@/views/permission/user'),
-        name: 'User',
-        meta: { title: '用户管理', icon: 'icon-ym icon-ym-user', noCache: true }
-      }
-    ]
-  },
-  {
-    path: '/bill',
-    component: Layout,
-    name: 'Bill',
-    meta: { title: '盲板管理', icon: 'el-icon-folder', noCache: true },
-    children: [
-      {
-        path: 'longBill',
-        component: () => import('@/views/bill/mb/longBill'),
-        name: 'LongBill',
-        meta: { title: '长期台账', icon: 'el-icon-document-copy', noCache: true }
-      },
-      {
-        path: 'shortBill',
-        component: () => import('@/views/bill/mb/shortBill'),
-        name: 'ShortBill',
-        meta: { title: '短期台账', icon: 'el-icon-document', noCache: true }
-      },
-      {
-        path: 'deletedBill',
-        component: () => import('@/views/bill/mb/deletedBill'),
-        name: 'DeletedBill',
-        meta: { title: '已删除台账', icon: 'el-icon-delete-solid', noCache: true }
-      },
-      {
-        path: 'groups',
-        component: () => import('@/views/bill/mb/groups'),
-        name: 'Groups',
-        meta: { title: '班组', icon: 'ym-custom ym-custom-format-list-bulleted', noCache: true }
-      }
-    ]
-  },
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
-]
 
 const createRouter = () => new Router({
   mode: 'history', // require service support

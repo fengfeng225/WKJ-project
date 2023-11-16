@@ -64,11 +64,11 @@
 
       <div class="BL-common-layout-main BL-flex-main">
         <BL-table ref="BLTable" v-loading="tableLoading" :data="tableData" fixed-n-o row-key="id" @filter-change="deviceNameFilter">
-          <template v-for="item in columns">
+          <template v-for="item in computedRoleColumnOptions">
             <template v-if="item.prop === 'action'">
-              <ex-table-column :key="item.prop" :label="item.label" width="150" fixed="right">
+              <ex-table-column v-if="hasRoleButton(['btn_edit'])" :key="item.prop" :label="item.label" width="150" fixed="right">
                 <template #default="scope">
-                  <el-button type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
+                  <el-button v-if="hasRoleButton('btn_edit')" type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
                   <el-button class="BL-table-delBtn" type="text" @click="removeHandle(scope.row.id)">删除</el-button>
                   <BL-Dropdown style="margin-left: 8px;">
                     <span>
@@ -168,7 +168,7 @@ export default {
       deviceNameCategory: [],
       importLoading: false,
       exportLoading: false,
-      roleButtonOptions: [],
+      roleButtonOptions: ['btn_add', 'btn_edit'],
       roleColumnOptions: [
         {
           label: '装置名称',
@@ -250,7 +250,9 @@ export default {
   },
 
   computed: {
-    columns() {
+    computedRoleColumnOptions() {
+      // this.setPermissions()
+
       return this.roleColumnOptions
     }
   },
@@ -378,6 +380,68 @@ export default {
           })
         }).catch(() => {})
       }).catch(() => {})
+    },
+
+    setPermissions() {
+      // Get the list with all the user permissions from the store.
+      const permissionList = this.$store.getters.permissionList
+
+      // Retrieve the model ID based from the route.
+      const menuId = this.$route.meta.menuId
+
+      // Filter the user permission with the model and get only permissions for this page.
+      const list = permissionList.filter(o => o.menuId === menuId)
+
+      // Get the permissions for this module and check for column permissions.
+      const columnList = list[0] && list[0].column ? list[0].column : []
+
+      const permissionColumnList = []
+
+      for (let i = 0; i < this.roleColumnOptions.length; i++) {
+        // Create an inner look and assign a name to the loop.
+        for (let j = 0; j < columnList.length; j++) {
+          // If the column name in the page is in the list with user permissions add it to the visible list.
+          if (this.roleColumnOptions[i].prop === columnList[j].entityCode) {
+            permissionColumnList.push(this.roleColumnOptions[i])
+
+            // We have found a match, break the inner loop and go to the outer loop for next item.
+            break
+          }
+        }
+      }
+
+      // Assign the columns for this page with the filtered columns for the current user.
+      this.roleColumnOptions = permissionColumnList
+
+      // Get the permissions for this module and check for button permissions.
+      const buttonList = list[0] && list[0].button ? list[0].button : []
+
+      const permissionButtonList = []
+
+      for (let i = 0; i < this.roleButtonOptions.length; i++) {
+        for (let j = 0; j < buttonList.length; j++) {
+          if (this.roleButtonOptions[i] === buttonList[j].entityCode) {
+            permissionButtonList.push(this.roleButtonOptions[i])
+            break
+          }
+        }
+      }
+
+      this.roleButtonOptions = permissionButtonList
+    },
+
+    hasRoleButton(code) {
+      if (Array.isArray(code)) {
+        for (const item of code) {
+          if (this.roleButtonOptions.indexOf(item) > -1) {
+            return true
+          }
+        }
+
+        return false
+      } else {
+        return this.roleButtonOptions.indexOf(code) > -1
+      }
     },
 
     getMBStatusStyle,

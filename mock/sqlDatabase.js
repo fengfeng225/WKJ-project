@@ -217,43 +217,146 @@ const options = [
 const menuList = [
   {
     'enabledMark': 1,
-    'fullName': '代码生成',
-    'icon': 'icon-ym icon-ym-codeGeneration',
+    'fullName': '系统管理',
+    'entityCode': 'system',
+    'icon': 'el-icon-setting',
     'urlAddress': '',
     'type': 1,
-    'sortCode': 2,
+    'sortCode': 0,
     'id': '76975bee62074937b8e3ab76e53b0797',
     'parentId': '-1'
   },
   {
     'enabledMark': 1,
-    'fullName': '功能表单',
-    'icon': 'icon-ym icon-ym-webForm',
-    'urlAddress': 'generator/webForm',
+    'fullName': '选项字段',
+    'entityCode': 'optionsConfig',
+    'icon': 'icon-ym icon-ym-options',
+    'urlAddress': 'system/optionsConfig',
     'type': 2,
-    'sortCode': 15,
+    'sortCode': 0,
     'id': 'f32e517a0a9e4cf7b2eb80a589a6da9d',
     'parentId': '76975bee62074937b8e3ab76e53b0797'
   },
   {
     'enabledMark': 1,
-    'fullName': '移动表单',
-    'icon': 'icon-ym icon-ym-appForm',
-    'urlAddress': 'generator/appForm',
+    'fullName': '系统图标',
+    'entityCode': 'systemIcon',
+    'icon': 'icon-ym icon-ym-sysIcon',
+    'urlAddress': 'system/systemIcon',
     'type': 2,
-    'sortCode': 16,
+    'sortCode': 0,
     'id': 'aad12c217ea047e0814c631c4784f489',
     'parentId': '76975bee62074937b8e3ab76e53b0797'
   },
   {
     'enabledMark': 1,
-    'fullName': '流程表单',
-    'icon': 'icon-ym icon-ym-flowForm',
-    'urlAddress': 'generator/flowForm',
+    'fullName': '系统日志',
+    'entityCode': 'log',
+    'icon': 'el-icon-tickets',
+    'urlAddress': 'system/log',
     'type': 2,
-    'sortCode': 17,
+    'sortCode': 0,
     'id': '8ee6ec6db2ac4a5e9b010100c7690798',
     'parentId': '76975bee62074937b8e3ab76e53b0797'
+  },
+  {
+    'enabledMark': 1,
+    'fullName': '权限管理',
+    'entityCode': 'permission',
+    'icon': 'icon-ym icon-ym-permission',
+    'urlAddress': '',
+    'type': 1,
+    'sortCode': 0,
+    'id': '8ee6ec6db2ac4safsaf00c7690798',
+    'parentId': '-1'
+  },
+  {
+    'enabledMark': 1,
+    'fullName': '菜单管理',
+    'entityCode': 'menu',
+    'icon': 'el-icon-menu',
+    'urlAddress': 'permission/menu',
+    'type': 2,
+    'sortCode': 0,
+    'id': '8ee6ec6dsafsfasfafsaf00c7690798',
+    'parentId': '8ee6ec6db2ac4safsaf00c7690798'
+  },
+  {
+    'enabledMark': 1,
+    'fullName': '角色管理',
+    'entityCode': 'role',
+    'icon': 'icon-ym icon-ym-role',
+    'urlAddress': 'permission/role',
+    'type': 2,
+    'sortCode': 0,
+    'id': '8ee6ec6dsafsfasfafwqrtqwt798',
+    'parentId': '8ee6ec6db2ac4safsaf00c7690798'
+  },
+  {
+    'enabledMark': 1,
+    'fullName': '用户管理',
+    'entityCode': 'user',
+    'icon': 'icon-ym icon-ym-user',
+    'urlAddress': 'permission/user',
+    'type': 2,
+    'sortCode': 0,
+    'id': '8ee6ecrueueurtkyuu184f00c7690798',
+    'parentId': '8ee6ec6db2ac4safsaf00c7690798'
+  },
+  {
+    'enabledMark': 1,
+    'fullName': '盲板管理',
+    'entityCode': 'bill',
+    'icon': 'el-icon-folder',
+    'urlAddress': '',
+    'type': 1,
+    'sortCode': 0,
+    'id': '8ee78954qwrwrac4safsaf00c7690798',
+    'parentId': '-1'
+  },
+  {
+    'enabledMark': 1,
+    'fullName': '长期台账',
+    'entityCode': 'mb/longBill',
+    'icon': 'el-icon-document-copy',
+    'urlAddress': 'bill/mb/longBill',
+    'type': 2,
+    'sortCode': 0,
+    'id': '8ee6ec7qwr5sa7f9184f00c7690798',
+    'parentId': '8ee78954qwrwrac4safsaf00c7690798'
+  },
+  {
+    'enabledMark': 1,
+    'fullName': '短期台账',
+    'entityCode': 'mb/shortBill',
+    'icon': 'el-icon-document',
+    'urlAddress': 'bill/mb/shortBill',
+    'type': 2,
+    'sortCode': 0,
+    'id': '8ee6ecrueueurtkywqr7984a5wqr690798',
+    'parentId': '8ee78954qwrwrac4safsaf00c7690798'
+  },
+  {
+    'enabledMark': 1,
+    'fullName': '已删除台账',
+    'entityCode': 'mb/deletedBill',
+    'icon': 'el-icon-delete-solid',
+    'urlAddress': 'bill/mb/deletedBill',
+    'type': 2,
+    'sortCode': 0,
+    'id': '8ee6ewqr798wq13rqwuu184f00c7690798',
+    'parentId': '8ee78954qwrwrac4safsaf00c7690798'
+  },
+  {
+    'enabledMark': 1,
+    'fullName': '班组',
+    'entityCode': 'mb/groups',
+    'icon': 'ym-custom ym-custom-format-list-bulleted',
+    'urlAddress': 'bill/mb/groups',
+    'type': 2,
+    'sortCode': 0,
+    'id': '8ee6ec454qwr879asfuu184f00c7690798',
+    'parentId': '8ee78954qwrwrac4safsaf00c7690798'
   }
 ]
 
@@ -385,7 +488,7 @@ const roleRelation = [
 const userRelation = [
   {
     id: '441100315089961029',
-    userId: '',
+    userId: 'admin',
     roleId: 'e55532c906b348798b078ea0c17dbbb1',
     sortCode: 0,
     creatorTime: 1509075545000
@@ -397,9 +500,7 @@ const users = [
     'id': '398311385311739973',
     'account': 'byyb',
     'password': '',
-    'realName': '白油一班',
-    'token': 'byyb-token',
-    'roles': ['byyb'],
+    'userName': '白油一班',
     'enabledMark': 1,
     'creatorTime': 1677130037000,
     'sortCode': 0
@@ -408,9 +509,7 @@ const users = [
     'id': 'admin',
     'account': 'admin',
     'password': 'e10adc3949ba59abbe56e057f20f883e',
-    'realName': '管理员',
-    'token': 'admin-token',
-    'roles': ['admin'],
+    'userName': '管理员',
     'enabledMark': 1,
     'creatorTime': 1509092175000,
     'sortCode': 0

@@ -25,6 +25,9 @@
       <el-form-item label="名称" prop="fullName">
         <el-input v-model="dataForm.fullName" placeholder="输入名称" />
       </el-form-item>
+      <el-form-item label="编码" prop="entityCode">
+        <el-input v-model="dataForm.entityCode" placeholder="请输入编码" />
+      </el-form-item>
       <el-form-item label="图标" prop="icon">
         <el-input
           v-model="dataForm.icon"
@@ -101,6 +104,7 @@ export default {
         id: '',
         parentId: '',
         fullName: '',
+        entityCode: '',
         icon: '',
         type: null,
         urlAddress: '',
@@ -115,6 +119,10 @@ export default {
         fullName: [
           { required: true, message: '菜单名称不能为空', trigger: 'blur' },
           { max: 50, message: '菜单名称最多为50个字符！', trigger: 'blur' }
+        ],
+        entityCode: [
+          { required: true, message: '菜单编码不能为空', trigger: 'blur' },
+          { max: 50, message: '菜单编码最多为50个字符！', trigger: 'blur' }
         ],
         icon: [
           { required: true, message: '菜单图标不能为空', trigger: 'blur' }

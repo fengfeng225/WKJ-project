@@ -36,7 +36,7 @@
         </div>
         <BL-table v-loading="listLoading" :data="tableData">
           <el-table-column prop="account" label="账号" />
-          <el-table-column prop="realName" label="名称" />
+          <el-table-column prop="userName" label="名称" />
           <el-table-column prop="creatorTime" label="创建时间" :formatter="dateFormatTable" />
           <el-table-column prop="sortCode" label="排序" align="center" />
           <el-table-column label="状态" align="center">

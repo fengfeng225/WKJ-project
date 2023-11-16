@@ -23,8 +23,8 @@
               </el-form-item>
             </el-col>
             <el-col :sm="12" :xs="24">
-              <el-form-item label="名称" prop="realName">
-                <el-input v-model="dataForm.realName" placeholder="请输入名称" />
+              <el-form-item label="名称" prop="userName">
+                <el-input v-model="dataForm.userName" placeholder="请输入名称" />
               </el-form-item>
             </el-col>
             <el-col :sm="24" :xs="24">
@@ -82,7 +82,7 @@ export default {
         sortCode: 0,
         enabledMark: 1,
         account: '',
-        realName: '',
+        userName: '',
         roleId: [],
         description: ''
       },
@@ -93,7 +93,7 @@ export default {
           { required: true, message: '请输入账户', trigger: 'blur' },
           { max: 50, message: '账户最多为50个字符！', trigger: 'blur' }
         ],
-        realName: [
+        userName: [
           { required: true, message: '请输入名称', trigger: 'blur' },
           { max: 50, message: '名称最多为50个字符！', trigger: 'blur' }
         ]
