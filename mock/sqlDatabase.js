@@ -548,7 +548,7 @@ const checkPlanList = [
     'category': '短期盲板',
     'entityCode': 'shortBill',
     'runCount': '12',
-    'cron': '0 0 0 0 * 1',
+    'cron': '0 0 0 ? * 1',
     'description': '每月检查一次',
     'nextRunTime': null,
     'lastRunTime': 1700189407000,

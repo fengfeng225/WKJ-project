@@ -32,7 +32,7 @@
             <el-col :span="24">
               <el-form-item label="检查周期" prop="cron">
                 <el-input v-model="dataForm.cron" placeholder="Cron表达式" readonly>
-                  <el-button slot="append" icon="el-icon-edit-outline" @click="showCron = true" />
+                  <el-button slot="append" icon="el-icon-edit-outline" @click="showCronDialog" />
                 </el-input>
               </el-form-item>
             </el-col>
@@ -57,8 +57,9 @@
         lock-scroll
         append-to-body
         width="700px"
+        @closed="showCronTab = false"
       >
-        
+        <vcrontab v-if="showCronTab" :expression="dataForm.cron" @hide="showCron = false" @fill="crontabFill" />
       </el-dialog>
     </div>
   </transition>
@@ -66,16 +67,18 @@
 
 <script>
 import { checkPlanInfo, checkPlanUpdate } from '@/api/scheduledTask/checkPlan'
+import vcrontab from '@/components/vcrontab'
 
 export default {
   components: {
-    
+    vcrontab
   },
   data() {
     return {
       loading: false,
       btnLoading: false,
       showCron: false,
+      showCronTab: false,
       dataForm: {
         id: '',
         fullName: '',
@@ -123,6 +126,15 @@ export default {
 
     goBack() {
       this.$emit('close')
+    },
+
+    showCronDialog() {
+      this.showCron = true
+      this.showCronTab = true
+    },
+
+    crontabFill(value) {
+      this.dataForm.cron = value
     }
 
   }
