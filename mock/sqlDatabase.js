@@ -543,6 +543,20 @@ const users = [
   }
 ]
 
+const checkPlanList = [
+  {
+    'category': '短期盲板',
+    'entityCode': 'shortBill',
+    'runCount': '12',
+    'cron': '0 0 0 0 * 1',
+    'description': '每月检查一次',
+    'nextRunTime': null,
+    'lastRunTime': 1700189407000,
+    'id': '493638496171327557',
+    'enabledMark': 1
+  }
+]
+
 const getShortBills = function() {
   return mbShortBills
 }
@@ -595,6 +609,10 @@ const getUsers = function() {
   return users
 }
 
+const getCheckPlanList = function() {
+  return checkPlanList
+}
+
 module.exports = {
   getShortBills,
   getLongBills,
@@ -608,5 +626,6 @@ module.exports = {
   getRoleList,
   getRoleRelation,
   getUserRelation,
-  getUsers
+  getUsers,
+  getCheckPlanList
 }

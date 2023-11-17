@@ -272,7 +272,7 @@ export default {
         this.treeData = parent
 
         this.$nextTick(() => {
-          if (this.$refs.Tree) this.$refs.Tree.setCurrentKey('')
+          if (this.$refs.Tree) this.$refs.Tree.setCurrentKey('-1')
           this.treeLoading = false
           this.initData()
         })

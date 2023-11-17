@@ -28,7 +28,7 @@
       <div class="BL-common-layout-main BL-flex-main">
         <BL-table v-loading="listLoading" :data="list">
           <ex-table-column prop="category" label="类目" />
-          <ex-table-column prop="entityCode" label="编码" />
+          <!-- <ex-table-column prop="entityCode" label="编码" /> -->
           <ex-table-column prop="runCount" label="下发次数" />
           <el-table-column
             prop="lastRunTime"
@@ -72,14 +72,14 @@
         </BL-table>
 
         <ConfigForm v-if="formVisible" ref="ConfigForm" @close="closeForm" />
-        <Log v-if="logVisible" ref="Log" @close="logVisible=false" />
+        <Log v-if="logVisible" ref="Log" @close="logVisible = false" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { checkPlanList, checkPlanDelete, checkPlanStop, checkPlanEnable } from '@/api/system/timeTask'
+import { checkPlanList, checkPlanDelete, checkPlanStop, checkPlanEnable } from '@/api/scheduledTask/checkPlan'
 import { dateFormatTable } from '@/utils'
 
 import ConfigForm from './configForm'
