@@ -130,13 +130,13 @@
 </template>
 
 <script>
-import { getShortBills, deleteShortBill, getDeviceNameCategory } from '@/api/bill/mb/bill'
+import { getShortBills, deleteShortBill, getShortDeviceNameCategory } from '@/api/bill/mb/bill'
 import { getGroupCategories } from '@/api/bill/mb/group'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 import { getMBStatusStyle, getMBStatusLabel } from '@/utils/helperHandlers'
 import { dateFormatTable } from '@/utils'
 
-import BillForm from '../BillForm'
+import BillForm from './BillForm'
 
 export default {
   name: 'ShortBill',
@@ -256,7 +256,7 @@ export default {
       this.deviceNameList = res.data.list
     })
     this.getGroupList()
-    this.getDeviceNameCategory()
+    this.getShortDeviceNameCategory()
   },
 
   methods: {
@@ -281,8 +281,8 @@ export default {
       })
     },
 
-    getDeviceNameCategory() {
-      getDeviceNameCategory().then(res => {
+    getShortDeviceNameCategory() {
+      getShortDeviceNameCategory().then(res => {
         this.deviceNameCategory = res.data.list.map(item => {
           return {
             text: this.getDeviceName(item),
@@ -360,7 +360,7 @@ export default {
     },
 
     removeHandle(id) {
-      this.$confirm('您确定要删除该盲板吗?', '提示', {
+      this.$confirm('您确定要删除该条数据吗?', '提示', {
         type: 'warning'
       }).then(() => {
         deleteShortBill(id).then(res => {

@@ -362,6 +362,28 @@ const menuList = [
     'sortCode': 0,
     'id': '8ee6ec454qwr879asfuu184f00c7690798',
     'parentId': '8ee78954qwrwrac4safsaf00c7690798'
+  },
+  {
+    'enabledMark': 1,
+    'fullName': '定时任务',
+    'entityCode': 'scheduledTask',
+    'icon': 'icon-ym icon-ym-sysQuartz',
+    'urlAddress': '',
+    'type': 1,
+    'sortCode': 0,
+    'id': '8ee6ec45qw987agf5654wq00c7690798',
+    'parentId': '-1'
+  },
+  {
+    'enabledMark': 1,
+    'fullName': '检查计划',
+    'entityCode': 'checkPlan',
+    'icon': 'ym-custom ym-custom-calendar-check',
+    'urlAddress': 'scheduledTask/checkPlan',
+    'type': 2,
+    'sortCode': 0,
+    'id': '8ee6ec45qw987agf5654wq9874qw5r',
+    'parentId': '8ee6ec45qw987agf5654wq00c7690798'
   }
 ]
 
