@@ -58,7 +58,7 @@
         append-to-body
         width="700px"
       >
-        
+
       </el-dialog>
     </div>
   </transition>
@@ -69,7 +69,7 @@ import { checkPlanInfo, checkPlanUpdate } from '@/api/scheduledTask/checkPlan'
 
 export default {
   components: {
-    
+
   },
   data() {
     return {
