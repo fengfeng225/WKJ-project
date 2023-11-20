@@ -4,6 +4,11 @@
     <div class="BL-common-layout-left">
       <div class="BL-common-title">
         <h2>班组</h2>
+        <span class="options">
+          <el-tooltip content="台账" placement="top">
+            <el-link icon="ym-custom ym-custom-tooltip-image" :underline="false" @click="showBill" />
+          </el-tooltip>
+        </span>
       </div>
       <el-scrollbar
         v-loading="treeLoading"
@@ -124,24 +129,27 @@
         />
 
         <BillForm v-if="billFormVisible" ref="BillForm" @close="closeForm" />
+        <BillImage v-if="billImageVisible" @close="billImageVisible = false" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getLongBills, deleteLongBill, getLongDeviceNameCategory } from '@/api/bill/mb/bill'
+import { getShortBills, deleteShortBill, getShortDeviceNameCategory } from '@/api/bill/mb/bill'
 import { getGroupCategories } from '@/api/bill/mb/group'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 import { getMBStatusStyle, getMBStatusLabel } from '@/utils/helperHandlers'
 import { dateFormatTable } from '@/utils'
 
 import BillForm from './BillForm'
+import BillImage from './BillImage'
 
 export default {
-  name: 'LongBill',
+  name: 'ShortBill',
   components: {
-    BillForm
+    BillForm,
+    BillImage
   },
   data() {
     return {
@@ -239,7 +247,8 @@ export default {
         }
       ],
       billFormVisible: false,
-      mtToggleVisible: false
+      mtToggleVisible: false,
+      billImageVisible: false
     }
   },
 
@@ -256,7 +265,7 @@ export default {
       this.deviceNameList = res.data.list
     })
     this.getGroupList()
-    this.getLongDeviceNameCategory()
+    this.getShortDeviceNameCategory()
   },
 
   methods: {
@@ -281,8 +290,8 @@ export default {
       })
     },
 
-    getLongDeviceNameCategory() {
-      getLongDeviceNameCategory().then(res => {
+    getShortDeviceNameCategory() {
+      getShortDeviceNameCategory().then(res => {
         this.deviceNameCategory = res.data.list.map(item => {
           return {
             text: this.getDeviceName(item),
@@ -304,7 +313,7 @@ export default {
 
     initData() {
       this.tableLoading = true
-      getLongBills(this.params).then(res => {
+      getShortBills(this.params).then(res => {
         this.tableData = res.data.list
         this.total = res.data.pagination.total
         this.tableLoading = false
@@ -346,6 +355,10 @@ export default {
       this.initData()
     },
 
+    showBill() {
+      this.billImageVisible = true
+    },
+
     closeForm(isRefresh) {
       this.billFormVisible = false
 
@@ -363,7 +376,7 @@ export default {
       this.$confirm('您确定要删除该条数据吗?', '提示', {
         type: 'warning'
       }).then(() => {
-        deleteLongBill(id).then(res => {
+        deleteShortBill(id).then(res => {
           this.$message({
             message: res.message,
             type: 'success',

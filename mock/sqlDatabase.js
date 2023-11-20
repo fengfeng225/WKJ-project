@@ -311,7 +311,7 @@ const menuList = [
   {
     'enabledMark': 1,
     'fullName': '盲板管理',
-    'entityCode': 'bill',
+    'entityCode': 'bill/mb',
     'icon': 'el-icon-folder',
     'urlAddress': '',
     'type': 1,
@@ -322,7 +322,7 @@ const menuList = [
   {
     'enabledMark': 1,
     'fullName': '长期台账',
-    'entityCode': 'mb/longBill',
+    'entityCode': 'longBill',
     'icon': 'el-icon-document-copy',
     'urlAddress': 'bill/mb/longBill',
     'type': 2,
@@ -333,7 +333,7 @@ const menuList = [
   {
     'enabledMark': 1,
     'fullName': '短期台账',
-    'entityCode': 'mb/shortBill',
+    'entityCode': 'shortBill',
     'icon': 'el-icon-document',
     'urlAddress': 'bill/mb/shortBill',
     'type': 2,
@@ -344,7 +344,7 @@ const menuList = [
   {
     'enabledMark': 1,
     'fullName': '拆装明细',
-    'entityCode': 'mb/disassemblyDetails',
+    'entityCode': 'disassemblyDetails',
     'icon': 'el-icon-notebook-2',
     'urlAddress': 'bill/mb/disassemblyDetails',
     'type': 2,
@@ -355,13 +355,68 @@ const menuList = [
   {
     'enabledMark': 1,
     'fullName': '班组',
-    'entityCode': 'mb/groups',
+    'entityCode': 'groups',
     'icon': 'ym-custom ym-custom-format-list-bulleted',
     'urlAddress': 'bill/mb/groups',
     'type': 2,
     'sortCode': 0,
     'id': '8ee6ec454qwr879asfuu184f00c7690798',
     'parentId': '8ee78954qwrwrac4safsaf00c7690798'
+  },
+  {
+    'enabledMark': 1,
+    'fullName': '未封堵管理',
+    'entityCode': 'bill/unblocked',
+    'icon': 'ym-custom ym-custom-block-helper',
+    'urlAddress': '',
+    'type': 1,
+    'sortCode': 0,
+    'id': '8eewqr565asfc4safsaf00c7690798',
+    'parentId': '-1'
+  },
+  {
+    'enabledMark': 1,
+    'fullName': '放空阀',
+    'entityCode': 'unblockedBill',
+    'icon': 'ym-custom ym-custom-battery-charging-3',
+    'urlAddress': 'bill/unblocked',
+    'type': 2,
+    'sortCode': 0,
+    'id': '8ee6ec4wqr16454a84f00c7690798',
+    'parentId': '8eewqr565asfc4safsaf00c7690798'
+  },
+  {
+    'enabledMark': 1,
+    'fullName': '班组',
+    'entityCode': 'groups',
+    'icon': 'ym-custom ym-custom-format-list-bulleted',
+    'urlAddress': 'bill/unblocked/groups',
+    'type': 2,
+    'sortCode': 0,
+    'id': '8ee6ec4156wqrkyu454a84f00c7690798',
+    'parentId': '8eewqr565asfc4safsaf00c7690798'
+  },
+  {
+    'enabledMark': 1,
+    'fullName': '定时任务',
+    'entityCode': 'scheduledTask',
+    'icon': 'icon-ym icon-ym-sysQuartz',
+    'urlAddress': '',
+    'type': 1,
+    'sortCode': 0,
+    'id': '8ee6ec45qw987agf5654wq00c7690798',
+    'parentId': '-1'
+  },
+  {
+    'enabledMark': 1,
+    'fullName': '检查计划',
+    'entityCode': 'checkPlan',
+    'icon': 'ym-custom ym-custom-calendar-check',
+    'urlAddress': 'scheduledTask/checkPlan',
+    'type': 2,
+    'sortCode': 0,
+    'id': '8ee6ec45qw987agf5654wq9874qw5r',
+    'parentId': '8ee6ec45qw987agf5654wq00c7690798'
   }
 ]
 
@@ -521,6 +576,20 @@ const users = [
   }
 ]
 
+const checkPlanList = [
+  {
+    'category': '短期盲板',
+    'entityCode': 'shortBill',
+    'runCount': '12',
+    'cron': '0 0 0 ? * 1',
+    'description': '每月检查一次',
+    'nextRunTime': null,
+    'lastRunTime': 1700189407000,
+    'id': '493638496171327557',
+    'enabledMark': 1
+  }
+]
+
 const getShortBills = function() {
   return mbShortBills
 }
@@ -573,6 +642,10 @@ const getUsers = function() {
   return users
 }
 
+const getCheckPlanList = function() {
+  return checkPlanList
+}
+
 module.exports = {
   getShortBills,
   getLongBills,
@@ -586,5 +659,6 @@ module.exports = {
   getRoleList,
   getRoleRelation,
   getUserRelation,
-  getUsers
+  getUsers,
+  getCheckPlanList
 }

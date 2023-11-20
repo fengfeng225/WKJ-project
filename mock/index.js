@@ -7,6 +7,7 @@ const bill = require('./bill')
 const groupCategory = require('./groupCategory')
 const dictionary = require('./dictionary')
 const system = require('./system')
+const checkPlan = require('./checkPlan')
 
 const mocks = [
   ...user,
@@ -14,7 +15,8 @@ const mocks = [
   ...bill,
   ...groupCategory,
   ...dictionary,
-  ...system
+  ...system,
+  ...checkPlan
 ]
 
 // for front mock
