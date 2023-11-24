@@ -58,16 +58,7 @@ service.interceptors.response.use(
       Message({
         message: res.message || '请求出错，请重试',
         type: 'error',
-        duration: 1500,
-        onClose: () => {
-          if (res.code === 601) {
-            // to re-login
-            store.dispatch('user/resetToken').then(() => {
-              if (window.location.pathname.indexOf('login') > -1) return
-              setTimeout(() => { location.reload() }, 100)
-            })
-          }
-        }
+        duration: 1500
       })
       return Promise.reject(new Error(res.message || 'Error'))
     } else {
@@ -76,14 +67,24 @@ service.interceptors.response.use(
   },
   error => {
     if (process.env.NODE_ENV === 'development') {
-      console.log(error) // for debug
+      console.log(error.response.data) // for debug
     }
+
     Message({
-      message: '请求出错，请重试',
+      message: error.response.data.message || '请求出错，请重试',
       type: 'error',
-      duration: 1500
+      duration: 1500,
+      onClose: () => {
+        if (error.response.code === 600) {
+          // to re-login
+          store.dispatch('user/resetToken').then(() => {
+            if (window.location.pathname.indexOf('login') > -1) return
+            setTimeout(() => { location.reload() }, 100)
+          })
+        }
+      }
     })
-    return Promise.reject(error)
+    return Promise.reject(error.response.data)
   }
 )
 
