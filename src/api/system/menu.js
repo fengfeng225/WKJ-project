@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getMenuList(data) {
   return request({
-    url: '/api/system/menuList',
+    url: '/api/system/menu/list',
     method: 'GET',
     data
   })
