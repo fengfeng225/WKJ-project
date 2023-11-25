@@ -8,7 +8,7 @@
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="hover">
         <div class="avatar-wrapper">
           <el-avatar :size="26" icon="el-icon-user-solid" class="user-avatar" />
-          <span>{{ userInfo.userName }}</span>
+          <span>{{ userInfo.username }}</span>
           <i class="el-icon-arrow-down" />
         </div>
         <el-dropdown-menu slot="dropdown">

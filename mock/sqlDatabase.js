@@ -448,7 +448,7 @@ const buttons = [
   }
 ]
 
-// 表
+// 表permission
 const columns = [
   {
     'id': '398677119342739526',
