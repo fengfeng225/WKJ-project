@@ -53,8 +53,8 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="10">
-                  <el-form-item label="负责班组" prop="groupId">
-                    <el-select v-model="dataForm.groupId" placeholder="请选择负责班组" style="width: 100%;">
+                  <el-form-item label="负责班组" prop="classId">
+                    <el-select v-model="dataForm.classId" placeholder="请选择负责班组" style="width: 100%;">
                       <el-option v-for="item in groups" :key="item.id" :label="item.label" :value="item.id" />
                     </el-select>
                   </el-form-item>
@@ -129,8 +129,8 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="管理干部" prop="Manager">
-                    <el-input v-model="dataForm.Manager" placeholder="请输入管理干部" />
+                  <el-form-item label="管理干部" prop="manager">
+                    <el-input v-model="dataForm.manager" placeholder="请输入管理干部" />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -153,8 +153,8 @@ export default {
       formLoading: false,
       btnLoading: false,
       dataForm: {
-        id: '',
-        groupId: '',
+        id: null,
+        classId: null,
         name: '',
         code: '',
         status: null,
@@ -168,7 +168,7 @@ export default {
         material: '',
         disassembleTime: null,
         operator: '',
-        Manager: '',
+        manager: '',
         enabledMark: 1
       },
       groups: [],
@@ -199,7 +199,7 @@ export default {
 
   methods: {
     init(id) {
-      this.dataForm.id = id || ''
+      this.dataForm.id = id || null
       if (id) {
         this.formLoading = true
         getShortBillInfo(id).then(res => {

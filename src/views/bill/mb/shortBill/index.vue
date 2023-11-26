@@ -146,7 +146,7 @@ export default {
   data() {
     return {
       params: {
-        groupId: '',
+        classId: null,
         keyword: '',
         currentPage: 1,
         pageSize: 20,
@@ -231,7 +231,7 @@ export default {
         },
         {
           label: '管理干部',
-          prop: 'Manager'
+          prop: 'manager'
         },
         {
           label: '操作',
@@ -266,7 +266,7 @@ export default {
         const parent = [{
           label: '全部',
           hasChildren: true,
-          id: '-1',
+          id: -1,
           children: res.data.list
         }]
         this.treeData = parent
@@ -342,7 +342,7 @@ export default {
 
       // 定义表头对应关系
       const headers = {
-        '班组': 'groupId',
+        '班组': 'classId',
         '装置名称': 'name',
         '盲板编号': 'code',
         '管径': 'pipDiameter',
@@ -357,7 +357,7 @@ export default {
         '盲板材质': 'material',
         '创建时间': 'creatorTime',
         '操作人员': 'operator',
-        '管理干部': 'Manager'
+        '管理干部': 'manager'
       }
 
       const groups = {}
@@ -374,7 +374,7 @@ export default {
         try {
           const { data: { list }} = await getAllShortBills()
           list.forEach(row => {
-            row.groupId = groups[row.groupId]
+            row.classId = groups[row.classId]
             row.name = deviceNames[row.name]
             row.status = row.status ? '通' : '盲'
           })
@@ -431,9 +431,9 @@ export default {
     },
 
     handleNodeClick(data) {
-      if (this.params.groupId === data.id) return
+      if (this.params.classId === data.id) return
 
-      this.params.groupId = data.id
+      this.params.classId = data.id
       this.initData()
     },
 

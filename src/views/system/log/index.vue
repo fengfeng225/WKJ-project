@@ -1,6 +1,6 @@
 <template>
   <div class="BL-common-layout systemLogs">
-    <div class="BL-common-layout-center">
+    <div class="BL-common-layout-center BL-flex-main">
       <el-row class="BL-common-search-box" :gutter="16">
         <el-form @submit.native.prevent>
           <el-col :span="6">
@@ -37,7 +37,7 @@
           </el-col>
         </el-form>
       </el-row>
-      <div class="BL-common-layout-main BL-flex-main">
+      <div class="BL-common-layout-main">
         <el-tabs
           v-model="activeName"
           type="border-card"
@@ -101,7 +101,7 @@
               </el-table-column>
             </BL-table>
           </el-tab-pane>
-          <pagination
+          <BL-pagination
             :total="total"
             :page.sync="params.currentPage"
             :limit.sync="params.pageSize"
@@ -126,7 +126,7 @@ export default {
   data() {
     return {
       formVisible: false,
-      listLoading: true,
+      listLoading: false,
       activeName: '1',
       errorLogData: [],
       requestLogData: [],
@@ -170,7 +170,7 @@ export default {
     }
   },
   created() {
-    this.initData()
+    // this.initData()
   },
   methods: {
     initData() {
@@ -270,12 +270,12 @@ export default {
       word-break: break-all;
     }
 
-    :deep(.el-tabs__content) {
+    ::v-deep .el-tabs__content {
       height: calc(100% - 40px);
       padding: 0;
 
       .el-tab-pane {
-        height: calc(100% - 110px);
+        height: calc(100% - 80px);
         overflow: hidden;
       }
     }
