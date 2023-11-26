@@ -1,24 +1,22 @@
 import request from '@/utils/request'
 
-export function getButtonAuthorizeList(moduleId) {
+export function getButtonAuthorizeList(menuId) {
   return request({
-    url: '/api/system/menu/button/list',
-    method: 'GET',
-    data: { moduleId }
+    url: `/api/system/menuButton/list/${menuId}`,
+    method: 'GET'
   })
 }
 
 export function delButton(id) {
   return request({
-    url: '/api/system/menu/button',
-    method: 'DELETE',
-    data: { id }
+    url: `/api/system/menuButton/${id}`,
+    method: 'DELETE'
   })
 }
 
 export function createButton(data) {
   return request({
-    url: '/api/system/menu/button',
+    url: '/api/system/menuButton',
     method: 'POST',
     data
   })
@@ -26,7 +24,7 @@ export function createButton(data) {
 
 export function updateButton(data) {
   return request({
-    url: '/api/system/menu/button',
+    url: `/api/system/menuButton/${data.id}`,
     method: 'PUT',
     data
   })
@@ -34,8 +32,7 @@ export function updateButton(data) {
 
 export function getButtonInfo(id) {
   return request({
-    url: '/api/system/menu/button/info',
-    method: 'GET',
-    data: { id }
+    url: `/api/system/menuButton/${id}`,
+    method: 'GET'
   })
 }
