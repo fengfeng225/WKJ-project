@@ -166,7 +166,7 @@ export default {
     // 单选切换选项
     handleNodeClick(node) {
       if (!this.multiple) {
-        if (this.lastLevel && node[this.lastLevelKey] && node[this.lastLevelKey] != this.lastLevelValue) return
+        if (this.lastLevel && node[this.lastLevelKey] && node[this.lastLevelKey] !== this.lastLevelValue) return
         this.valueTitle = node[this.props.label]
         this.$emit('input', node[this.props.value], node)
         this.$emit('change', node[this.props.value], node)
@@ -182,7 +182,7 @@ export default {
         selectedTextData = this.$refs.selectTree.getCheckedNodes(true)
         for (let i = 0; i < selectedTextData.length; i++) {
           const e = selectedTextData[i]
-          if (e[this.lastLevelKey] == this.lastLevelValue) {
+          if (e[this.lastLevelKey] === this.lastLevelValue) {
             selectedData.push(e[this.props.value])
             titleList.push(e[this.props.label])
           }

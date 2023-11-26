@@ -331,6 +331,15 @@
   }
 }
 
+.table-switch.el-switch.is-disabled {
+  opacity: 1;
+
+  .el-switch__core,
+  .el-switch__label {
+    cursor: pointer;
+  }
+}
+
 .BL-common-page-header {
   padding: 14px 10px;
   display: flex;

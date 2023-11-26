@@ -4,6 +4,11 @@
     <div class="BL-common-layout-left">
       <div class="BL-common-title">
         <h2>班组</h2>
+        <span class="options">
+          <el-tooltip content="台账" placement="top">
+            <el-link icon="ym-custom ym-custom-tooltip-image" :underline="false" @click="showBill" />
+          </el-tooltip>
+        </span>
       </div>
       <el-scrollbar
         v-loading="treeLoading"
@@ -124,29 +129,32 @@
         />
 
         <BillForm v-if="billFormVisible" ref="BillForm" @close="closeForm" />
+        <BillImage v-if="billImageVisible" @close="billImageVisible = false" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getAllShortBills, getShortBills, deleteShortBill, getShortDeviceNameCategory } from '@/api/bill/mb/bill'
+import { getShortBills, deleteShortBill, getShortDeviceNameCategory } from '@/api/bill/mb/bill'
 import { getGroupCategories } from '@/api/bill/mb/group'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 import { getMBStatusStyle, getMBStatusLabel } from '@/utils/helperHandlers'
-import { dateFormatTable, transToTDArray } from '@/utils'
+import { dateFormatTable } from '@/utils'
 
 import BillForm from './BillForm'
+import BillImage from './BillImage'
 
 export default {
   name: 'ShortBill',
   components: {
-    BillForm
+    BillForm,
+    BillImage
   },
   data() {
     return {
       params: {
-        classId: null,
+        groupId: '',
         keyword: '',
         currentPage: 1,
         pageSize: 20,
@@ -231,7 +239,7 @@ export default {
         },
         {
           label: '管理干部',
-          prop: 'manager'
+          prop: 'Manager'
         },
         {
           label: '操作',
@@ -239,7 +247,8 @@ export default {
         }
       ],
       billFormVisible: false,
-      mtToggleVisible: false
+      mtToggleVisible: false,
+      billImageVisible: false
     }
   },
 
@@ -266,7 +275,7 @@ export default {
         const parent = [{
           label: '全部',
           hasChildren: true,
-          id: -1,
+          id: '-1',
           children: res.data.list
         }]
         this.treeData = parent
@@ -337,104 +346,17 @@ export default {
       return ''
     },
 
-    exportData() {
-      this.exportLoading = true
-
-      // 定义表头对应关系
-      const headers = {
-        '班组': 'classId',
-        '装置名称': 'name',
-        '盲板编号': 'code',
-        '管径': 'pipDiameter',
-        '盲板安装位置描述（注明阀前或阀后）': 'description',
-        '盲通状态': 'status',
-        '拆装时间': 'disassembleTime',
-        '名称': 'pipelineMediaName',
-        '温度 (℃)': 'pipelineMediaTemperature',
-        '压力 (MPa)': 'pipelineMediaPressure',
-        '盲板规格 (mm)': 'size',
-        '盲板形式': 'type',
-        '盲板材质': 'material',
-        '创建时间': 'creatorTime',
-        '操作人员': 'operator',
-        '管理干部': 'manager'
-      }
-
-      const groups = {}
-      this.treeData[0].children.forEach(item => {
-        groups[item.id] = item.label
-      })
-
-      const deviceNames = {}
-      this.deviceNameList.forEach(item => {
-        deviceNames[item.entityCode] = item.fullName
-      })
-
-      import('@/vendor/Export2Excel').then(async excel => {
-        try {
-          const { data: { list }} = await getAllShortBills()
-          list.forEach(row => {
-            row.classId = groups[row.classId]
-            row.name = deviceNames[row.name]
-            row.status = row.status ? '通' : '盲'
-          })
-
-          const data = transToTDArray(headers, list)
-          const multiHeader = [[
-            '班组',
-            '装置名称',
-            '盲板编号',
-            '管径',
-            '盲板安装位置描述（注明阀前或阀后）',
-            '盲通状态',
-            '拆装时间',
-            '管线介质',
-            '',
-            '',
-            '盲板规格 (mm)',
-            '盲板形式',
-            '盲板材质',
-            '创建时间',
-            '操作人员',
-            '管理干部'
-          ]]
-          const merges = [
-            'A1:A2',
-            'B1:B2',
-            'C1:C2',
-            'D1:D2',
-            'E1:E2',
-            'F1:F2',
-            'G1:G2',
-            'H1:J1',
-            'K1:K2',
-            'L1:L2',
-            'M1:M2',
-            'N1:N2',
-            'O1:O2',
-            'P1:P2'
-          ]
-          excel.export_json_to_excel({
-            header: Object.keys(headers),
-            data,
-            filename: '短期盲板台账',
-            multiHeader,
-            merges,
-            autoWidth: true,
-            bookType: 'xlsx'
-          })
-          this.exportLoading = false
-        } catch (error) {
-          this.exportLoading = false
-        }
-      })
-    },
+    exportData() {},
 
     handleNodeClick(data) {
-      if (this.params.classId === data.id) return
+      if (this.params.groupId === data.id) return
 
-      this.params.classId = data.id
+      this.params.groupId = data.id
       this.initData()
+    },
+
+    showBill() {
+      this.billImageVisible = true
     },
 
     closeForm(isRefresh) {

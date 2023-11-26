@@ -106,11 +106,11 @@ export default {
   methods: {
     search() {
       let key = ''
-      if (this.activeName == '0') {
+      if (this.activeName === '0') {
         key = 'ymIcons'
-      } else if (this.activeName == '1') {
+      } else if (this.activeName === '1') {
         key = 'elementIcons'
-      } else if (this.activeName == '2') {
+      } else if (this.activeName === '2') {
         key = 'ymCustom'
       }
       if (this.keyword) {

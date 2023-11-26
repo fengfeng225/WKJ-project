@@ -41,8 +41,8 @@
           <el-table-column prop="sortCode" label="排序" width="90" align="center" />
           <el-table-column label="状态" width="90">
             <template slot-scope="scope">
-              <el-tag :type="scope.row.enabledMark == 1 ? 'success' : 'danger'" disable-transitions>
-                {{ scope.row.enabledMark == 1 ? '正常' : '停用' }}
+              <el-tag :type="scope.row.enabledMark === 1 ? 'success' : 'danger'" disable-transitions>
+                {{ scope.row.enabledMark === 1 ? '正常' : '停用' }}
               </el-tag>
             </template>
           </el-table-column>
@@ -167,7 +167,7 @@ export default {
           definition += `    "entityCode": "${item.entityCode}"\r\n`
 
           // Closing }
-          if (i != this.columnList.length - 1) {
+          if (i !== this.columnList.length - 1) {
             definition += '  },\r\n'
           } else {
             definition += '  }\r\n'

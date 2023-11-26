@@ -18,7 +18,7 @@ service.interceptors.request.use(
     if (store.getters.token) {
       config.headers['Authorization'] = getToken()
     }
-    if (config.method == 'get') {
+    if (config.method === 'get') {
       config.params = config.data
     }
     const timestamp = Date.parse(new Date()) / 1000
