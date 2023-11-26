@@ -1,7 +1,7 @@
 <template>
   <div class="BL-common-layout menu-list">
-    <div class="BL-common-layout-center">
-      <!-- <el-row class="BL-common-search-box" :gutter="16">
+    <div class="BL-common-layout-center BL-flex-main">
+      <el-row class="BL-common-search-box" :gutter="16">
         <el-form @submit.native.prevent>
           <el-col :span="6">
             <el-form-item label="关键词">
@@ -20,8 +20,8 @@
             </el-form-item>
           </el-col>
         </el-form>
-      </el-row> -->
-      <div class="BL-common-layout-main BL-flex-main">
+      </el-row>
+      <div class="BL-common-layout-main">
         <div class="box">
           <div class="BL-common-head">
             <el-button type="primary" icon="el-icon-plus" @click="addOrUpdateHandle()">新建</el-button>
@@ -82,7 +82,7 @@
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="操作" width="150">
+            <el-table-column label="操作" width="150" fixed="right">
               <template slot-scope="scope">
                 <el-button type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
                 <el-button type="text" class="BL-table-delBtn" @click="handleDel(scope.row.id)">删除</el-button>
@@ -122,7 +122,6 @@
 </template>
 <script>
 import { getMenuList, delMenu } from '@/api/system/menu'
-import { getTreeData } from '@/utils/util'
 
 import Form from './Form'
 import ButtonAuthorizeListDrawer from './components/buttonAuthorize'
@@ -163,7 +162,7 @@ export default {
     initData() {
       this.listLoading = true
       getMenuList(this.params).then(res => {
-        this.treeList = getTreeData(res.data.list, '-1')
+        this.treeList = res.data.list
         this.listLoading = false
       }).catch(() => {
         this.listLoading = false
@@ -199,51 +198,41 @@ export default {
       }).catch(() => { })
     },
     handleButtonAuthorize(row) {
-      const moduleId = row.id
+      const menuId = row.id
       const fullName = row.fullName
       this.buttonAuthorizeListDrawer = true
       this.$nextTick(() => {
-        this.$refs.buttonAuthorizeList.init(moduleId, fullName)
+        this.$refs.buttonAuthorizeList.init(menuId, fullName)
       })
     },
     handleColumnAuthorize(row) {
-      const moduleId = row.id
+      const menuId = row.id
       const fullName = row.fullName
       this.columnAuthorizeListDrawer = true
       this.$nextTick(() => {
-        this.$refs.ColumnAuthorizeList.init(moduleId, fullName)
+        this.$refs.ColumnAuthorizeList.init(menuId, fullName)
       })
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-  .menu-list {
-    .table-icon {
-      vertical-align: middle;
-      font-size: 16px;
-    }
-
-    .BL-common-layout-main {
-      padding: 0;
-    }
-
-    .menu-tab {
-      height: 100%;
-
-      :deep(.el-tabs__content) {
-        padding: 0;
-        height: calc(100% - 40px);
-
-        .box {
-          flex: 1;
-          height: 100%;
-          overflow: hidden;
-          display: flex;
-          flex-direction: column;
-          padding-bottom: 10px;
-        }
-      }
-    }
+.menu-list {
+  .table-icon {
+    vertical-align: middle;
+    font-size: 16px;
   }
+
+  .BL-common-layout-main {
+    padding: 0;
+  }
+
+  .box {
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 10px;
+  }
+}
 </style>

@@ -57,8 +57,8 @@ export default {
       formLoading: false,
       btnLoading: false,
       dataForm: {
-        id: '',
-        moduleId: '',
+        id: null,
+        menuId: null,
         fullName: '',
         entityCode: '',
         sortCode: 0,
@@ -76,9 +76,9 @@ export default {
     }
   },
   methods: {
-    init(moduleId, id) {
-      this.dataForm.id = id || ''
-      this.dataForm.moduleId = moduleId
+    init(menuId, id) {
+      this.dataForm.id = id || null
+      this.dataForm.menuId = menuId
       this.visible = true
 
       if (this.dataForm.id) {

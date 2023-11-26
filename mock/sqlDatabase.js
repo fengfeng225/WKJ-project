@@ -245,9 +245,9 @@ const menuList = [
   {
     'enabledMark': 1,
     'fullName': '系统图标',
-    'entityCode': 'systemIcon',
+    'entityCode': 'icon',
     'icon': 'icon-ym icon-ym-sysIcon',
-    'urlAddress': 'system/systemIcon',
+    'urlAddress': 'system/icon',
     'type': 2,
     'sortCode': 0,
     'id': 'aad12c217ea047e0814c631c4784f489',

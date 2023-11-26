@@ -92,22 +92,22 @@ export default {
       columnAuthorizeBatchFormVisible: false,
       columnExportFormVisible: false,
       dialogTitle: '',
-      moduleId: '',
+      menuId: null,
       listLoading: false,
       columnList: []
     }
   },
   methods: {
-    init(moduleId, fullName) {
+    init(menuId, fullName) {
       this.columnAuthorizeListDrawer = true
-      this.moduleId = moduleId
+      this.menuId = menuId
       this.dialogTitle = `列表权限 - ${fullName}`
       this.getList()
     },
 
     getList() {
       this.listLoading = true
-      getColumnAuthorizeList(this.moduleId).then(res => {
+      getColumnAuthorizeList(this.menuId).then(res => {
         this.columnList = res.data.list
         this.listLoading = false
       }).catch(() => {
@@ -118,14 +118,14 @@ export default {
     addOrUpdateHandle(id) {
       this.columnAuthorizeFormVisible = true
       this.$nextTick(() => {
-        this.$refs.ColumnAuthorizeForm.init(this.moduleId, id)
+        this.$refs.ColumnAuthorizeForm.init(this.menuId, id)
       })
     },
 
     handleBatchAdd() {
       this.columnAuthorizeBatchFormVisible = true
       this.$nextTick(() => {
-        this.$refs.ColumnAuthorizeBatchForm.init(this.moduleId)
+        this.$refs.ColumnAuthorizeBatchForm.init(this.menuId)
       })
     },
 

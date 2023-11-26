@@ -56,14 +56,14 @@ export default {
       btnLoading: false,
       content: '',
       dataForm: {
-        moduleId: '',
+        menuId: null,
         columnJson: []
       }
     }
   },
   methods: {
-    init(moduleId) {
-      this.dataForm.moduleId = moduleId
+    init(menuId) {
+      this.dataForm.menuId = menuId
       this.visible = true
       this.formLoading = true
       this.$nextTick(() => {

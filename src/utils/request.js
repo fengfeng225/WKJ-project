@@ -75,7 +75,7 @@ service.interceptors.response.use(
       type: 'error',
       duration: 1500,
       onClose: () => {
-        if (error.response.code === 600) {
+        if (error.response.data.code === 600) {
           // to re-login
           store.dispatch('user/resetToken').then(() => {
             if (window.location.pathname.indexOf('login') > -1) return

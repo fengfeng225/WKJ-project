@@ -69,7 +69,7 @@ export default {
     options: { type: Array, default: () => [] },
     placeholder: { type: String, default: '请选择' },
     // 初始值
-    value: '',
+    value: null,
     // 可清空选项
     clearable: { type: Boolean, default: false },
     // 能否搜索

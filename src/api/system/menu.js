@@ -10,9 +10,8 @@ export function getMenuList(data) {
 
 export function delMenu(id) {
   return request({
-    url: '/api/system/menu',
-    method: 'DELETE',
-    data: { id }
+    url: `/api/system/menu/${id}`,
+    method: 'DELETE'
   })
 }
 
@@ -26,7 +25,7 @@ export function createMenu(data) {
 
 export function updateMenu(data) {
   return request({
-    url: '/api/system/menu',
+    url: `/api/system/menu/${data.id}`,
     method: 'PUT',
     data
   })
@@ -34,16 +33,14 @@ export function updateMenu(data) {
 
 export function getMenuInfo(id) {
   return request({
-    url: '/api/system/menu/info',
-    method: 'GET',
-    data: { id }
+    url: `/api/system/menu/info/${id}`,
+    method: 'GET'
   })
 }
 
 export function getMenuSelector(id) {
   return request({
-    url: '/api/system/menu/selector',
-    method: 'GET',
-    data: { id }
+    url: `/api/system/menu/selector/${id}`,
+    method: 'GET'
   })
 }

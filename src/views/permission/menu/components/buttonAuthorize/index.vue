@@ -72,7 +72,7 @@ export default {
       buttonAuthorizeListDrawer: false,
       buttonAuthorizeFormVisible: false,
       dialogTitle: '',
-      moduleId: '',
+      menuId: null,
       loading: false,
       listLoading: false,
       btnList: []
@@ -80,15 +80,15 @@ export default {
   },
 
   methods: {
-    init(moduleId, fullName) {
+    init(menuId, fullName) {
       this.buttonAuthorizeListDrawer = true
-      this.moduleId = moduleId
+      this.menuId = menuId
       this.dialogTitle = `按钮权限 - ${fullName}`
       this.getList()
     },
     getList() {
       this.listLoading = true
-      getButtonAuthorizeList(this.moduleId).then(res => {
+      getButtonAuthorizeList(this.menuId).then(res => {
         this.btnList = res.data.list
         this.listLoading = false
       }).catch(() => {
@@ -99,7 +99,7 @@ export default {
     addOrUpdateHandle(id) {
       this.buttonAuthorizeFormVisible = true
       this.$nextTick(() => {
-        this.$refs.ButtonAuthorizeForm.init(this.moduleId, id)
+        this.$refs.ButtonAuthorizeForm.init(this.menuId, id)
       })
     },
 

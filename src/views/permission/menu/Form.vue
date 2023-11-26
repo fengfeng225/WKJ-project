@@ -20,6 +20,7 @@
           v-model="dataForm.parentId"
           :options="treeData"
           placeholder="选择上级菜单"
+          :disabled="!!dataForm.id"
         />
       </el-form-item>
       <el-form-item label="名称" prop="fullName">
@@ -36,7 +37,7 @@
         />
       </el-form-item>
       <el-form-item label="类型" prop="type">
-        <el-select v-model="dataForm.type" placeholder="请选择类型" @change="changeMenuType">
+        <el-select v-model="dataForm.type" placeholder="请选择类型" :disabled="!!dataForm.id" @change="changeMenuType">
           <el-option
             v-for="item in typeData"
             :key="item.entityCode"
@@ -81,7 +82,6 @@
 
 <script>
 import { getMenuSelector, createMenu, updateMenu, getMenuInfo } from '@/api/system/menu'
-import { getTreeData } from '@/utils/util'
 
 export default {
   data() {
@@ -101,8 +101,8 @@ export default {
       ],
       dictionaryData: [],
       dataForm: {
-        id: '',
-        parentId: '',
+        id: null,
+        parentId: null,
         fullName: '',
         entityCode: '',
         icon: '',
@@ -139,17 +139,16 @@ export default {
   methods: {
     init(id) {
       // Object.assign(this.$data, this.$options.data())
-      this.dataForm.id = id || ''
+      this.dataForm.id = id || null
       this.visible = true
 
       // 获取上级菜单
       getMenuSelector(id || 0).then(res => {
-        const children = getTreeData(res.data.list, '-1')
         const topItem = {
           fullName: '顶级节点',
           hasChildren: true,
-          id: '-1',
-          children
+          id: -1,
+          children: res.data.list
         }
         this.treeData = [topItem]
       })
@@ -157,6 +156,7 @@ export default {
       if (this.dataForm.id) {
         this.formLoading = true
         getMenuInfo(this.dataForm.id).then(res => {
+          res.data.parentId ??= -1
           this.dataForm = res.data
           this.formLoading = false
         }).catch(() => {
