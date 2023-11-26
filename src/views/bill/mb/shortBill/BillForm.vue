@@ -36,9 +36,7 @@
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="管径" prop="pipDiameter" label-width="60px">
-                    <BL-input-number v-model="dataForm.pipDiameter" placeholder="请输入管径">
-                      <template #suffix>DN</template>
-                    </BL-input-number>
+                    <el-input v-model="dataForm.pipDiameter" placeholder="请输入管径" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="14">
@@ -158,7 +156,7 @@ export default {
         name: '',
         code: '',
         status: null,
-        pipDiameter: null,
+        pipDiameter: '',
         description: '',
         pipelineMediaName: '',
         pipelineMediaTemperature: '',
