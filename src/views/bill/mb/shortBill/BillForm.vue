@@ -109,7 +109,6 @@
                   <el-form-item label="拆装时间" prop="disassembleTime">
                     <el-date-picker
                       v-model="dataForm.disassembleTime"
-                      value-format="timestamp"
                       type="datetime"
                       placeholder="请选择拆装时间"
                     />
@@ -160,14 +159,13 @@ export default {
         description: '',
         pipelineMediaName: '',
         pipelineMediaTemperature: '',
-        pipelineMediaPressure: null,
-        size: null,
+        pipelineMediaPressure: '',
+        size: '',
         type: '',
         material: '',
         disassembleTime: null,
         operator: '',
-        manager: '',
-        enabledMark: 1
+        manager: ''
       },
       groups: [],
       deviceNameList: [],

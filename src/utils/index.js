@@ -363,7 +363,7 @@ export function dateFormat(date, format) {
 
 // 表格专用
 export function dateFormatTable(row, column, cellValue, index, format) {
-  format = format || 'YYYY-MM-DD HH:mm'
+  format = format || 'YYYY-MM-DD HH:mm:ss'
   if (!cellValue) return ''
   return dayjs(cellValue).format(format)
 }

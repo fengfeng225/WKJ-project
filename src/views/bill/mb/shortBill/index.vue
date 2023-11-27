@@ -66,7 +66,7 @@
         <BL-table ref="BLTable" v-loading="tableLoading" :data="tableData" fixed-n-o row-key="id" @filter-change="deviceNameFilter">
           <template v-for="item in computedRoleColumnOptions">
             <template v-if="item.prop === 'action'">
-              <ex-table-column v-if="hasRoleButton(['btn_edit'])" :key="item.prop" :label="item.label" width="150" fixed="right">
+              <ex-table-column v-if="hasRoleButton(['btn_edit'])" :key="item.prop" :label="item.label" width="100" fixed="right">
                 <template #default="scope">
                   <el-button v-if="hasRoleButton('btn_edit')" type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
                   <el-button class="BL-table-delBtn" type="text" @click="removeHandle(scope.row.id)">删除</el-button>
@@ -96,7 +96,7 @@
               </ex-table-column>
             </template>
             <template v-else-if="item.prop === 'name'">
-              <ex-table-column :key="item.prop" :label="item.label" :filters="deviceNameCategory">
+              <ex-table-column :key="item.prop" :label="item.label" :filters="deviceNameListForFilter">
                 <template #default="scope">
                   {{ getDeviceName(scope.row.name) }}
                 </template>
@@ -130,7 +130,7 @@
 </template>
 
 <script>
-import { getAllShortBills, getShortBills, deleteShortBill, getShortDeviceNameCategory } from '@/api/bill/mb/bill'
+import { getAllShortBills, getShortBills, deleteShortBill } from '@/api/bill/mb/bill'
 import { getGroupCategories } from '@/api/bill/mb/group'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 import { getMBStatusStyle, getMBStatusLabel } from '@/utils/helperHandlers'
@@ -150,7 +150,7 @@ export default {
         keyword: '',
         currentPage: 1,
         pageSize: 20,
-        queryJson: null
+        queryJson: ''
       },
       total: 0,
       treeLoading: false,
@@ -162,7 +162,7 @@ export default {
       tableLoading: false,
       tableData: [],
       deviceNameList: [],
-      deviceNameCategory: [],
+      deviceNameListForFilter: [],
       importLoading: false,
       exportLoading: false,
       roleButtonOptions: ['btn_add', 'btn_edit'],
@@ -254,9 +254,14 @@ export default {
   created() {
     getOptionsByCode('deviceName').then(res => {
       this.deviceNameList = res.data.list
+      this.deviceNameListForFilter = res.data.list.map(item => {
+        return {
+          text: item.fullName,
+          value: item.entityCode
+        }
+      })
     })
     this.getGroupList()
-    this.getShortDeviceNameCategory()
   },
 
   methods: {
@@ -272,24 +277,13 @@ export default {
         this.treeData = parent
 
         this.$nextTick(() => {
-          if (this.$refs.Tree) this.$refs.Tree.setCurrentKey('-1')
+          if (this.$refs.Tree) this.$refs.Tree.setCurrentKey(-1)
           this.treeLoading = false
           this.initData()
         })
       }).catch(() => {
         this.treeLoading = false
       })
-    },
-
-    getShortDeviceNameCategory() {
-      getShortDeviceNameCategory().then(res => {
-        this.deviceNameCategory = res.data.list.map(item => {
-          return {
-            text: this.getDeviceName(item),
-            value: item
-          }
-        })
-      }).catch(() => {})
     },
 
     deviceNameFilter(filters) {
