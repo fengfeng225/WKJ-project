@@ -101,7 +101,7 @@
                 </el-col>
                 <el-col />
                 <el-col :span="6">
-                  <el-form-item label="盲通状态" prop="status">
+                  <el-form-item label="盲通状态" prop="status" required>
                     <el-switch v-model="dataForm.status" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0" @change="changeStatus" />
                   </el-form-item>
                 </el-col>
@@ -170,17 +170,47 @@ export default {
       groups: [],
       deviceNameList: [],
       dataRule: {
+        classId: [
+          { required: true, message: '请选择班组', trigger: 'change' }
+        ],
         name: [
           { required: true, message: '请选择装置名称', trigger: 'change' }
         ],
         code: [
           { required: true, message: '请输入盲板编号', trigger: 'blur' }
         ],
+        pipDiameter: [
+          { required: true, message: '请输入管径', trigger: 'blur' }
+        ],
+        description: [
+          { required: true, message: '请输入盲板安装位置描述', trigger: 'blur' }
+        ],
+        pipelineMediaName: [
+          { required: true, message: '请输入名称', trigger: 'blur' }
+        ],
+        pipelineMediaTemperature: [
+          { required: true, message: '请输入温度', trigger: 'blur' }
+        ],
+        pipelineMediaPressure: [
+          { required: true, message: '请输入压力', trigger: 'blur' }
+        ],
+        size: [
+          { required: true, message: '请输入盲板规格', trigger: 'blur' }
+        ],
+        type: [
+          { required: true, message: '请输入盲板形式', trigger: 'blur' }
+        ],
+        material: [
+          { required: true, message: '请输入盲板材质', trigger: 'blur' }
+        ],
         disassembleTime: [
           { required: true, message: '请选择拆装时间', trigger: 'change' }
         ],
         operator: [
           { required: true, message: '请输入操作人员', trigger: 'blur' }
+        ],
+        manager: [
+          { required: true, message: '请选择管理干部', trigger: 'change' }
         ]
       }
     }
