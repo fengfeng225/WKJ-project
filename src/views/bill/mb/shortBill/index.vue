@@ -252,15 +252,8 @@ export default {
   },
 
   created() {
-    getOptionsByCode('deviceName').then(res => {
-      this.deviceNameList = res.data.list
-      this.deviceNameListForFilter = res.data.list.map(item => {
-        return {
-          text: item.fullName,
-          value: item.entityCode
-        }
-      })
-    })
+    this.getDeviceNameList()
+    this.getManagerList()
     this.getGroupList()
   },
 
@@ -305,6 +298,22 @@ export default {
       }).catch(() => {
         this.tableLoading = false
       })
+    },
+
+    getDeviceNameList() {
+      getOptionsByCode('deviceName').then(res => {
+        this.deviceNameList = res.data.list
+        this.deviceNameListForFilter = res.data.list.map(item => {
+          return {
+            text: item.fullName,
+            value: item.entityCode
+          }
+        })
+      })
+    },
+
+    getManagerList() {
+
     },
 
     search() {

@@ -38,7 +38,7 @@
           <el-col :span="6">
             <el-form-item label="关键词">
               <el-input
-                v-model="keyword"
+                v-model="params.keyword"
                 placeholder="请输入关键词查询"
                 clearable
                 @keyup.enter.native="search()"
@@ -112,7 +112,9 @@ export default {
         children: 'children',
         label: 'fullName'
       },
-      keyword: '',
+      params: {
+        keyword: ''
+      },
       typeId: '',
       drawer: false,
       optionDialogVisible: false,
@@ -130,7 +132,7 @@ export default {
       this.getCurrentOptions()
     },
     reset() {
-      this.keyword = ''
+      this.params.keyword = ''
       this.getCurrentOptions()
     },
     initData() {
@@ -149,7 +151,7 @@ export default {
     },
     getCurrentOptions() {
       this.listLoading = true
-      getOptions(this.typeId, this.keyword).then(res => {
+      getOptions(this.typeId, this.params).then(res => {
         this.tableData = res.data.list
         this.listLoading = false
       }).catch(() => {

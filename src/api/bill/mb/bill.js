@@ -40,7 +40,7 @@ export function getShortBillInfo(id) {
 
 export function getLongBills(data) {
   return request({
-    url: '/api/admin/mb/longBills',
+    url: '/api/admin/mb/longBill',
     method: 'GET',
     data
   })
@@ -56,7 +56,7 @@ export function createLongBill(data) {
 
 export function updateLongBill(data) {
   return request({
-    url: `/api/admin/mb/longBill`,
+    url: `/api/admin/mb/longBill/${data.id}`,
     method: 'PUT',
     data
   })
@@ -64,23 +64,14 @@ export function updateLongBill(data) {
 
 export function deleteLongBill(id) {
   return request({
-    url: `/api/admin/mb/longBill`,
-    method: 'DELETE',
-    params: { id }
+    url: `/api/admin/mb/longBill/${id}`,
+    method: 'DELETE'
   })
 }
 
 export function getLongBillInfo(id) {
   return request({
-    url: `/api/admin/mb/LongBill/info`,
-    method: 'GET',
-    data: { id }
-  })
-}
-
-export function getLongDeviceNameCategory() {
-  return request({
-    url: `/api/admin/mb/longBill/deviceNameCategory`,
+    url: `/api/admin/mb/LongBill/${id}`,
     method: 'GET'
   })
 }

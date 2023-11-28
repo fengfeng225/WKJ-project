@@ -59,7 +59,7 @@ export default {
         ],
         entityCode: [
           { required: true, message: '请输入编码', trigger: 'blur' },
-          { max: 150, message: '字典编码最多为150个字符！', trigger: 'blur' }
+          { max: 150, message: '字典编码最多为50个字符！', trigger: 'blur' }
         ]
       }
     }

@@ -2,22 +2,21 @@ import request from '@/utils/request'
 
 export function getDictionaryList() {
   return request({
-    url: '/api/admin/systemData/dictionaryList',
+    url: '/api/admin/systemData/dictionary',
     method: 'GET'
   })
 }
 
 export function getDictionaryInfo(id) {
   return request({
-    url: '/api/admin/systemData/dictionary/info',
-    method: 'GET',
-    data: { id }
+    url: `/api/admin/systemData/dictionary/${id}`,
+    method: 'GET'
   })
 }
 
 export function updateDictionary(data) {
   return request({
-    url: '/api/admin/systemData/dictionary',
+    url: `/api/admin/systemData/dictionary/${data.id}`,
     method: 'PUT',
     data
   })
@@ -33,25 +32,23 @@ export function createDictionary(data) {
 
 export function deleteDictionary(id) {
   return request({
-    url: '/api/admin/systemData/dictionary',
-    method: 'DELETE',
-    data: { id }
+    url: `/api/admin/systemData/dictionary/${id}`,
+    method: 'DELETE'
   })
 }
 
-export function getOptions(id, keyword) {
+export function getOptions(id, data) {
   return request({
-    url: '/api/admin/systemData/dictionary/options',
+    url: `/api/admin/systemData/dictionary/${id}/option`,
     method: 'GET',
-    data: { id, keyword }
+    data
   })
 }
 
 export function deleteOption(id) {
   return request({
-    url: '/api/admin/systemData/dictionary/option',
-    method: 'DELETE',
-    data: { id }
+    url: `/api/admin/systemData/dictionary/option/${id}`,
+    method: 'DELETE'
   })
 }
 
@@ -65,7 +62,7 @@ export function createOption(data) {
 
 export function updateOption(data) {
   return request({
-    url: '/api/admin/systemData/dictionary/option',
+    url: `/api/admin/systemData/dictionary/option/${data.id}`,
     method: 'PUT',
     data
   })
@@ -73,16 +70,14 @@ export function updateOption(data) {
 
 export function getOptionInfo(id) {
   return request({
-    url: '/api/admin/systemData/dictionary/option/info',
-    method: 'GET',
-    data: { id }
+    url: `/api/admin/systemData/dictionary/option/${id}`,
+    method: 'GET'
   })
 }
 
 export function getOptionsByCode(code) {
   return request({
-    url: '/api/admin/systemData/dictionary/optionsByCode',
-    method: 'GET',
-    data: { code }
+    url: `/api/admin/systemData/dictionary/optionsByCode/${code}`,
+    method: 'GET'
   })
 }
