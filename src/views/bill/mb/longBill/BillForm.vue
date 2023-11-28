@@ -24,7 +24,7 @@
               <el-row :gutter="20" class="custom-row">
                 <el-col :span="8">
                   <el-form-item label="装置名称" prop="name">
-                    <el-select v-model="dataForm.name" placeholder="请输入装置名称">
+                    <el-select v-model="dataForm.name" placeholder="请输入装置名称" @change="changeDeviceName">
                       <el-option v-for="item in deviceNameList" :key="item.id" :label="item.fullName" :value="item.entityCode" />
                     </el-select>
                   </el-form-item>
@@ -36,9 +36,7 @@
                 </el-col>
                 <el-col :span="8">
                   <el-form-item label="管径" prop="pipDiameter" label-width="60px">
-                    <BL-input-number v-model="dataForm.pipDiameter" placeholder="请输入管径">
-                      <template #suffix>DN</template>
-                    </BL-input-number>
+                    <el-input v-model="dataForm.pipDiameter" placeholder="请输入管径" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="14">
@@ -53,8 +51,8 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="10">
-                  <el-form-item label="负责班组" prop="groupId">
-                    <el-select v-model="dataForm.groupId" placeholder="请选择负责班组" style="width: 100%;">
+                  <el-form-item label="负责班组" prop="classId">
+                    <el-select v-model="dataForm.classId" placeholder="请选择负责班组" style="width: 100%;">
                       <el-option v-for="item in groups" :key="item.id" :label="item.label" :value="item.id" />
                     </el-select>
                   </el-form-item>
@@ -77,7 +75,7 @@
                 </el-col>
                 <el-col :span="6">
                   <el-form-item label="压力 (MPa)" prop="pipelineMediaPressure">
-                    <BL-input-number v-model="dataForm.pipelineMediaPressure" :step="0.1" placeholder="请输入压力" />
+                    <el-input v-model="dataForm.pipelineMediaPressure" placeholder="请输入压力" />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -88,7 +86,7 @@
               <el-row :gutter="20" class="custom-row">
                 <el-col :span="6">
                   <el-form-item label="盲板规格(mm)" prop="size" label-width="120px">
-                    <BL-input-number v-model="dataForm.size" placeholder="请输入盲板规格" />
+                    <el-input v-model="dataForm.size" placeholder="请输入盲板规格" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
@@ -103,7 +101,7 @@
                 </el-col>
                 <el-col />
                 <el-col :span="6">
-                  <el-form-item label="盲通状态" prop="status">
+                  <el-form-item label="盲通状态" prop="status" required>
                     <el-switch v-model="dataForm.status" active-color="#13ce66" inactive-color="#ff4949" :active-value="1" :inactive-value="0" @change="changeStatus" />
                   </el-form-item>
                 </el-col>
@@ -111,7 +109,6 @@
                   <el-form-item label="拆装时间" prop="disassembleTime">
                     <el-date-picker
                       v-model="dataForm.disassembleTime"
-                      value-format="timestamp"
                       type="datetime"
                       placeholder="请选择拆装时间"
                     />
@@ -129,8 +126,10 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="管理干部" prop="Manager">
-                    <el-input v-model="dataForm.Manager" placeholder="请输入管理干部" />
+                  <el-form-item label="管理干部" prop="manager">
+                    <el-select v-model="dataForm.manager" placeholder="请选择管理干部">
+                      <el-option v-for="item in managerList" :key="item.id" :label="item.fullName" :value="item.entityCode" />
+                    </el-select>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -153,53 +152,82 @@ export default {
       formLoading: false,
       btnLoading: false,
       dataForm: {
-        id: '',
-        groupId: '',
+        id: null,
+        classId: null,
         name: '',
         code: '',
         status: null,
-        pipDiameter: null,
+        pipDiameter: '',
         description: '',
         pipelineMediaName: '',
         pipelineMediaTemperature: '',
-        pipelineMediaPressure: null,
-        size: null,
+        pipelineMediaPressure: '',
+        size: '',
         type: '',
         material: '',
         disassembleTime: null,
         operator: '',
-        Manager: '',
-        enabledMark: 1
+        manager: ''
       },
       groups: [],
       deviceNameList: [],
+      managerList: [],
       dataRule: {
+        classId: [
+          { required: true, message: '请选择班组', trigger: 'change' }
+        ],
         name: [
           { required: true, message: '请选择装置名称', trigger: 'change' }
         ],
         code: [
           { required: true, message: '请输入盲板编号', trigger: 'blur' }
         ],
+        pipDiameter: [
+          { required: true, message: '请输入管径', trigger: 'blur' }
+        ],
+        description: [
+          { required: true, message: '请输入盲板安装位置描述', trigger: 'blur' }
+        ],
+        pipelineMediaName: [
+          { required: true, message: '请输入名称', trigger: 'blur' }
+        ],
+        pipelineMediaTemperature: [
+          { required: true, message: '请输入温度', trigger: 'blur' }
+        ],
+        pipelineMediaPressure: [
+          { required: true, message: '请输入压力', trigger: 'blur' }
+        ],
+        size: [
+          { required: true, message: '请输入盲板规格', trigger: 'blur' }
+        ],
+        type: [
+          { required: true, message: '请输入盲板形式', trigger: 'blur' }
+        ],
+        material: [
+          { required: true, message: '请输入盲板材质', trigger: 'blur' }
+        ],
         disassembleTime: [
           { required: true, message: '请选择拆装时间', trigger: 'change' }
         ],
         operator: [
           { required: true, message: '请输入操作人员', trigger: 'blur' }
+        ],
+        manager: [
+          { required: true, message: '请选择管理干部', trigger: 'change' }
         ]
       }
     }
   },
 
   created() {
-    getOptionsByCode('deviceName').then(res => {
-      this.deviceNameList = res.data.list
-    })
+    this.getDeviceNameList()
+    this.getManagerList()
     this.getGroupCategories()
   },
 
   methods: {
     init(id) {
-      this.dataForm.id = id || ''
+      this.dataForm.id = id || null
       if (id) {
         this.formLoading = true
         getLongBillInfo(id).then(res => {
@@ -215,6 +243,26 @@ export default {
       getGroupCategories().then(res => {
         this.groups = res.data.list
       }).catch(() => {})
+    },
+
+    getDeviceNameList() {
+      getOptionsByCode('deviceName').then(res => {
+        this.deviceNameList = res.data.list
+      }).catch(() => {})
+    },
+
+    getManagerList() {
+      getOptionsByCode('manager').then(res => {
+        res.data.list.forEach(item => {
+          item.entityCode = item.entityCode.split(',')
+        })
+        this.managerList = res.data.list
+      }).catch(() => {})
+    },
+
+    changeDeviceName(name) {
+      const manager = this.managerList.find(item => item.entityCode.includes(name))
+      if (manager) this.dataForm.manager = manager.fullName
     },
 
     changeStatus() {

@@ -121,7 +121,7 @@ export default {
   data() {
     return {
       params: {
-        groupId: '',
+        groupId: null,
         keyword: '',
         currentPage: 1,
         pageSize: 20
@@ -227,13 +227,13 @@ export default {
         const parent = [{
           label: '全部',
           hasChildren: true,
-          id: '-1',
+          id: -1,
           children: res.data.list
         }]
         this.treeData = parent
 
         this.$nextTick(() => {
-          if (this.$refs.Tree) this.$refs.Tree.setCurrentKey('')
+          if (this.$refs.Tree) this.$refs.Tree.setCurrentKey(-1)
           this.treeLoading = false
           this.initData()
         })

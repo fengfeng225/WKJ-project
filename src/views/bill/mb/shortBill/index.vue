@@ -48,8 +48,8 @@
 
         <div class="BL-common-head-right">
           <div>
-            <el-button icon="el-icon-download" :loading="exportLoading" @click="exportData">导出</el-button>
-            <el-button icon="el-icon-plus" type="primary" @click="addOrUpdateHandle()">新建</el-button>
+            <el-button v-if="hasRoleButton('btn_export')" icon="el-icon-download" :loading="exportLoading" @click="exportData">导出</el-button>
+            <el-button v-if="hasRoleButton('btn_add')" icon="el-icon-plus" type="primary" @click="addOrUpdateHandle()">新建</el-button>
             <el-tooltip effect="dark" content="刷新" placement="top">
               <el-link
                 style="margin-left: 12px;"
@@ -66,10 +66,10 @@
         <BL-table ref="BLTable" v-loading="tableLoading" :data="tableData" fixed-n-o row-key="id" @filter-change="deviceNameFilter">
           <template v-for="item in computedRoleColumnOptions">
             <template v-if="item.prop === 'action'">
-              <ex-table-column v-if="hasRoleButton(['btn_edit'])" :key="item.prop" :label="item.label" width="100" fixed="right">
+              <ex-table-column v-if="hasRoleButton(['btn_add', 'btn_edit', 'btn_export', 'btn_delete'])" :key="item.prop" :label="item.label" width="100" fixed="right">
                 <template #default="scope">
                   <el-button v-if="hasRoleButton('btn_edit')" type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
-                  <el-button class="BL-table-delBtn" type="text" @click="removeHandle(scope.row.id)">删除</el-button>
+                  <el-button v-if="hasRoleButton('btn_delete')" class="BL-table-delBtn" type="text" @click="removeHandle(scope.row.id)">删除</el-button>
                   <!-- <BL-Dropdown style="margin-left: 8px;">
                     <span>
                       <el-button type="text" size="small">更多<i class="el-icon-arrow-down el-icon--right" /></el-button>
@@ -81,7 +81,7 @@
                 </template>
               </ex-table-column>
             </template>
-            <template v-else-if="item.prop === 'PipelineMedia'">
+            <template v-else-if="item.prop === 'pipelineMedia'">
               <ex-table-column :key="item.prop" :label="item.label">
                 <template v-for="column in item.children">
                   <ex-table-column :key="column.prop" :label="column.label" :prop="column.prop" :width="column.prop === 'pipelineMediaName' ? '100px' : 'auto'" />
@@ -165,7 +165,7 @@ export default {
       deviceNameListForFilter: [],
       importLoading: false,
       exportLoading: false,
-      roleButtonOptions: ['btn_add', 'btn_edit'],
+      roleButtonOptions: ['btn_add', 'btn_edit', 'btn_export', 'btn_delete'],
       roleColumnOptions: [
         {
           label: '装置名称',
@@ -193,7 +193,7 @@ export default {
         },
         {
           label: '管线介质',
-          prop: 'PipelineMedia',
+          prop: 'pipelineMedia',
           children: [
             {
               label: '名称',
@@ -245,7 +245,7 @@ export default {
 
   computed: {
     computedRoleColumnOptions() {
-      // this.setPermissions()
+      this.setPermissions()
 
       return this.roleColumnOptions
     }
@@ -253,7 +253,6 @@ export default {
 
   created() {
     this.getDeviceNameList()
-    this.getManagerList()
     this.getGroupList()
   },
 
@@ -309,11 +308,7 @@ export default {
             value: item.entityCode
           }
         })
-      })
-    },
-
-    getManagerList() {
-
+      }).catch(() => {})
     },
 
     search() {
@@ -478,10 +473,10 @@ export default {
       const menuId = this.$route.meta.menuId
 
       // Filter the user permission with the model and get only permissions for this page.
-      const list = permissionList.filter(o => o.menuId === menuId)
+      const list = permissionList.filter(o => o.id === menuId)
 
       // Get the permissions for this module and check for column permissions.
-      const columnList = list[0] && list[0].column ? list[0].column : []
+      const columnList = list[0] && list[0].columns ? list[0].columns : []
 
       const permissionColumnList = []
 
@@ -502,7 +497,7 @@ export default {
       this.roleColumnOptions = permissionColumnList
 
       // Get the permissions for this module and check for button permissions.
-      const buttonList = list[0] && list[0].button ? list[0].button : []
+      const buttonList = list[0] && list[0].buttons ? list[0].buttons : []
 
       const permissionButtonList = []
 

@@ -48,8 +48,8 @@
 
         <div class="BL-common-head-right">
           <div>
-            <el-button icon="el-icon-download" :loading="exportLoading" @click="exportData">导出</el-button>
-            <el-button icon="el-icon-plus" type="primary" @click="addOrUpdateHandle()">新建</el-button>
+            <el-button v-if="hasRoleButton('btn_export')" icon="el-icon-download" :loading="exportLoading" @click="exportData">导出</el-button>
+            <el-button v-if="hasRoleButton('btn_add')" icon="el-icon-plus" type="primary" @click="addOrUpdateHandle()">新建</el-button>
             <el-tooltip effect="dark" content="刷新" placement="top">
               <el-link
                 style="margin-left: 12px;"
@@ -66,10 +66,10 @@
         <BL-table ref="BLTable" v-loading="tableLoading" :data="tableData" fixed-n-o row-key="id" @filter-change="deviceNameFilter">
           <template v-for="item in computedRoleColumnOptions">
             <template v-if="item.prop === 'action'">
-              <ex-table-column v-if="hasRoleButton(['btn_edit'])" :key="item.prop" :label="item.label" width="150" fixed="right">
+              <ex-table-column v-if="hasRoleButton(['btn_add', 'btn_edit', 'btn_export', 'btn_delete'])" :key="item.prop" :label="item.label" width="100" fixed="right">
                 <template #default="scope">
                   <el-button v-if="hasRoleButton('btn_edit')" type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
-                  <el-button class="BL-table-delBtn" type="text" @click="removeHandle(scope.row.id)">删除</el-button>
+                  <el-button v-if="hasRoleButton('btn_add')" class="BL-table-delBtn" type="text" @click="removeHandle(scope.row.id)">删除</el-button>
                   <!-- <BL-Dropdown style="margin-left: 8px;">
                     <span>
                       <el-button type="text" size="small">更多<i class="el-icon-arrow-down el-icon--right" /></el-button>
@@ -96,7 +96,7 @@
               </ex-table-column>
             </template>
             <template v-else-if="item.prop === 'name'">
-              <ex-table-column :key="item.prop" :label="item.label" :filters="deviceNameCategory">
+              <ex-table-column :key="item.prop" :label="item.label" :filters="deviceNameListForFilter">
                 <template #default="scope">
                   {{ getDeviceName(scope.row.name) }}
                 </template>
@@ -130,11 +130,11 @@
 </template>
 
 <script>
-import { getLongBills, deleteLongBill, getLongDeviceNameCategory } from '@/api/bill/mb/bill'
+import { getAllLongBills, getLongBills, deleteLongBill } from '@/api/bill/mb/bill'
 import { getGroupCategories } from '@/api/bill/mb/group'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 import { getMBStatusStyle, getMBStatusLabel } from '@/utils/helperHandlers'
-import { dateFormatTable } from '@/utils'
+import { dateFormatTable, transToTDArray } from '@/utils'
 
 import BillForm from './BillForm'
 
@@ -146,11 +146,11 @@ export default {
   data() {
     return {
       params: {
-        groupId: '',
+        classId: null,
         keyword: '',
         currentPage: 1,
         pageSize: 20,
-        queryJson: null
+        queryJson: ''
       },
       total: 0,
       treeLoading: false,
@@ -162,10 +162,10 @@ export default {
       tableLoading: false,
       tableData: [],
       deviceNameList: [],
-      deviceNameCategory: [],
+      deviceNameListForFilter: [],
       importLoading: false,
       exportLoading: false,
-      roleButtonOptions: ['btn_add', 'btn_edit'],
+      roleButtonOptions: ['btn_add', 'btn_edit', 'btn_export', 'btn_delete'],
       roleColumnOptions: [
         {
           label: '装置名称',
@@ -231,7 +231,7 @@ export default {
         },
         {
           label: '管理干部',
-          prop: 'Manager'
+          prop: 'manager'
         },
         {
           label: '操作',
@@ -245,18 +245,15 @@ export default {
 
   computed: {
     computedRoleColumnOptions() {
-      // this.setPermissions()
+      this.setPermissions()
 
       return this.roleColumnOptions
     }
   },
 
   created() {
-    getOptionsByCode('deviceName').then(res => {
-      this.deviceNameList = res.data.list
-    })
+    this.getDeviceNameList()
     this.getGroupList()
-    this.getLongDeviceNameCategory()
   },
 
   methods: {
@@ -266,30 +263,19 @@ export default {
         const parent = [{
           label: '全部',
           hasChildren: true,
-          id: '-1',
+          id: -1,
           children: res.data.list
         }]
         this.treeData = parent
 
         this.$nextTick(() => {
-          if (this.$refs.Tree) this.$refs.Tree.setCurrentKey('-1')
+          if (this.$refs.Tree) this.$refs.Tree.setCurrentKey(-1)
           this.treeLoading = false
           this.initData()
         })
       }).catch(() => {
         this.treeLoading = false
       })
-    },
-
-    getLongDeviceNameCategory() {
-      getLongDeviceNameCategory().then(res => {
-        this.deviceNameCategory = res.data.list.map(item => {
-          return {
-            text: this.getDeviceName(item),
-            value: item
-          }
-        })
-      }).catch(() => {})
     },
 
     deviceNameFilter(filters) {
@@ -311,6 +297,18 @@ export default {
       }).catch(() => {
         this.tableLoading = false
       })
+    },
+
+    getDeviceNameList() {
+      getOptionsByCode('deviceName').then(res => {
+        this.deviceNameList = res.data.list
+        this.deviceNameListForFilter = res.data.list.map(item => {
+          return {
+            text: item.fullName,
+            value: item.entityCode
+          }
+        })
+      }).catch(() => {})
     },
 
     search() {
@@ -337,12 +335,103 @@ export default {
       return ''
     },
 
-    exportData() {},
+    exportData() {
+      this.exportLoading = true
+
+      // 定义表头对应关系
+      const headers = {
+        '班组': 'classId',
+        '装置名称': 'name',
+        '盲板编号': 'code',
+        '管径': 'pipDiameter',
+        '盲板安装位置描述（注明阀前或阀后）': 'description',
+        '盲通状态': 'status',
+        '拆装时间': 'disassembleTime',
+        '名称': 'pipelineMediaName',
+        '温度 (℃)': 'pipelineMediaTemperature',
+        '压力 (MPa)': 'pipelineMediaPressure',
+        '盲板规格 (mm)': 'size',
+        '盲板形式': 'type',
+        '盲板材质': 'material',
+        '创建时间': 'creatorTime',
+        '操作人员': 'operator',
+        '管理干部': 'manager'
+      }
+
+      const groups = {}
+      this.treeData[0].children.forEach(item => {
+        groups[item.id] = item.label
+      })
+
+      const deviceNames = {}
+      this.deviceNameList.forEach(item => {
+        deviceNames[item.entityCode] = item.fullName
+      })
+
+      import('@/vendor/Export2Excel').then(async excel => {
+        try {
+          const { data: { list }} = await getAllLongBills()
+          list.forEach(row => {
+            row.classId = groups[row.classId]
+            row.name = deviceNames[row.name]
+            row.status = row.status ? '通' : '盲'
+          })
+
+          const data = transToTDArray(headers, list)
+          const multiHeader = [[
+            '班组',
+            '装置名称',
+            '盲板编号',
+            '管径',
+            '盲板安装位置描述（注明阀前或阀后）',
+            '盲通状态',
+            '拆装时间',
+            '管线介质',
+            '',
+            '',
+            '盲板规格 (mm)',
+            '盲板形式',
+            '盲板材质',
+            '创建时间',
+            '操作人员',
+            '管理干部'
+          ]]
+          const merges = [
+            'A1:A2',
+            'B1:B2',
+            'C1:C2',
+            'D1:D2',
+            'E1:E2',
+            'F1:F2',
+            'G1:G2',
+            'H1:J1',
+            'K1:K2',
+            'L1:L2',
+            'M1:M2',
+            'N1:N2',
+            'O1:O2',
+            'P1:P2'
+          ]
+          excel.export_json_to_excel({
+            header: Object.keys(headers),
+            data,
+            filename: '短期盲板台账',
+            multiHeader,
+            merges,
+            autoWidth: true,
+            bookType: 'xlsx'
+          })
+          this.exportLoading = false
+        } catch (error) {
+          this.exportLoading = false
+        }
+      })
+    },
 
     handleNodeClick(data) {
-      if (this.params.groupId === data.id) return
+      if (this.params.classId === data.id) return
 
-      this.params.groupId = data.id
+      this.params.classId = data.id
       this.initData()
     },
 
@@ -384,10 +473,10 @@ export default {
       const menuId = this.$route.meta.menuId
 
       // Filter the user permission with the model and get only permissions for this page.
-      const list = permissionList.filter(o => o.menuId === menuId)
+      const list = permissionList.filter(o => o.id === menuId)
 
       // Get the permissions for this module and check for column permissions.
-      const columnList = list[0] && list[0].column ? list[0].column : []
+      const columnList = list[0] && list[0].columns ? list[0].columns : []
 
       const permissionColumnList = []
 
@@ -408,7 +497,7 @@ export default {
       this.roleColumnOptions = permissionColumnList
 
       // Get the permissions for this module and check for button permissions.
-      const buttonList = list[0] && list[0].button ? list[0].button : []
+      const buttonList = list[0] && list[0].buttons ? list[0].buttons : []
 
       const permissionButtonList = []
 

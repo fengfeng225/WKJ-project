@@ -115,7 +115,7 @@ export default {
       params: {
         keyword: ''
       },
-      typeId: '',
+      typeId: null,
       drawer: false,
       optionDialogVisible: false,
       treeLoading: false,
@@ -140,6 +140,10 @@ export default {
       getDictionaryList().then(res => {
         this.treeData = res.data.list
         this.$nextTick(() => {
+          if (!this.treeData.length) {
+            this.treeLoading = false
+            return
+          }
           this.typeId = this.typeId || this.treeData[0].id
           this.$refs.treeBox.setCurrentKey(this.typeId)
           this.treeLoading = false

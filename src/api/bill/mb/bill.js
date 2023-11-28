@@ -1,5 +1,12 @@
 import request from '@/utils/request'
 
+export function getAllShortBills() {
+  return request({
+    url: '/api/admin/mb/allShortBill',
+    method: 'GET'
+  })
+}
+
 export function getShortBills(data) {
   return request({
     url: '/api/admin/mb/shortBill',
@@ -34,6 +41,13 @@ export function deleteShortBill(id) {
 export function getShortBillInfo(id) {
   return request({
     url: `/api/admin/mb/shortBill/${id}`,
+    method: 'GET'
+  })
+}
+
+export function getAllLongBills() {
+  return request({
+    url: '/api/admin/mb/allLongBill',
     method: 'GET'
   })
 }

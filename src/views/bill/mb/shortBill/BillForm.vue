@@ -24,7 +24,7 @@
               <el-row :gutter="20" class="custom-row">
                 <el-col :span="8">
                   <el-form-item label="装置名称" prop="name">
-                    <el-select v-model="dataForm.name" placeholder="请输入装置名称">
+                    <el-select v-model="dataForm.name" placeholder="请输入装置名称" @change="changeDeviceName">
                       <el-option v-for="item in deviceNameList" :key="item.id" :label="item.fullName" :value="item.entityCode" />
                     </el-select>
                   </el-form-item>
@@ -75,7 +75,7 @@
                 </el-col>
                 <el-col :span="6">
                   <el-form-item label="压力 (MPa)" prop="pipelineMediaPressure">
-                    <BL-input-number v-model="dataForm.pipelineMediaPressure" :step="0.1" placeholder="请输入压力" />
+                    <el-input v-model="dataForm.pipelineMediaPressure" placeholder="请输入压力" />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -86,7 +86,7 @@
               <el-row :gutter="20" class="custom-row">
                 <el-col :span="6">
                   <el-form-item label="盲板规格(mm)" prop="size" label-width="120px">
-                    <BL-input-number v-model="dataForm.size" placeholder="请输入盲板规格" />
+                    <el-input v-model="dataForm.size" placeholder="请输入盲板规格" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="8">
@@ -127,7 +127,9 @@
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="管理干部" prop="manager">
-                    <el-input v-model="dataForm.manager" placeholder="请输入管理干部" />
+                    <el-select v-model="dataForm.manager" placeholder="请选择管理干部">
+                      <el-option v-for="item in managerList" :key="item.id" :label="item.fullName" :value="item.entityCode" />
+                    </el-select>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -169,6 +171,7 @@ export default {
       },
       groups: [],
       deviceNameList: [],
+      managerList: [],
       dataRule: {
         classId: [
           { required: true, message: '请选择班组', trigger: 'change' }
@@ -217,9 +220,8 @@ export default {
   },
 
   created() {
-    getOptionsByCode('deviceName').then(res => {
-      this.deviceNameList = res.data.list
-    })
+    this.getDeviceNameList()
+    this.getManagerList()
     this.getGroupCategories()
   },
 
@@ -241,6 +243,26 @@ export default {
       getGroupCategories().then(res => {
         this.groups = res.data.list
       }).catch(() => {})
+    },
+
+    getDeviceNameList() {
+      getOptionsByCode('deviceName').then(res => {
+        this.deviceNameList = res.data.list
+      }).catch(() => {})
+    },
+
+    getManagerList() {
+      getOptionsByCode('manager').then(res => {
+        res.data.list.forEach(item => {
+          item.entityCode = item.entityCode.split(',')
+        })
+        this.managerList = res.data.list
+      }).catch(() => {})
+    },
+
+    changeDeviceName(name) {
+      const manager = this.managerList.find(item => item.entityCode.includes(name))
+      if (manager) this.dataForm.manager = manager.fullName
     },
 
     changeStatus() {

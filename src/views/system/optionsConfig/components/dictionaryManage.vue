@@ -44,7 +44,7 @@ export default {
     return {
       visible: false,
       dataForm: {
-        id: '',
+        id: null,
         fullName: '',
         entityCode: '',
         description: ''
@@ -66,7 +66,7 @@ export default {
   methods: {
     init(id) {
       this.visible = true
-      this.dataForm.id = id || ''
+      this.dataForm.id = id || null
 
       if (this.dataForm.id) {
         this.formLoading = true

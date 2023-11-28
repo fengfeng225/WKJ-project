@@ -46,7 +46,7 @@ export default {
       formLoading: false,
       btnLoading: false,
       dataForm: {
-        id: '',
+        id: null,
         dictionaryId: '',
         fullName: '',
         entityCode: '',
@@ -67,7 +67,7 @@ export default {
   methods: {
     init(id, typeId) {
       this.visible = true
-      this.dataForm.id = id || ''
+      this.dataForm.id = id || null
       this.dataForm.dictionaryId = typeId
 
       if (this.dataForm.id) {
