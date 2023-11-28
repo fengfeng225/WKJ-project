@@ -23,10 +23,8 @@
           <el-table-column label="创建时间" prop="creatorTime" :formatter="dateFormatTable" />
           <el-table-column label="操作" width="120" fixed="right">
             <template #default="scope">
-              <template v-if="!!scope.row.parentId">
-                <el-button type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
-                <el-button class="BL-table-delBtn" type="text" @click="removeHandle(scope.row.id)">删除</el-button>
-              </template>
+              <el-button type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
+              <el-button class="BL-table-delBtn" type="text" @click="removeHandle(scope.row.id)">删除</el-button>
             </template>
           </el-table-column>
         </BL-table>
