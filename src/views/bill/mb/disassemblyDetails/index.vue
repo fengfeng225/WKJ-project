@@ -73,7 +73,7 @@
             <template v-else-if="item.prop === 'remark'">
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop">
                 <template #default="scope">
-                  {{ getRemarkStatus(scope.row.remark) }}
+                  <el-tag :type="getActionStyle(scope.row.remark)">{{ getRemarkStatus(scope.row.remark) }}</el-tag>
                 </template>
               </ex-table-column>
             </template>
@@ -121,7 +121,7 @@ export default {
   data() {
     return {
       params: {
-        groupId: null,
+        classId: null,
         keyword: '',
         currentPage: 1,
         pageSize: 20
@@ -201,7 +201,7 @@ export default {
         },
         {
           label: '管理干部',
-          prop: 'Manager'
+          prop: 'manager'
         }
       ]
     }
@@ -267,9 +267,9 @@ export default {
     },
 
     handleNodeClick(data) {
-      if (this.params.groupId === data.id) return
+      if (this.params.classId === data.id) return
 
-      this.params.groupId = data.id
+      this.params.classId = data.id
       this.initData()
     },
 
@@ -289,6 +289,21 @@ export default {
       if (content.includes('1')) return content.replace('1', '通')
 
       return content
+    },
+
+    getActionStyle(content) {
+      switch (content) {
+        case '新增':
+          return 'success'
+        case '切换为 1':
+          return 'success'
+        case '删除':
+          return 'danger'
+        case '切换为 0':
+          return 'danger'
+        default:
+          return 'warning'
+      }
     },
 
     getMBStatusStyle,
