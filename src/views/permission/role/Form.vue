@@ -28,9 +28,6 @@
           controls-position="right"
         />
       </el-form-item>
-      <el-form-item label="状态" prop="enabledMark">
-        <el-switch v-model="dataForm.enabledMark" :active-value="1" :inactive-value="0" />
-      </el-form-item>
       <el-form-item label="说明" prop="description">
         <el-input v-model="dataForm.description" type="textarea" :rows="6" />
       </el-form-item>
@@ -56,10 +53,9 @@ export default {
       formLoading: false,
       btnLoading: false,
       dataForm: {
-        id: '',
+        id: null,
         fullName: '',
         entityCode: '',
-        enabledMark: 1,
         sortCode: 0,
         description: ''
       },
@@ -77,7 +73,7 @@ export default {
   },
   methods: {
     init(id) {
-      this.dataForm.id = id || ''
+      this.dataForm.id = id || null
       this.visible = true
 
       if (this.dataForm.id) {
