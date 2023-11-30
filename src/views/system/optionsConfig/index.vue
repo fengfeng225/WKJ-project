@@ -141,6 +141,8 @@ export default {
         this.treeData = res.data.list
         this.$nextTick(() => {
           if (!this.treeData.length) {
+            this.typeId = null
+            this.tableData = []
             this.treeLoading = false
             return
           }

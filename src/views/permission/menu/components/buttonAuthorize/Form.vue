@@ -58,7 +58,7 @@ export default {
       btnLoading: false,
       dataForm: {
         id: null,
-        menuId: null,
+        menuId: '',
         fullName: '',
         entityCode: '',
         sortCode: 0,

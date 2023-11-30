@@ -72,7 +72,7 @@ export default {
       buttonAuthorizeListDrawer: false,
       buttonAuthorizeFormVisible: false,
       dialogTitle: '',
-      menuId: null,
+      menuId: '',
       loading: false,
       listLoading: false,
       btnList: []

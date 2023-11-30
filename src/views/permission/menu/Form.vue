@@ -101,7 +101,7 @@ export default {
       ],
       dictionaryData: [],
       dataForm: {
-        id: null,
+        id: '',
         parentId: null,
         fullName: '',
         entityCode: '',
@@ -139,7 +139,7 @@ export default {
   methods: {
     init(id) {
       // Object.assign(this.$data, this.$options.data())
-      this.dataForm.id = id || null
+      this.dataForm.id = id || ''
       this.visible = true
 
       // 获取上级菜单
@@ -147,7 +147,7 @@ export default {
         const topItem = {
           fullName: '顶级节点',
           hasChildren: true,
-          id: -1,
+          id: '-1',
           children: res.data.list
         }
         this.treeData = [topItem]
@@ -156,7 +156,7 @@ export default {
       if (this.dataForm.id) {
         this.formLoading = true
         getMenuInfo(this.dataForm.id).then(res => {
-          res.data.parentId ??= -1
+          res.data.parentId ??= '-1'
           this.dataForm = res.data
           this.formLoading = false
         }).catch(() => {

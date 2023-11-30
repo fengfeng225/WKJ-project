@@ -40,7 +40,7 @@ export default {
       visible: false,
       formLoading: false,
       dataForm: {
-        menuId: null,
+        menuId: '',
         columnJson: []
       }
     }

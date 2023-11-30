@@ -92,7 +92,7 @@ export default {
       columnAuthorizeBatchFormVisible: false,
       columnExportFormVisible: false,
       dialogTitle: '',
-      menuId: null,
+      menuId: '',
       listLoading: false,
       columnList: []
     }

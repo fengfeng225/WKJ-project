@@ -56,7 +56,7 @@ export default {
       btnLoading: false,
       content: '',
       dataForm: {
-        menuId: null,
+        menuId: '',
         columnJson: []
       }
     }
