@@ -68,8 +68,8 @@ export default {
       treeLoading: false,
       btnLoading: false,
       checkStrictly: true,
+      roleId: null,
       params: {
-        roleId: '',
         type: 'menu',
         menuIds: ''
       },
@@ -96,14 +96,14 @@ export default {
   },
   methods: {
     init(id) {
-      this.params.roleId = id
+      this.roleId = id
       this.getAuthorizeList()
     },
 
     getAuthorizeList() {
       this.treeLoading = true
       this.authorizeTreeData = []
-      getAuthorizeValues(this.params).then(res => {
+      getAuthorizeValues(this.roleId, this.params).then(res => {
         switch (this.active) {
           case 0:
             this.menuAuthorizeTree = res.data.list
@@ -218,7 +218,7 @@ export default {
     },
     handleConfirm() {
       this.btnLoading = true
-      updateAuthorizeList(this.params.roleId, this.dataForm).then(res => {
+      updateAuthorizeList(this.roleId, this.dataForm).then(res => {
         this.$message({
           message: res.message,
           type: 'success',

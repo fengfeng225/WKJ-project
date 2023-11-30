@@ -35,7 +35,7 @@
           </div>
         </div>
         <BL-table v-loading="listLoading" :data="roleList" row-key="id">
-          <el-table-column prop="fullName" label="姓名" />
+          <el-table-column prop="fullName" label="名称" />
           <el-table-column prop="entityCode" label="编码" />
           <el-table-column prop="description" label="说明" />
           <el-table-column prop="creatorTime" label="创建时间" :formatter="dateFormatTable" width="120" />
@@ -51,7 +51,8 @@
                   </el-button>
                 </span>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item @click.native="handleAuthorize(scope.row.id)">角色权限</el-dropdown-item>
+                  <el-dropdown-item @click.native="roleAuthorize(scope.row.id)">角色权限</el-dropdown-item>
+                  <el-dropdown-item @click.native="classAuthorize(scope.row.id)">班组权限</el-dropdown-item>
                 </el-dropdown-menu>
               </BL-dropdown>
             </template>
@@ -144,11 +145,15 @@ export default {
       }).catch(() => { })
     },
 
-    handleAuthorize(id) {
+    roleAuthorize(id) {
       this.authorizeFormVisible = true
       this.$nextTick(() => {
         this.$refs.AuthorizeForm.init(id)
       })
+    },
+
+    classAuthorize(id) {
+
     },
 
     dateFormatTable

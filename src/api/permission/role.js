@@ -38,9 +38,9 @@ export function getRoleInfo(id) {
   })
 }
 
-export function getAuthorizeValues(data) {
+export function getAuthorizeValues(roleId, data) {
   return request({
-    url: '/api/permission/role/Authorize',
+    url: `/api/permission/role/Authorize/${roleId}`,
     method: 'GET',
     data
   })
