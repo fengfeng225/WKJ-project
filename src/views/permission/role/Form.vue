@@ -53,7 +53,7 @@ export default {
       formLoading: false,
       btnLoading: false,
       dataForm: {
-        id: null,
+        id: '',
         fullName: '',
         entityCode: '',
         sortCode: 0,
@@ -73,7 +73,7 @@ export default {
   },
   methods: {
     init(id) {
-      this.dataForm.id = id || null
+      this.dataForm.id = id || ''
       this.visible = true
 
       if (this.dataForm.id) {

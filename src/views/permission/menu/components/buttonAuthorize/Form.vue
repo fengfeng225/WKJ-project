@@ -57,7 +57,7 @@ export default {
       formLoading: false,
       btnLoading: false,
       dataForm: {
-        id: null,
+        id: '',
         menuId: '',
         fullName: '',
         entityCode: '',
@@ -77,7 +77,7 @@ export default {
   },
   methods: {
     init(menuId, id) {
-      this.dataForm.id = id || null
+      this.dataForm.id = id || ''
       this.dataForm.menuId = menuId
       this.visible = true
 

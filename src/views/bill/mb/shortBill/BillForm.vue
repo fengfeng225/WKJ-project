@@ -152,8 +152,8 @@ export default {
       formLoading: false,
       btnLoading: false,
       dataForm: {
-        id: null,
-        classId: null,
+        id: '',
+        classId: '',
         name: '',
         code: '',
         status: null,
@@ -227,7 +227,7 @@ export default {
 
   methods: {
     init(id) {
-      this.dataForm.id = id || null
+      this.dataForm.id = id || ''
       if (id) {
         this.formLoading = true
         getShortBillInfo(id).then(res => {

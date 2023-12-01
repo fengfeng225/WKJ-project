@@ -115,7 +115,7 @@ export default {
       params: {
         keyword: ''
       },
-      typeId: null,
+      typeId: '',
       drawer: false,
       optionDialogVisible: false,
       treeLoading: false,
@@ -141,7 +141,7 @@ export default {
         this.treeData = res.data.list
         this.$nextTick(() => {
           if (!this.treeData.length) {
-            this.typeId = null
+            this.typeId = ''
             this.tableData = []
             this.treeLoading = false
             return

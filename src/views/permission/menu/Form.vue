@@ -102,7 +102,7 @@ export default {
       dictionaryData: [],
       dataForm: {
         id: '',
-        parentId: null,
+        parentId: '',
         fullName: '',
         entityCode: '',
         icon: '',
