@@ -74,9 +74,6 @@ export default {
       },
       active: 0,
       authorizeTreeData: [],
-      // menuAuthorizeTree: [],
-      // buttonAuthorizeTree: [],
-      // columnAuthorizeTree: [],
       menuAllData: [],
       buttonAllData: [],
       columnAllData: [],
@@ -105,7 +102,6 @@ export default {
       getAuthorizeValues(this.roleId, this.params).then(res => {
         switch (this.active) {
           case 0:
-            // this.menuAuthorizeTree = res.data.list
             this.menuAllData = res.data.all // 用于全选, 所有id的集合
             this.authorizeTreeData = res.data.list // 渲染树形结构
             this.dataForm.menus = [...new Set([...this.menuIdsTemp, ...res.data.ids])] // 所有选择的菜单id
@@ -113,14 +109,12 @@ export default {
             this.$refs.authorizeTree.setCheckedKeys(this.dataForm.menus) // 勾选
             break
           case 1:
-            // this.buttonAuthorizeTree = res.data.list
             this.buttonAllData = res.data.all
             this.authorizeTreeData = res.data.list // 返回菜单和按钮组成的树形结构
             this.dataForm.buttons = [...new Set([...this.dataForm.buttons, ...res.data.ids, ...this.menuIdsTemp])]
             this.$refs.authorizeTree.setCheckedKeys(this.dataForm.buttons)
             break
           case 2:
-            // this.columnAuthorizeTree = res.data.list
             this.columnAllData = res.data.all
             this.authorizeTreeData = res.data.list
             this.dataForm.columns = [...new Set([...this.dataForm.columns, ...res.data.ids, ...this.menuIdsTemp])]
