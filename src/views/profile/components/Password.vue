@@ -27,7 +27,7 @@
 
 <script>
 import md5 from 'js-md5'
-import { updatePassword } from '@/api/user'
+import { updatePassword } from '@/api/permission/user'
 export default {
   data() {
     var validatePass = (rule, value, callback) => {

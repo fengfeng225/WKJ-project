@@ -74,8 +74,8 @@ export default {
     return {
       visible: false,
       btnLoading: false,
+      userId: '',
       dataForm: {
-        id: '',
         account: '',
         userPassword: '',
         validatePassword: ''
@@ -95,7 +95,7 @@ export default {
   methods: {
     init(id, account) {
       this.visible = true
-      this.dataForm.id = id
+      this.userId = id
       this.dataForm.account = account
     },
     dataFormSubmit() {
@@ -103,11 +103,10 @@ export default {
         if (valid) {
           this.btnLoading = true
           const formData = {
-            id: this.dataForm.id,
             userPassword: md5(this.dataForm.userPassword),
             validatePassword: md5(this.dataForm.validatePassword)
           }
-          resetUserPassword(formData).then(res => {
+          resetUserPassword(this.userId, formData).then(res => {
             this.$message({
               message: res.message,
               type: 'success',

@@ -38,9 +38,17 @@ export function getUserInfo(id) {
   })
 }
 
-export function resetUserPassword(data) {
+export function updatePassword(data) {
   return request({
-    url: `/api/permission/user/resetPassword/${data.id}`,
+    url: '/api/permission/user/updatePassword',
+    method: 'put',
+    data
+  })
+}
+
+export function resetUserPassword(userId, data) {
+  return request({
+    url: `/api/permission/user/resetPassword/${userId}`,
     method: 'PUT',
     data
   })

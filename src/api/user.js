@@ -21,11 +21,3 @@ export function logout() {
     method: 'post'
   })
 }
-
-export function updatePassword(data) {
-  return request({
-    url: '/api/user/updatePassword',
-    method: 'put',
-    data
-  })
-}
