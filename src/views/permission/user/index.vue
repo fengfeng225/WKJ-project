@@ -72,7 +72,7 @@
         />
       </div>
     </div>
-    <Form v-show="formVisible" ref="Form" @close="closeForm" />
+    <Form v-if="formVisible" ref="Form" @close="closeForm" />
     <ResetPwdForm v-if="resetFormVisible" ref="ResetPwdForm" @refreshDataList="initData" />
   </div>
 </template>
