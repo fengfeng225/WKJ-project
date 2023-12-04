@@ -95,7 +95,9 @@
             </template>
             <template v-else-if="item.prop === 'action'">
               <el-table-column v-if="hasRoleButton('btn_delete')" :key="item.prop" :label="item.label" width="60" fixed="right">
-                <el-button v-if="hasRoleButton('btn_delete')" class="BL-table-delBtn" type="text" @click="removeHandle(scope.row.id)">删除</el-button>
+                <template #default="scope">
+                  <el-button v-if="hasRoleButton('btn_delete')" class="BL-table-delBtn" type="text" @click="removeHandle(scope.row.id)">删除</el-button>
+                </template>
               </el-table-column>
             </template>
             <template v-else>

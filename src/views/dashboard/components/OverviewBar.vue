@@ -34,8 +34,8 @@ export default {
           }
         },
         grid: {
-          top: '8%',
-          bottom: '5%',
+          top: '30px',
+          bottom: '20px',
           left: '45px',
           right: '65px'
         },
