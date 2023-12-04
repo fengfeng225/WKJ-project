@@ -66,7 +66,7 @@
         <BL-table ref="BLTable" v-loading="tableLoading" :data="tableData" fixed-n-o row-key="id" @filter-change="deviceNameFilter">
           <template v-for="item in computedRoleColumnOptions">
             <template v-if="item.prop === 'action'">
-              <ex-table-column v-if="hasRoleButton(['btn_add', 'btn_edit', 'btn_export', 'btn_delete'])" :key="item.prop" :label="item.label" width="100" fixed="right">
+              <ex-table-column v-if="hasRoleButton(['btn_edit', 'btn_delete'])" :key="item.prop" :label="item.label" width="100" fixed="right">
                 <template #default="scope">
                   <el-button v-if="hasRoleButton('btn_edit')" type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
                   <el-button v-if="hasRoleButton('btn_delete')" class="BL-table-delBtn" type="text" @click="removeHandle(scope.row.id)">删除</el-button>

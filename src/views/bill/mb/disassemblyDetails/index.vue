@@ -62,7 +62,7 @@
 
       <div class="BL-common-layout-main BL-flex-main">
         <BL-table ref="BLTable" v-loading="tableLoading" :data="tableData" fixed-n-o row-key="id">
-          <template v-for="item in columns">
+          <template v-for="item in computedRoleColumnOptions">
             <template v-if="item.prop === 'name'">
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
@@ -93,6 +93,11 @@
             <template v-else-if="item.prop === 'cycleType'">
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :formatter="getCycleTypeLabel" />
             </template>
+            <template v-else-if="item.prop === 'action'">
+              <el-table-column v-if="hasRoleButton('btn_delete')" :key="item.prop" :label="item.label" width="60" fixed="right">
+                <el-button v-if="hasRoleButton('btn_delete')" class="BL-table-delBtn" type="text" @click="removeHandle(scope.row.id)">删除</el-button>
+              </el-table-column>
+            </template>
             <template v-else>
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" />
             </template>
@@ -110,7 +115,7 @@
 </template>
 
 <script>
-import { getDisassembleDetails } from '@/api/bill/mb/bill'
+import { getDisassembleDetails, removeDisassembleDetail } from '@/api/bill/mb/bill'
 import { getGroupCategories } from '@/api/bill/mb/group'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 import { getMBStatusStyle, getMBStatusLabel, getCycleTypeLabel } from '@/utils/helperHandlers'
@@ -136,6 +141,7 @@ export default {
       tableLoading: false,
       tableData: [],
       deviceNameList: [],
+      roleButtonOptions: ['btn_delete'],
       roleColumnOptions: [
         {
           label: '装置名称',
@@ -202,13 +208,19 @@ export default {
         {
           label: '管理干部',
           prop: 'manager'
+        },
+        {
+          label: '操作',
+          prop: 'action'
         }
       ]
     }
   },
 
   computed: {
-    columns() {
+    computedRoleColumnOptions() {
+      this.setPermissions()
+
       return this.roleColumnOptions
     }
   },
@@ -251,6 +263,23 @@ export default {
       }).catch(() => {
         this.tableLoading = false
       })
+    },
+
+    removeHandle(id) {
+      this.$confirm('您确定要删除该条数据吗?', '提示', {
+        type: 'warning'
+      }).then(() => {
+        removeDisassembleDetail(id).then(res => {
+          this.$message({
+            message: res.message,
+            type: 'success',
+            duration: 1500,
+            onClose: () => {
+              this.initData()
+            }
+          })
+        }).catch(() => {})
+      }).catch(() => {})
     },
 
     search() {
@@ -303,6 +332,68 @@ export default {
           return 'danger'
         default:
           return 'warning'
+      }
+    },
+
+    setPermissions() {
+      // Get the list with all the user permissions from the store.
+      const permissionList = this.$store.getters.permissionList
+
+      // Retrieve the model ID based from the route.
+      const menuId = this.$route.meta.menuId
+
+      // Filter the user permission with the model and get only permissions for this page.
+      const list = permissionList.filter(o => o.id === menuId)
+
+      // Get the permissions for this module and check for column permissions.
+      const columnList = list[0] && list[0].columns ? list[0].columns : []
+
+      const permissionColumnList = []
+
+      for (let i = 0; i < this.roleColumnOptions.length; i++) {
+        // Create an inner look and assign a name to the loop.
+        for (let j = 0; j < columnList.length; j++) {
+          // If the column name in the page is in the list with user permissions add it to the visible list.
+          if (this.roleColumnOptions[i].prop === columnList[j].entityCode) {
+            permissionColumnList.push(this.roleColumnOptions[i])
+
+            // We have found a match, break the inner loop and go to the outer loop for next item.
+            break
+          }
+        }
+      }
+
+      // Assign the columns for this page with the filtered columns for the current user.
+      this.roleColumnOptions = permissionColumnList
+
+      // Get the permissions for this module and check for button permissions.
+      const buttonList = list[0] && list[0].buttons ? list[0].buttons : []
+
+      const permissionButtonList = []
+
+      for (let i = 0; i < this.roleButtonOptions.length; i++) {
+        for (let j = 0; j < buttonList.length; j++) {
+          if (this.roleButtonOptions[i] === buttonList[j].entityCode) {
+            permissionButtonList.push(this.roleButtonOptions[i])
+            break
+          }
+        }
+      }
+
+      this.roleButtonOptions = permissionButtonList
+    },
+
+    hasRoleButton(code) {
+      if (Array.isArray(code)) {
+        for (const item of code) {
+          if (this.roleButtonOptions.indexOf(item) > -1) {
+            return true
+          }
+        }
+
+        return false
+      } else {
+        return this.roleButtonOptions.indexOf(code) > -1
       }
     },
 

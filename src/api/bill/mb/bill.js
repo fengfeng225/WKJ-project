@@ -97,3 +97,10 @@ export function getDisassembleDetails(data) {
     data
   })
 }
+
+export function removeDisassembleDetail(id) {
+  return request({
+    url: `/api/admin/mb/bill/disassembleDetail/${id}`,
+    method: 'DELETE'
+  })
+}

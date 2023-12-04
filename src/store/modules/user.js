@@ -72,6 +72,7 @@ const actions = {
                 path: '/' + e.entityCode,
                 component: Layout,
                 name: e.entityCode,
+                alwaysShow: true,
                 meta: {
                   title: e.fullName,
                   icon: e.icon,

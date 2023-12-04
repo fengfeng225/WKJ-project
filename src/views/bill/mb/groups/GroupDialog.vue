@@ -17,6 +17,14 @@
       <el-form-item label="名称" prop="label">
         <el-input v-model="dataForm.label" placeholder="请输入名称" />
       </el-form-item>
+      <el-form-item label="排序" prop="sortCode">
+        <el-input-number
+          v-model="dataForm.sortCode"
+          :min="0"
+          :max="999999"
+          controls-position="right"
+        />
+      </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="visible = false">取消</el-button>
@@ -41,8 +49,7 @@ export default {
       dataForm: {
         id: '',
         label: '',
-        isLeaf: true,
-        enabledMark: 1
+        sortCode: 0
       },
       dataRule: {
         label: [
