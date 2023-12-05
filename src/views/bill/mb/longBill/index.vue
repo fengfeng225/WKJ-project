@@ -130,8 +130,7 @@
 </template>
 
 <script>
-import { getAllLongBills, getLongBills, deleteLongBill } from '@/api/bill/mb/bill'
-import { getGroupCategories } from '@/api/bill/mb/group'
+import { getAllLongBills, getLongBills, deleteLongBill, getClasses } from '@/api/bill/mb/bill'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 import { getMBStatusStyle, getMBStatusLabel } from '@/utils/helperHandlers'
 import { dateFormatTable, transToTDArray } from '@/utils'
@@ -253,13 +252,13 @@ export default {
 
   created() {
     this.getDeviceNameList()
-    this.getGroupList()
+    this.getClasses()
   },
 
   methods: {
-    getGroupList() {
+    getClasses() {
       this.treeLoading = true
-      getGroupCategories().then(res => {
+      getClasses().then(res => {
         const parent = [{
           label: '全部',
           hasChildren: true,
@@ -358,9 +357,9 @@ export default {
         '管理干部': 'manager'
       }
 
-      const groups = {}
+      const classes = {}
       this.treeData[0].children.forEach(item => {
-        groups[item.id] = item.label
+        classes[item.id] = item.label
       })
 
       const deviceNames = {}
@@ -372,7 +371,7 @@ export default {
         try {
           const { data: { list }} = await getAllLongBills()
           list.forEach(row => {
-            row.classId = groups[row.classId]
+            row.classId = classes[row.classId]
             row.name = deviceNames[row.name]
             row.status = row.status ? '通' : '盲'
           })

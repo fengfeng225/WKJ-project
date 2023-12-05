@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { getGroupCategories, deleteGroupCategory } from '@/api/bill/mb/group'
+import { getGroupCategories, deleteGroupCategory } from '@/api/bill/mb/class'
 import { dateFormatTable } from '@/utils'
 
 import GroupDialog from './GroupDialog'

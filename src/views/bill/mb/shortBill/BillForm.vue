@@ -53,7 +53,7 @@
                 <el-col :span="10">
                   <el-form-item label="负责班组" prop="classId">
                     <el-select v-model="dataForm.classId" placeholder="请选择负责班组" style="width: 100%;">
-                      <el-option v-for="item in groups" :key="item.id" :label="item.label" :value="item.id" />
+                      <el-option v-for="item in classes" :key="item.id" :label="item.label" :value="item.id" />
                     </el-select>
                   </el-form-item>
                 </el-col>
@@ -142,8 +142,7 @@
 </template>
 
 <script>
-import { getShortBillInfo, updateShortBill, createShortBill } from '@/api/bill/mb/bill'
-import { getGroupCategories } from '@/api/bill/mb/group'
+import { getShortBillInfo, updateShortBill, createShortBill, getClasses } from '@/api/bill/mb/bill'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 
 export default {
@@ -169,7 +168,7 @@ export default {
         operator: '',
         manager: ''
       },
-      groups: [],
+      classes: [],
       deviceNameList: [],
       managerList: [],
       dataRule: {
@@ -222,7 +221,7 @@ export default {
   created() {
     this.getDeviceNameList()
     this.getManagerList()
-    this.getGroupCategories()
+    this.getClasses()
   },
 
   methods: {
@@ -239,9 +238,9 @@ export default {
       }
     },
 
-    getGroupCategories() {
-      getGroupCategories().then(res => {
-        this.groups = res.data.list
+    getClasses() {
+      getClasses().then(res => {
+        this.classes = res.data.list
       }).catch(() => {})
     },
 

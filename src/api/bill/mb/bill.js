@@ -104,3 +104,10 @@ export function removeDisassembleDetail(id) {
     method: 'DELETE'
   })
 }
+
+export function getClasses() {
+  return request({
+    url: `/api/admin/mb/class`,
+    method: 'GET'
+  })
+}

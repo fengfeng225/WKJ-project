@@ -1,13 +1,13 @@
 import request from '@/utils/request'
 
-export function getGroupCategories() {
+export function getClasses() {
   return request({
     url: `/api/admin/mb/class`,
     method: 'GET'
   })
 }
 
-export function createGroupCategory(data) {
+export function createClass(data) {
   return request({
     url: `/api/admin/mb/class`,
     method: 'POST',
@@ -15,7 +15,7 @@ export function createGroupCategory(data) {
   })
 }
 
-export function updateGroupCategory(data) {
+export function updateClass(data) {
   return request({
     url: `/api/admin/mb/class/${data.id}`,
     method: 'PUT',
@@ -23,14 +23,14 @@ export function updateGroupCategory(data) {
   })
 }
 
-export function deleteGroupCategory(id) {
+export function deleteClass(id) {
   return request({
     url: `/api/admin/mb/class/${id}`,
     method: 'DELETE'
   })
 }
 
-export function getGroupCategoryInfo(id) {
+export function getClassInfo(id) {
   return request({
     url: `/api/admin/mb/class/${id}`,
     method: 'GET'
