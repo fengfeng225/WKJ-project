@@ -27,8 +27,8 @@
       </el-row>
       <div class="BL-common-layout-main BL-flex-main">
         <BL-table v-loading="listLoading" :data="list">
-          <ex-table-column prop="category" label="类目" />
-          <!-- <ex-table-column prop="entityCode" label="编码" /> -->
+          <ex-table-column prop="fullName" label="台账名称" />
+          <ex-table-column prop="entityCode" label="编码" />
           <ex-table-column prop="runCount" label="下发次数" />
           <el-table-column
             prop="lastRunTime"
@@ -43,6 +43,7 @@
             :formatter="dateFormatTable"
           />
           <ex-table-column prop="description" label="说明" />
+          <ex-table-column prop="sortCode" label="排序" />
           <el-table-column label="状态" prop="enabledMark" width="70" align="center">
             <template slot-scope="scope">
               <el-switch
@@ -58,7 +59,6 @@
           <el-table-column label="操作" width="150" fixed="right">
             <template slot-scope="scope">
               <el-button type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
-              <el-button class="BL-table-delBtn" type="text" @click="handleDel(scope.row.id)">删除</el-button>
               <BL-Dropdown style="margin-left: 8px;">
                 <span>
                   <el-button type="text" size="small">更多<i class="el-icon-arrow-down el-icon--right" /></el-button>
@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import { checkPlanList, checkPlanDelete, checkPlanStop, checkPlanEnable } from '@/api/scheduledTask/checkPlan'
+import { getCheckPlanList, stopCheckPlan, enableCheckPlan } from '@/api/scheduledTask/checkPlan'
 import { dateFormatTable } from '@/utils'
 
 import ConfigForm from './configForm'
@@ -112,7 +112,7 @@ export default {
     },
     initData() {
       this.listLoading = true
-      checkPlanList(this.listQuery).then(res => {
+      getCheckPlanList(this.listQuery).then(res => {
         this.list = res.data.list
         this.listLoading = false
       }).catch(() => {
@@ -120,27 +120,10 @@ export default {
       })
     },
 
-    handleDel(id) {
-      this.$confirm('您确定要删除该条数据吗?', '提示', {
-        type: 'warning'
-      }).then(() => {
-        checkPlanDelete(id).then(res => {
-          this.$message({
-            type: 'success',
-            message: res.message,
-            duration: 1500,
-            onClose: () => {
-              this.initData()
-            }
-          })
-        })
-      }).catch(() => { })
-    },
-
     viewLog(row) {
       this.logVisible = true
       this.$nextTick(() => {
-        this.$refs.Log.init(row.id, row.category)
+        this.$refs.Log.init(row.id, row.fullName)
       })
     },
 
@@ -149,7 +132,7 @@ export default {
       this.$confirm(`您确定要${txt}该任务, 是否继续?`, '提示', {
         type: 'warning'
       }).then(() => {
-        const method = row.enabledMark ? checkPlanStop : checkPlanEnable
+        const method = row.enabledMark ? stopCheckPlan : enableCheckPlan
         method(row.id).then(res => {
           this.$message({
             type: 'success',

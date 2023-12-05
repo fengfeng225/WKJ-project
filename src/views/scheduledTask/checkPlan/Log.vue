@@ -2,7 +2,7 @@
   <transition name="el-zoom-in-center">
     <div class="BL-preview-main">
       <div class="BL-common-page-header">
-        <el-page-header :content="category" @back="goBack" />
+        <el-page-header :content="fullName" @back="goBack" />
         <div class="options">
           <el-button @click="goBack">取消</el-button>
         </div>
@@ -79,17 +79,16 @@ export default {
   data() {
     return {
       id: '',
-      category: '',
+      fullName: '',
       list: [],
       total: 0,
       listLoading: true,
       listQuery: {
-        runResult: '',
+        runResult: null,
         startTime: '',
         endTime: '',
         currentPage: 1,
-        pageSize: 20,
-        sort: 'desc'
+        pageSize: 20
       },
       pickerOptions: {
         shortcuts: [{
@@ -126,9 +125,9 @@ export default {
       this.$emit('close')
     },
 
-    init(id, category) {
+    init(id, fullName) {
       this.id = id
-      this.category = category
+      this.fullName = fullName
       this.initData()
     },
 
@@ -147,7 +146,7 @@ export default {
       this.pickerVal = []
       this.listQuery.startTime = ''
       this.listQuery.endTime = ''
-      this.listQuery.runResult = ''
+      this.listQuery.runResult = null
       this.initData()
     },
 

@@ -20,8 +20,8 @@
             @submit.native.prevent
           >
             <el-col :span="24">
-              <el-form-item label="类目" prop="category">
-                <el-input v-model="dataForm.category" readonly />
+              <el-form-item label="台账名称" prop="fullName">
+                <el-input v-model="dataForm.fullName" readonly />
               </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -34,6 +34,16 @@
                 <el-input v-model="dataForm.cron" placeholder="Cron表达式" readonly>
                   <el-button slot="append" icon="el-icon-edit-outline" @click="showCronDialog" />
                 </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item label="排序" prop="sortCode">
+                <el-input-number
+                  v-model="dataForm.sortCode"
+                  :min="0"
+                  :max="999999"
+                  controls-position="right"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -84,9 +94,16 @@ export default {
         fullName: '',
         entityCode: '',
         cron: '',
-        description: ''
+        description: '',
+        sortCode: 0
       },
       dataRule: {
+        fullName: [
+          { required: true, message: '名称不能为空', trigger: 'blur' }
+        ],
+        entityCode: [
+          { required: true, message: '编码不能为空', trigger: 'blur' }
+        ],
         cron: [
           { required: true, message: 'Cron表达式不能为空', trigger: 'click' }
         ]

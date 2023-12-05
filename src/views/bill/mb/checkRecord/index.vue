@@ -50,33 +50,33 @@
       </div>
     </div>
 
-    <GroupDialog v-if="groupDialogVisible" ref="GroupDialog" @refreshDataList="refresh" />
+    <ClassInfoDialog v-if="classInfoDialogVisible" ref="ClassInfoDialog" @refreshDataList="refresh" />
   </div>
 </template>
 
 <script>
-import { getGroupCategories, deleteGroupCategory } from '@/api/bill/mb/class'
+import { getGroupCategories, deleteGroupCategory } from '@/api/bill/mb/checkRecord'
 import { dateFormatTable } from '@/utils'
 
-import GroupDialog from './GroupDialog'
+import ClassInfoDialog from './ClassInfoDialog'
 
 export default {
-  name: 'Groups',
+  name: 'MbCheckRecord',
 
   components: {
-    GroupDialog
+    ClassInfoDialog
   },
 
   data() {
     return {
       tableLoading: false,
       tableData: [],
-      groupDialogVisible: false,
+      classInfoDialogVisible: false,
       roleButtonOptions: ['btn_add', 'btn_edit', 'btn_delete'],
       roleColumnOptions: [
         {
           label: '名称',
-          prop: 'label'
+          prop: 'fullName'
         },
         {
           label: '排序',
@@ -122,9 +122,9 @@ export default {
     },
 
     addOrUpdateHandle(id) {
-      this.groupDialogVisible = true
+      this.classInfoDialogVisible = true
       this.$nextTick(() => {
-        this.$refs.GroupDialog.init(id)
+        this.$refs.ClassInfoDialog.init(id)
       })
     },
 

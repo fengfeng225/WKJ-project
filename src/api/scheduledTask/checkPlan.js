@@ -1,54 +1,43 @@
 import request from '@/utils/request'
 
-export function checkPlanList(data) {
+export function getCheckPlanList(data) {
   return request({
-    url: '/api/scheduledTask/checkPlan/list',
+    url: '/api/scheduledTask/checkPlan',
     method: 'GET',
     data
   })
 }
 
-export function checkPlanDelete(id) {
+export function updateCheckPlan(data) {
   return request({
-    url: '/api/scheduledTask/checkPlan',
-    method: 'DELETE',
-    data: { id }
-  })
-}
-
-export function checkPlanUpdate(data) {
-  return request({
-    url: '/api/scheduledTask/checkPlan',
+    url: `/api/scheduledTask/checkPlan/${data.id}`,
     method: 'PUT',
     data
   })
 }
 
-export function checkPlanInfo(id) {
+export function getCheckPlanInfo(id) {
   return request({
-    url: '/api/scheduledTask/checkPlan/info',
-    method: 'GET',
-    data: { id }
+    url: `/api/scheduledTask/checkPlan/${id}`,
+    method: 'GET'
   })
 }
 
-export function checkPlanStop(id) {
+export function stopCheckPlan(id) {
   return request({
-    url: '/api/scheduledTask/checkPlan/stop',
-    method: 'PUT',
-    data: { id }
+    url: `/api/scheduledTask/checkPlan/stop/${id}`,
+    method: 'PUT'
   })
 }
 
-export function checkPlanEnable(id) {
+export function enableCheckPlan(id) {
   return request({
-    url: '/api/scheduledTask/checkPlan/enable',
-    method: 'PUT',
-    data: { id }
+    url: `/api/scheduledTask/checkPlan/enable/${id}`,
+    method: 'PUT'
   })
 }
 
-export function checkPlanLog(id, data) {
+export function getCheckPlanLog(id, data) {
   return request({
     url: `/api/scheduledTask/checkPlan/${id}/log`,
     method: 'GET',

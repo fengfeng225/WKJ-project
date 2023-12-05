@@ -137,7 +137,7 @@ export default {
       treeData: [],
       defaultProps: {
         children: 'children',
-        label: 'label'
+        label: 'fullName'
       },
       tableLoading: false,
       tableData: [],
@@ -238,7 +238,7 @@ export default {
       this.treeLoading = true
       getClasses().then(res => {
         const parent = [{
-          label: '全部',
+          fullName: '全部',
           hasChildren: true,
           id: '-1',
           children: res.data.list

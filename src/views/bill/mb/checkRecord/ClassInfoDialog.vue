@@ -14,8 +14,8 @@
       :rules="dataRule"
       label-width="100px"
     >
-      <el-form-item label="名称" prop="label">
-        <el-input v-model="dataForm.label" placeholder="请输入名称" />
+      <el-form-item label="名称" prop="fullName">
+        <el-input v-model="dataForm.fullName" placeholder="请输入名称" />
       </el-form-item>
       <el-form-item label="排序" prop="sortCode">
         <el-input-number
@@ -38,7 +38,7 @@ import {
   createGroupCategory,
   updateGroupCategory,
   getGroupCategoryInfo
-} from '@/api/bill/mb/class'
+} from '@/api/bill/mb/checkRecord'
 
 export default {
   data() {
@@ -48,11 +48,11 @@ export default {
       btnLoading: false,
       dataForm: {
         id: '',
-        label: '',
+        fullName: '',
         sortCode: 0
       },
       dataRule: {
-        label: [
+        fullName: [
           { required: true, message: '请输入名称', trigger: 'blur' }
         ]
       }
