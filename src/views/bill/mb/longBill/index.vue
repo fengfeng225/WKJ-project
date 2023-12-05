@@ -237,8 +237,7 @@ export default {
           prop: 'action'
         }
       ],
-      billFormVisible: false,
-      mtToggleVisible: false
+      billFormVisible: false
     }
   },
 

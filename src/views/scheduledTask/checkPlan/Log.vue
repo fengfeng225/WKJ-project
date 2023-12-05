@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { checkPlanLog } from '@/api/scheduledTask/checkPlan'
+import { getCheckPlanLog } from '@/api/scheduledTask/checkPlan'
 import { dateFormatTable } from '@/utils'
 
 export default {
@@ -133,7 +133,7 @@ export default {
 
     initData() {
       this.listLoading = true
-      checkPlanLog(this.id, this.listQuery).then(res => {
+      getCheckPlanLog(this.id, this.listQuery).then(res => {
         this.list = res.data.list
         this.total = res.data.pagination.total
         this.listLoading = false

@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { checkPlanInfo, checkPlanUpdate } from '@/api/scheduledTask/checkPlan'
+import { getCheckPlanInfo, updateCheckPlan } from '@/api/scheduledTask/checkPlan'
 import vcrontab from '@/components/vcrontab'
 
 export default {
@@ -114,7 +114,7 @@ export default {
   methods: {
     init(id) {
       this.loading = true
-      checkPlanInfo(id).then(res => {
+      getCheckPlanInfo(id).then(res => {
         this.dataForm = res.data
         this.loading = false
       }).catch(() => {
@@ -126,7 +126,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.btnLoading = true
-          checkPlanUpdate(this.dataForm).then((res) => {
+          updateCheckPlan(this.dataForm).then((res) => {
             this.$message({
               message: res.msg,
               type: 'success',

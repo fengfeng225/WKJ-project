@@ -48,6 +48,7 @@
 
         <div class="BL-common-head-right">
           <div>
+            <el-button type="primary" @click="showCheckDialog">一键检查</el-button>
             <el-button v-if="hasRoleButton('btn_export')" icon="el-icon-download" :loading="exportLoading" @click="exportData">导出</el-button>
             <el-button v-if="hasRoleButton('btn_add')" icon="el-icon-plus" type="primary" @click="addOrUpdateHandle()">新建</el-button>
             <el-tooltip effect="dark" content="刷新" placement="top">
@@ -124,6 +125,7 @@
         />
 
         <BillForm v-if="billFormVisible" ref="BillForm" @close="closeForm" />
+        <CheckDialog v-if="checkDialogVisible" ref="CheckDialog" @close="closeCheck" />
       </div>
     </div>
   </div>
@@ -136,11 +138,13 @@ import { getMBStatusStyle, getMBStatusLabel } from '@/utils/helperHandlers'
 import { dateFormatTable, transToTDArray } from '@/utils'
 
 import BillForm from './BillForm'
+import CheckDialog from '../../components/checkDialog'
 
 export default {
   name: 'ShortBill',
   components: {
-    BillForm
+    BillForm,
+    CheckDialog
   },
   data() {
     return {
@@ -238,7 +242,7 @@ export default {
         }
       ],
       billFormVisible: false,
-      mtToggleVisible: false
+      checkDialogVisible: false
     }
   },
 
@@ -424,6 +428,13 @@ export default {
         } catch (error) {
           this.exportLoading = false
         }
+      })
+    },
+
+    showCheckDialog() {
+      this.checkDialogVisible = true
+      this.$nextTick(() => {
+        this.$refs.CheckDialog.init('shortBill')
       })
     },
 
