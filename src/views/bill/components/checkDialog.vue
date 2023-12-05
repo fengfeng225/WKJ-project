@@ -14,7 +14,7 @@
       label-width="100px"
     >
       <el-form-item label="班组" prop="className">
-        <el-select v-model="dataForm.classId" placeholder="请选择要检查的班组">
+        <el-select v-model="dataForm.classId" multiple placeholder="请选择要检查的班组">
           <el-option v-for="item in classList" :key="item.id" :label="item.fullName" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -38,6 +38,7 @@ export default {
       visible: false,
       formLoading: false,
       btnLoading: false,
+      type: '',
       classList: [],
       dataForm: {
         classId: [],
@@ -55,11 +56,12 @@ export default {
   },
 
   methods: {
-    init(billType) {
+    init(type) {
+      this.type = type
       this.visible = true
       this.formLoading = true
       getClasses().then(res => {
-        this.dataForm = res.data.list
+        this.classList = res.data.list
         this.formLoading = false
       }).catch(() => {
         this.formLoading = false
