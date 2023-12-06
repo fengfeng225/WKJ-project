@@ -20,7 +20,7 @@
             @submit.native.prevent
           >
             <el-col :span="24">
-              <el-form-item label="台账名称" prop="fullName">
+              <el-form-item label="台账类别" prop="fullName">
                 <el-input v-model="dataForm.fullName" readonly />
               </el-form-item>
             </el-col>
@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { getCheckPlanInfo, updateCheckPlan } from '@/api/scheduledTask/checkPlan'
+import { getCheckPlanInfo, updateCheckPlan } from '@/api/scheduledTask/billCheck'
 import vcrontab from '@/components/vcrontab'
 
 export default {
@@ -99,7 +99,7 @@ export default {
       },
       dataRule: {
         fullName: [
-          { required: true, message: '名称不能为空', trigger: 'blur' }
+          { required: true, message: '台账类别不能为空', trigger: 'blur' }
         ],
         entityCode: [
           { required: true, message: '编码不能为空', trigger: 'blur' }

@@ -27,7 +27,7 @@
       </el-row>
       <div class="BL-common-layout-main BL-flex-main">
         <BL-table v-loading="listLoading" :data="list">
-          <ex-table-column prop="fullName" label="台账名称" />
+          <ex-table-column prop="fullName" label="台账类别" />
           <ex-table-column prop="entityCode" label="编码" />
           <ex-table-column prop="runCount" label="下发次数" />
           <el-table-column
@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import { getCheckPlanList, stopCheckPlan, enableCheckPlan } from '@/api/scheduledTask/checkPlan'
+import { getCheckPlanList, stopCheckPlan, enableCheckPlan } from '@/api/scheduledTask/billCheck'
 import { dateFormatTable } from '@/utils'
 
 import ConfigForm from './configForm'

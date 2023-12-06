@@ -44,3 +44,18 @@ export function getCheckPlanLog(id, data) {
     data
   })
 }
+
+export function checkAll(data) {
+  return request({
+    url: `/api/scheduledTask/bill/checkAll`,
+    method: 'PUT',
+    data
+  })
+}
+
+export function getCheckRecords(id) {
+  return request({
+    url: `/api/scheduledTask/bill/checkRecords/${id}`,
+    method: 'GET'
+  })
+}

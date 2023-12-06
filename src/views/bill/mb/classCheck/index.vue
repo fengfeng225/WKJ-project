@@ -28,14 +28,50 @@
                 <template #default="scope">
                   <el-button v-if="hasRoleButton('btn_edit')" type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
                   <el-button v-if="hasRoleButton('btn_delete')" class="BL-table-delBtn" type="text" @click="removeHandle(scope.row.id)">删除</el-button>
-                  <!-- <BL-Dropdown style="margin-left: 8px;">
+                  <BL-Dropdown style="margin-left: 8px;">
                     <span>
                       <el-button type="text" size="small">更多<i class="el-icon-arrow-down el-icon--right" /></el-button>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item>其他</el-dropdown-item>
+                      <el-dropdown-item @click.native="showCheckRecords(scope.row.id)">检查记录</el-dropdown-item>
                     </el-dropdown-menu>
-                  </BL-Dropdown> -->
+                  </BL-Dropdown>
+                </template>
+              </ex-table-column>
+            </template>
+            <template v-else-if="item.prop === 'shortCheckingStatus'">
+              <ex-table-column :key="item.prop" :label="item.label">
+                <template #default="scope">
+                  <el-tag :type="getCheckingStatusStyle(scope.row.shortCheckingStatus)" disable-transitions>
+                    {{ getCheckingStatusLabel(scope.row.shortCheckingStatus) }}
+                  </el-tag>
+                </template>
+              </ex-table-column>
+            </template>
+            <template v-else-if="item.prop === 'shortCheckedStatus'">
+              <ex-table-column :key="item.prop" :label="item.label">
+                <template #default="scope">
+                  <el-tag :type="getCheckedStatusStyle(scope.row.shortCheckedStatus)" disable-transitions>
+                    {{ getCheckedStatusLabel(scope.row.shortCheckedStatus) }}
+                  </el-tag>
+                </template>
+              </ex-table-column>
+            </template>
+            <template v-else-if="item.prop === 'longCheckingStatus'">
+              <ex-table-column :key="item.prop" :label="item.label">
+                <template #default="scope">
+                  <el-tag :type="getCheckingStatusStyle(scope.row.longCheckingStatus)" disable-transitions>
+                    {{ getCheckingStatusLabel(scope.row.longCheckingStatus) }}
+                  </el-tag>
+                </template>
+              </ex-table-column>
+            </template>
+            <template v-else-if="item.prop === 'longCheckedStatus'">
+              <ex-table-column :key="item.prop" :label="item.label">
+                <template #default="scope">
+                  <el-tag :type="getCheckedStatusStyle(scope.row.longCheckedStatus)" disable-transitions>
+                    {{ getCheckedStatusLabel(scope.row.longCheckedStatus) }}
+                  </el-tag>
                 </template>
               </ex-table-column>
             </template>
@@ -50,21 +86,30 @@
       </div>
     </div>
 
-    <ClassInfoDialog v-if="classInfoDialogVisible" ref="ClassInfoDialog" @refreshDataList="refresh" />
+    <ClassInfoDialog v-if="classInfoDialogVisible" ref="ClassInfoDialog" @refreshDataList="initData" />
+    <CheckRecordsDrawer v-if="checkRecordsDrawerVisible" ref="CheckRecordsDrawer" @refreshDataList="initData" @close="checkRecordsDrawerVisible = false" />
   </div>
 </template>
 
 <script>
-import { getGroupCategories, deleteGroupCategory } from '@/api/bill/mb/checkRecord'
+import { getClassWithCheckStatus, deleteClass } from '@/api/bill/mb/classCheck'
+import {
+  getCheckingStatusStyle,
+  getCheckingStatusLabel,
+  getCheckedStatusStyle,
+  getCheckedStatusLabel
+} from '@/utils/helperHandlers'
 import { dateFormatTable } from '@/utils'
 
 import ClassInfoDialog from './ClassInfoDialog'
+import CheckRecordsDrawer from '../../components/checkRecordsDrawer'
 
 export default {
-  name: 'MbCheckRecord',
+  name: 'ClassCheckMb',
 
   components: {
-    ClassInfoDialog
+    ClassInfoDialog,
+    CheckRecordsDrawer
   },
 
   data() {
@@ -72,11 +117,28 @@ export default {
       tableLoading: false,
       tableData: [],
       classInfoDialogVisible: false,
+      checkRecordsDrawerVisible: false,
       roleButtonOptions: ['btn_add', 'btn_edit', 'btn_delete'],
       roleColumnOptions: [
         {
           label: '名称',
           prop: 'fullName'
+        },
+        {
+          label: '当前检查(短期)',
+          prop: 'shortCheckingStatus'
+        },
+        {
+          label: '历史检查(短期)',
+          prop: 'shortCheckedStatus'
+        },
+        {
+          label: '当前检查(长期)',
+          prop: 'longCheckingStatus'
+        },
+        {
+          label: '历史检查(长期)',
+          prop: 'longCheckedStatus'
         },
         {
           label: '排序',
@@ -109,16 +171,12 @@ export default {
   methods: {
     initData() {
       this.tableLoading = true
-      getGroupCategories().then(res => {
+      getClassWithCheckStatus().then(res => {
         this.tableData = res.data.list
         this.tableLoading = false
       }).catch(() => {
         this.tableLoading = false
       })
-    },
-
-    refresh() {
-      this.initData()
     },
 
     addOrUpdateHandle(id) {
@@ -132,7 +190,7 @@ export default {
       this.$confirm('您确定要删除该班吗?', '提示', {
         type: 'warning'
       }).then(() => {
-        deleteGroupCategory(id).then(res => {
+        deleteClass(id).then(res => {
           this.$message({
             message: res.message,
             type: 'success',
@@ -143,6 +201,13 @@ export default {
           })
         }).catch(() => {})
       }).catch(() => {})
+    },
+
+    showCheckRecords(id) {
+      this.checkRecordsDrawerVisible = true
+      this.$nextTick(() => {
+        this.$refs.CheckRecordsDrawer.init(id)
+      })
     },
 
     setPermissions() {
@@ -207,7 +272,15 @@ export default {
       }
     },
 
-    dateFormatTable
+    dateFormatTable,
+
+    getCheckingStatusStyle,
+
+    getCheckingStatusLabel,
+
+    getCheckedStatusStyle,
+
+    getCheckedStatusLabel
   }
 }
 </script>

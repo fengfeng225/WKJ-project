@@ -41,7 +41,7 @@ export default {
         },
         xAxis: {
           type: 'category',
-          name: '台账名称',
+          name: '台账类别',
           data: this.xAxis,
           axisTick: {
             alignWithLabel: true

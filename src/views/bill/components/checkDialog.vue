@@ -14,7 +14,7 @@
       label-width="100px"
     >
       <el-form-item label="班组" prop="className">
-        <el-select v-model="dataForm.classId" multiple placeholder="请选择要检查的班组">
+        <el-select v-model="dataForm.classIds" multiple placeholder="请选择要检查的班组">
           <el-option v-for="item in classList" :key="item.id" :label="item.fullName" :value="item.id" />
         </el-select>
       </el-form-item>
@@ -31,6 +31,7 @@
 
 <script>
 import { getClasses } from '@/api/bill/mb/bill'
+import { checkAll } from '@/api/scheduledTask/billCheck'
 
 export default {
   data() {
@@ -38,14 +39,14 @@ export default {
       visible: false,
       formLoading: false,
       btnLoading: false,
-      type: '',
       classList: [],
       dataForm: {
-        classId: [],
-        inspector: ''
+        classIds: [],
+        inspector: '',
+        type: ''
       },
       dataRule: {
-        classId: [
+        classIds: [
           { required: true, message: '请选择要检查的班组', trigger: 'change' }
         ],
         inspector: [
@@ -57,7 +58,7 @@ export default {
 
   methods: {
     init(type) {
-      this.type = type
+      this.dataForm.type = type
       this.visible = true
       this.formLoading = true
       getClasses().then(res => {
@@ -72,7 +73,7 @@ export default {
       this.$refs.dataForm.validate((valid) => {
         if (valid) {
           this.btnLoading = true
-          formMethod(this.dataForm).then(res => {
+          checkAll(this.dataForm).then(res => {
             this.$message({
               message: res.message,
               type: 'success',
@@ -80,7 +81,7 @@ export default {
               onClose: () => {
                 this.visible = false
                 this.btnLoading = false
-                this.$emit('refreshDataList')
+                this.$emit('close')
               }
             })
           }).catch(() => {

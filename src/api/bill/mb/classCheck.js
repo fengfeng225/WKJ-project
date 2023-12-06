@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function getClasses() {
+export function getClassWithCheckStatus() {
   return request({
-    url: `/api/admin/mb/class`,
+    url: `/api/admin/mb/classWithCheckStatus`,
     method: 'GET'
   })
 }

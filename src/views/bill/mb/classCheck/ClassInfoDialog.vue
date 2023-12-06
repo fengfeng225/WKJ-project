@@ -35,10 +35,10 @@
 
 <script>
 import {
-  createGroupCategory,
-  updateGroupCategory,
-  getGroupCategoryInfo
-} from '@/api/bill/mb/checkRecord'
+  createClass,
+  updateClass,
+  getClassInfo
+} from '@/api/bill/mb/classCheck'
 
 export default {
   data() {
@@ -66,7 +66,7 @@ export default {
       this.formLoading = true
 
       if (this.dataForm.id) {
-        getGroupCategoryInfo(this.dataForm.id).then(res => {
+        getClassInfo(this.dataForm.id).then(res => {
           this.dataForm = res.data
           this.formLoading = false
         }).catch(() => {
@@ -81,7 +81,7 @@ export default {
       this.$refs.dataForm.validate((valid) => {
         if (valid) {
           this.btnLoading = true
-          const formMethod = this.dataForm.id ? updateGroupCategory : createGroupCategory
+          const formMethod = this.dataForm.id ? updateClass : createClass
           formMethod(this.dataForm).then(res => {
             this.$message({
               message: res.message,
