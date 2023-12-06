@@ -42,7 +42,8 @@
             <template v-else-if="item.prop === 'shortCheckingStatus'">
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
-                  <el-tag :type="getCheckingStatusStyle(scope.row.shortCheckingStatus)" disable-transitions>
+                  <span v-if="scope.row.shortCheckingStatus === -1">-</span>
+                  <el-tag v-else :type="getCheckingStatusStyle(scope.row.shortCheckingStatus)" disable-transitions>
                     {{ getCheckingStatusLabel(scope.row.shortCheckingStatus) }}
                   </el-tag>
                 </template>
@@ -60,7 +61,8 @@
             <template v-else-if="item.prop === 'longCheckingStatus'">
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
-                  <el-tag :type="getCheckingStatusStyle(scope.row.longCheckingStatus)" disable-transitions>
+                  <span v-if="scope.row.shortCheckingStatus === -1">-</span>
+                  <el-tag v-else :type="getCheckingStatusStyle(scope.row.longCheckingStatus)" disable-transitions>
                     {{ getCheckingStatusLabel(scope.row.longCheckingStatus) }}
                   </el-tag>
                 </template>
