@@ -61,7 +61,7 @@
             <template v-else-if="item.prop === 'longCheckingStatus'">
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
-                  <span v-if="scope.row.shortCheckingStatus === -1">-</span>
+                  <span v-if="scope.row.longCheckingStatus === -1">-</span>
                   <el-tag v-else :type="getCheckingStatusStyle(scope.row.longCheckingStatus)" disable-transitions>
                     {{ getCheckingStatusLabel(scope.row.longCheckingStatus) }}
                   </el-tag>
