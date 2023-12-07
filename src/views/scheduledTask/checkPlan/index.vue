@@ -29,6 +29,7 @@
         <BL-table v-loading="listLoading" :data="list">
           <ex-table-column prop="fullName" label="台账类别" />
           <ex-table-column prop="entityCode" label="编码" />
+          <ex-table-column prop="classType" label="班组类型" />
           <ex-table-column prop="runCount" label="下发次数" />
           <el-table-column
             prop="lastRunTime"
