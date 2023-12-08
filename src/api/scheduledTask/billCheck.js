@@ -53,9 +53,17 @@ export function checkAll(data) {
   })
 }
 
-export function getCheckRecords(id) {
+export function getCheckRecords(id, type) {
   return request({
-    url: `/api/scheduledTask/bill/checkRecords/${id}`,
+    url: `/api/scheduledTask/bill/${id}/checkRecords/${type}`,
     method: 'GET'
+  })
+}
+
+export function fixRecord(data) {
+  return request({
+    url: `/api/scheduledTask/bill/checkRecord/fix/${data.id}`,
+    method: 'PUT',
+    data
   })
 }

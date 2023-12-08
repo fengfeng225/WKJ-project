@@ -35,7 +35,7 @@ export const getCycleTypeLabel = function(row, column, cellValue, index) {
 export const getCheckingStatusStyle = function(value) {
   switch (value) {
     case 0:
-      return 'info'
+      return ''
     case 1:
       return 'success'
     default:

@@ -13,7 +13,7 @@
                 style="margin-left: 12px;"
                 icon="el-icon-refresh"
                 :underline="false"
-                @click="refresh"
+                @click="initData"
               />
             </el-tooltip>
           </div>
@@ -24,7 +24,7 @@
         <BL-table ref="BLTable" v-loading="tableLoading" :data="tableData" row-key="id">
           <template v-for="item in computedRoleColumnOptions">
             <template v-if="item.prop === 'action'">
-              <ex-table-column v-if="hasRoleButton(['btn_edit', 'btn_delete'])" :key="item.prop" :label="item.label" width="120" fixed="right">
+              <ex-table-column v-if="hasRoleButton(['btn_edit', 'btn_delete'])" :key="item.prop" :label="item.label" width="150" fixed="right">
                 <template #default="scope">
                   <el-button v-if="hasRoleButton('btn_edit')" type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
                   <el-button v-if="hasRoleButton('btn_delete')" class="BL-table-delBtn" type="text" @click="removeHandle(scope.row.id)">删除</el-button>
@@ -39,40 +39,40 @@
                 </template>
               </ex-table-column>
             </template>
-            <template v-else-if="item.prop === 'shortCheckingStatus'">
+            <template v-else-if="item.prop === 'shortBillCheckingStatus'">
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
-                  <span v-if="scope.row.shortCheckingStatus === -1">-</span>
-                  <el-tag v-else :type="getCheckingStatusStyle(scope.row.shortCheckingStatus)" disable-transitions>
-                    {{ getCheckingStatusLabel(scope.row.shortCheckingStatus) }}
+                  <span v-if="scope.row.shortBillCheckingStatus === -1">-</span>
+                  <el-tag v-else :type="getCheckingStatusStyle(scope.row.shortBillCheckingStatus)" disable-transitions>
+                    {{ getCheckingStatusLabel(scope.row.shortBillCheckingStatus) }}
                   </el-tag>
                 </template>
               </ex-table-column>
             </template>
-            <template v-else-if="item.prop === 'shortCheckedStatus'">
+            <template v-else-if="item.prop === 'shortBillCheckedStatus'">
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
-                  <el-tag :type="getCheckedStatusStyle(scope.row.shortCheckedStatus)" disable-transitions>
-                    {{ getCheckedStatusLabel(scope.row.shortCheckedStatus) }}
+                  <el-tag :type="getCheckedStatusStyle(scope.row.shortBillCheckedStatus)" disable-transitions>
+                    {{ getCheckedStatusLabel(scope.row.shortBillCheckedStatus) }}
                   </el-tag>
                 </template>
               </ex-table-column>
             </template>
-            <template v-else-if="item.prop === 'longCheckingStatus'">
+            <template v-else-if="item.prop === 'longBillCheckingStatus'">
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
-                  <span v-if="scope.row.longCheckingStatus === -1">-</span>
-                  <el-tag v-else :type="getCheckingStatusStyle(scope.row.longCheckingStatus)" disable-transitions>
-                    {{ getCheckingStatusLabel(scope.row.longCheckingStatus) }}
+                  <span v-if="scope.row.longBillCheckingStatus === -1">-</span>
+                  <el-tag v-else :type="getCheckingStatusStyle(scope.row.longBillCheckingStatus)" disable-transitions>
+                    {{ getCheckingStatusLabel(scope.row.longBillCheckingStatus) }}
                   </el-tag>
                 </template>
               </ex-table-column>
             </template>
-            <template v-else-if="item.prop === 'longCheckedStatus'">
+            <template v-else-if="item.prop === 'longBillCheckedStatus'">
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
-                  <el-tag :type="getCheckedStatusStyle(scope.row.longCheckedStatus)" disable-transitions>
-                    {{ getCheckedStatusLabel(scope.row.longCheckedStatus) }}
+                  <el-tag :type="getCheckedStatusStyle(scope.row.longBillCheckedStatus)" disable-transitions>
+                    {{ getCheckedStatusLabel(scope.row.longBillCheckedStatus) }}
                   </el-tag>
                 </template>
               </ex-table-column>
@@ -106,6 +106,16 @@ import { dateFormatTable } from '@/utils'
 import ClassInfoDialog from './ClassInfoDialog'
 import CheckRecordsDrawer from '../../components/checkRecordsDrawer'
 
+const typeList = [
+  {
+    label: '短期盲板',
+    value: 'shortBill'
+  },
+  {
+    label: '长期盲板',
+    value: 'longBill'
+  }
+]
 export default {
   name: 'ClassCheckMb',
 
@@ -127,28 +137,28 @@ export default {
           prop: 'fullName'
         },
         {
-          label: '当前检查(短期)',
-          prop: 'shortCheckingStatus'
+          label: '本轮短期检查',
+          prop: 'shortBillCheckingStatus'
         },
         {
-          label: '历史检查(短期)',
-          prop: 'shortCheckedStatus'
+          label: '历史短期检查',
+          prop: 'shortBillCheckedStatus'
         },
         {
-          label: '当前检查(长期)',
-          prop: 'longCheckingStatus'
+          label: '本轮长期检查',
+          prop: 'longBillCheckingStatus'
         },
         {
-          label: '历史检查(长期)',
-          prop: 'longCheckedStatus'
-        },
-        {
-          label: '排序',
-          prop: 'sortCode'
+          label: '历史长期检查',
+          prop: 'longBillCheckedStatus'
         },
         {
           label: '创建时间',
           prop: 'creatorTime'
+        },
+        {
+          label: '排序',
+          prop: 'sortCode'
         },
         {
           label: '操作',
@@ -160,7 +170,7 @@ export default {
 
   computed: {
     computedRoleColumnOptions() {
-      this.setPermissions()
+      // this.setPermissions()
 
       return this.roleColumnOptions
     }
@@ -208,7 +218,7 @@ export default {
     showCheckRecords(id) {
       this.checkRecordsDrawerVisible = true
       this.$nextTick(() => {
-        this.$refs.CheckRecordsDrawer.init(id)
+        this.$refs.CheckRecordsDrawer.init(id, typeList)
       })
     },
 
