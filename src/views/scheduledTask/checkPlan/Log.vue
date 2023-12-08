@@ -46,10 +46,10 @@
         </el-row>
         <BL-table v-loading="listLoading" :data="list">
           <el-table-column
-            prop="runTime"
+            prop="creatorTime"
             label="下发时间"
             :formatter="dateFormatTable"
-            width="130"
+            width="150"
           />
           <el-table-column prop="runResult" label="下发结果" width="100" align="center">
             <template slot-scope="scope">
@@ -60,7 +60,7 @@
           </el-table-column>
           <el-table-column prop="description" label="说明" />
         </BL-table>
-        <pagination
+        <BL-pagination
           :total="total"
           :page.sync="listQuery.currentPage"
           :limit.sync="listQuery.pageSize"

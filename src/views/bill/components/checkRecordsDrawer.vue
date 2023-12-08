@@ -4,6 +4,7 @@
     :visible.sync="drawer"
     :close-on-press-escape="false"
     :wrapper-closable="false"
+    size="420px"
     @closed="close"
   >
     <div class="records-drawer">
@@ -14,10 +15,10 @@
             <el-option v-for="item in typeList" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </div>
-        <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
+        <el-button type="primary" icon="el-icon-search" :disabled="!type" @click="search">查询</el-button>
       </div>
       <el-divider />
-      <el-timeline>
+      <el-timeline v-loading="loading">
         <el-timeline-item
           v-for="item in 2"
           :key="item"
@@ -92,6 +93,8 @@ export default {
 
 <style lang="scss" scoped>
 .records-drawer {
+  display: flex;
+  flex-direction: column;
   height: 100%;
   padding: 10px;
   padding-top: 0;
@@ -108,23 +111,25 @@ export default {
       margin-right: 10px;
     }
   }
-  .basic {
-    width: 50%;
-    .user-info {
-      display: flex;
-      justify-content: flex-end;
-      padding-top: 10px;
-      table {
-        color: #909399;
-        font-size: 12px;
+  .el-timeline {
+    flex: 1;
+    .basic {
+      width: 50%;
+      .user-info {
+        padding-top: 10px;
+        table {
+          color: #909399;
+          font-size: 12px;
+          td {
+            word-break: break-all;
+          }
+        }
       }
-  }
-  }
-  .remark {
-    width: 50%;
-    margin-left: 5px;
-    text-align: right;
-    word-break: break-all;
+    }
+    .remark {
+      width: 40%;
+      word-break: break-all;
+    }
   }
 }
 ::v-deep .el-card__body {

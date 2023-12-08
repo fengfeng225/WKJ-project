@@ -29,18 +29,17 @@
         <BL-table v-loading="listLoading" :data="list">
           <ex-table-column prop="fullName" label="台账类别" />
           <ex-table-column prop="entityCode" label="编码" />
-          <ex-table-column prop="classType" label="班组类型" />
           <ex-table-column prop="runCount" label="下发次数" />
           <el-table-column
             prop="lastRunTime"
             label="最后下发时间"
-            width="120"
+            width="150"
             :formatter="dateFormatTable"
           />
           <el-table-column
             prop="nextRunTime"
             label="下次下发时间"
-            width="120"
+            width="150"
             :formatter="dateFormatTable"
           />
           <ex-table-column prop="description" label="说明" />

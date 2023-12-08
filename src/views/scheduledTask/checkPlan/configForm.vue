@@ -21,12 +21,12 @@
           >
             <el-col :span="24">
               <el-form-item label="台账类别" prop="fullName">
-                <el-input v-model="dataForm.fullName" readonly />
+                <el-input v-model="dataForm.fullName" />
               </el-form-item>
             </el-col>
             <el-col :span="24">
               <el-form-item label="编码" prop="entityCode">
-                <el-input v-model="dataForm.entityCode" readonly />
+                <el-input v-model="dataForm.entityCode" disabled />
               </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -35,7 +35,6 @@
                   <el-option label="类别划分" value="categoryDivide" />
                   <el-option label="班级划分" value="classDivide" />
                 </el-select>
-                <el-input v-model="dataForm.classType" readonly />
               </el-form-item>
             </el-col>
             <el-col :span="24">
