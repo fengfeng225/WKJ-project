@@ -140,7 +140,7 @@ export default {
           this.btnLoading = true
           updateCheckPlan(this.dataForm).then((res) => {
             this.$message({
-              message: res.msg,
+              message: res.message,
               type: 'success',
               duration: 1500,
               onClose: () => {

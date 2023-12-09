@@ -13,7 +13,7 @@
       :rules="dataRule"
       label-width="100px"
     >
-      <el-form-item label="班组" prop="className">
+      <el-form-item label="班组" prop="classIds">
         <el-select v-model="dataForm.classIds" multiple placeholder="请选择要检查的班组">
           <el-option v-for="item in classList" :key="item.id" :label="item.fullName" :value="item.id" />
         </el-select>

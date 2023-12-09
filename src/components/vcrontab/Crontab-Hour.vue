@@ -46,7 +46,7 @@ export default {
           hour: '*',
           day: '*',
           month: '*',
-          week: '?',
+          week: '*', // 兼容 ? 改 *
           year: ''
         }
       }

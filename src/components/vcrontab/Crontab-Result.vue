@@ -19,7 +19,7 @@ export default {
   props: {
     ex: {
       type: String,
-      default: '* * * * * ?'
+      default: '* * * * * *' // 兼容 ? 改 *
     }
   },
   data() {

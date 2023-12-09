@@ -56,7 +56,7 @@
               />
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="150" fixed="right">
+          <el-table-column label="操作" width="100" fixed="right">
             <template slot-scope="scope">
               <el-button type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
               <BL-Dropdown style="margin-left: 8px;">
@@ -140,6 +140,7 @@ export default {
             duration: 1500,
             onClose: () => {
               row.enabledMark = row.enabledMark ? 0 : 1
+              this.initData()
             }
           })
         })

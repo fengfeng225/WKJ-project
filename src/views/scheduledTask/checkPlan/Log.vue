@@ -21,6 +21,7 @@
                   value-format="timestamp"
                   clearable
                   :editable="false"
+                  style="width: 100%;"
                 />
               </el-form-item>
             </el-col>
@@ -32,7 +33,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="12">
               <el-form-item>
                 <el-button type="primary" icon="el-icon-search" @click="search">
                   查询
