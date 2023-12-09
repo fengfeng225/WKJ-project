@@ -71,6 +71,7 @@ export default {
     init(id, typeList) {
       this.id = id
       this.typeList = typeList
+      this.type = typeList[0]?.value || ''
       this.drawer = true
     },
 
