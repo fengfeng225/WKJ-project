@@ -20,56 +20,93 @@
       <el-divider />
       <el-timeline v-loading="loading">
         <el-timeline-item
-          v-for="item in 2"
-          :key="item"
-          icon="el-icon-check"
-          type="success"
+          v-for="item in recordList"
+          :key="item.id"
           size="large"
-          timestamp="2018/4/12"
+          :icon="getCheckRecordIcon(item.checkStatus)"
+          :type="getCheckRecordType(item.checkStatus)"
+          :timestamp="item.creatorTime"
           placement="top"
         >
           <el-card>
             <div class="basic">
-              <h4 style="font-size: 16px;">1月检查</h4>
+              <h4 style="font-size: 16px;">{{ item.fullName }}</h4>
               <div class="user-info">
                 <table>
                   <tr>
                     <td align="right">检查人员：</td>
-                    <td><span style="margin-left:8px;">王小虎</span></td>
+                    <td><span style="margin-left:8px;">{{ item.inspector }}</span></td>
                   </tr>
                   <tr>
                     <td align="right">检查时间：</td>
-                    <td><span style="margin-left:8px;">2018/4/12 20:46</span></td>
+                    <td><span style="margin-left:8px;">{{ item.checkedTime }}</span></td>
+                  </tr>
+                  <tr>
+                    <td align="right">台账类别：</td>
+                    <td><span style="margin-left:8px;">{{ item.type }}</span></td>
                   </tr>
                 </table>
               </div>
             </div>
-            <div class="remark">处理备注：已处理</div>
+            <div v-if="item.checkStatus === -1">
+              <el-button size="mini" type="primary" @click="showDialog(item.id)">点击处理</el-button>
+            </div>
+            <div v-if="item.checkStatus === 2" class="remark">处理说明：{{ item.description }}</div>
           </el-card>
         </el-timeline-item>
       </el-timeline>
     </div>
+
+    <el-dialog
+      title="异常处理"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      append-to-body
+      :visible.sync="visible"
+      @close="closeDialog"
+    >
+      <el-form
+        ref="dataForm"
+        :model="dataForm"
+        label-width="50px"
+      >
+        <el-form-item label="说明" prop="description" :rules="{ required: true, message: '请输入处理说明', trigger: 'blur' }">
+          <el-input v-model="dataForm.description" type="textarea" placeholder="请输入处理说明" />
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="visible = false">取消</el-button>
+        <el-button type="primary" :loading="btnLoading" @click="dataFormSubmit">确定</el-button>
+      </span>
+    </el-dialog>
   </el-drawer>
 </template>
 
 <script>
-import { getCheckRecords } from '@/api/scheduledTask/billCheck'
+import { getCheckRecords, fixRecord } from '@/api/scheduledTask/billCheck'
 
 export default {
   data() {
     return {
       drawer: false,
+      visible: false,
       loading: false,
-      id: '',
+      btnLoading: false,
+      classId: '',
       type: '',
       typeList: [],
-      recordList: []
+      recordList: [],
+      handled: false,
+      dataForm: {
+        id: '',
+        description: ''
+      }
     }
   },
 
   methods: {
     init(id, typeList) {
-      this.id = id
+      this.classId = id
       this.typeList = typeList
       this.type = typeList[0]?.value || ''
       this.drawer = true
@@ -77,7 +114,7 @@ export default {
 
     search() {
       this.loading = true
-      getCheckRecords(this.id, this.type).then(res => {
+      getCheckRecords(this.classId, this.type).then(res => {
         this.recordList = res.data.list
         this.loading = false
       }).catch(() => {
@@ -86,7 +123,63 @@ export default {
     },
 
     close() {
-      this.$emit('close')
+      this.$emit('close', this.handled)
+    },
+
+    showDialog(id) {
+      this.dataForm.id = id
+      this.visible = true
+    },
+
+    closeDialog() {
+      this.$refs.dataForm.resetFields()
+    },
+
+    dataFormSubmit() {
+      this.$refs.dataForm.validate().then(() => {
+        this.btnLoading = true
+        fixRecord(this.dataForm).then(res => {
+          this.handled = true
+          this.$message({
+            message: res.message,
+            type: 'success',
+            duration: 1500,
+            onClose: () => {
+              this.visible = false
+              this.btnLoading = false
+              this.search()
+            }
+          })
+        }).catch(() => {
+          this.btnLoading = false
+        })
+      }).catch(() => {})
+    },
+
+    getCheckRecordIcon(status) {
+      switch (status) {
+        case 1:
+          return 'el-icon-check'
+        case -1:
+          return 'el-icon-close'
+        case 2:
+          return 'el-icon-info'
+        default:
+          return 'el-icon-question'
+      }
+    },
+
+    getCheckRecordType(status) {
+      switch (status) {
+        case 1:
+          return 'success'
+        case -1:
+          return 'danger'
+        case 2:
+          return 'warning'
+        default:
+          return ''
+      }
     }
   }
 }

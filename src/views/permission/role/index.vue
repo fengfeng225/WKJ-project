@@ -62,6 +62,7 @@
 
       <Form v-if="formVisible" ref="Form" @refreshDataList="initData" />
       <AuthorizeForm v-if="authorizeFormVisible" ref="AuthorizeForm" @close="removeAuthorizeForm" />
+      <ClassAuthorize v-if="classAuthorizeVisible" ref="ClassAuthorize" />
     </div>
   </div>
 </template>
@@ -75,13 +76,15 @@ import {
 import { dateFormatTable } from '@/utils'
 
 import Form from './Form'
-import AuthorizeForm from '@/views/permission/role/AuthorizeForm'
+import AuthorizeForm from './AuthorizeForm'
+import ClassAuthorize from './classAuthorize'
 
 export default {
   name: 'PermissionRole',
   components: {
     Form,
-    AuthorizeForm
+    AuthorizeForm,
+    ClassAuthorize
   },
   data() {
     return {
@@ -91,7 +94,8 @@ export default {
       },
       listLoading: true,
       formVisible: false,
-      authorizeFormVisible: false
+      authorizeFormVisible: false,
+      classAuthorizeVisible: false
     }
   },
   created() {
@@ -153,7 +157,10 @@ export default {
     },
 
     classAuthorize(id) {
-
+      this.classAuthorizeVisible = true
+      this.$nextTick(() => {
+        this.$refs.ClassAuthorize.init(id)
+      })
     },
 
     dateFormatTable

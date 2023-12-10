@@ -89,7 +89,7 @@
     </div>
 
     <ClassInfoDialog v-if="classInfoDialogVisible" ref="ClassInfoDialog" @refreshDataList="initData" />
-    <CheckRecordsDrawer v-if="checkRecordsDrawerVisible" ref="CheckRecordsDrawer" @refreshDataList="initData" @close="checkRecordsDrawerVisible = false" />
+    <CheckRecordsDrawer v-if="checkRecordsDrawerVisible" ref="CheckRecordsDrawer" @close="closeDrawer" />
   </div>
 </template>
 
@@ -220,6 +220,12 @@ export default {
       this.$nextTick(() => {
         this.$refs.CheckRecordsDrawer.init(id, typeList)
       })
+    },
+
+    closeDrawer(isRefresh) {
+      this.checkRecordsDrawerVisible = false
+
+      if (isRefresh) this.initData()
     },
 
     setPermissions() {
