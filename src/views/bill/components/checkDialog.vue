@@ -19,6 +19,7 @@
           :options="treeData"
           placeholder="请选择要检查的班组"
           multiple
+          check-half-nodes
         />
       </el-form-item>
       <el-form-item label="检查人员" prop="inspector">
@@ -36,6 +37,13 @@
 import { getClassBasic, checkAll } from '@/api/bill/class'
 
 export default {
+  props: {
+    roleClassList: {
+      type: Array,
+      default: () => []
+    }
+  },
+
   data() {
     return {
       visible: false,
@@ -58,12 +66,19 @@ export default {
     }
   },
 
+  computed: {
+    roleClassIds() {
+      return this.roleClassList.map(item => item.id)
+    }
+  },
+
   methods: {
     init(type) {
       this.dataForm.type = type
       this.visible = true
       this.formLoading = true
       getClassBasic().then(res => {
+        this.initDisabledTreeNode(res.data.list)
         this.treeData = res.data.list
         this.formLoading = false
       }).catch(() => {
@@ -94,7 +109,14 @@ export default {
     },
 
     close() {
-      this.$refs.dataForm.resetFields()
+      this.$emit('close')
+    },
+
+    initDisabledTreeNode(treeData) {
+      treeData.forEach(item => {
+        if (!this.roleClassIds.includes(item.id)) item.disabled = true
+        if (item.children?.length) this.initDisabledTreeNode(item.children)
+      })
     }
   }
 }

@@ -125,7 +125,7 @@
         />
 
         <BillForm v-if="billFormVisible" ref="BillForm" @close="closeForm" />
-        <CheckDialog v-if="checkDialogVisible" ref="CheckDialog" @close="closeCheck" />
+        <CheckDialog v-if="checkDialogVisible" ref="CheckDialog" :role-class-list="roleClassList" @close="closeCheck" />
       </div>
     </div>
   </div>
@@ -169,6 +169,7 @@ export default {
       deviceNameListForFilter: [],
       importLoading: false,
       exportLoading: false,
+      roleClassList: [],
       roleButtonOptions: ['btn_add', 'btn_edit', 'btn_export', 'btn_delete', 'btn_check'],
       roleColumnOptions: [
         {
@@ -441,6 +442,8 @@ export default {
 
     closeCheck() {
       // 刷新按钮状态，应该变为禁用
+
+      this.checkDialogVisible = false
     },
 
     handleNodeClick(data) {
@@ -482,6 +485,7 @@ export default {
 
     setPermissions() {
       // Get the list with all the user permissions from the store.
+      this.roleClassList = this.$store.getters.classList
       const permissionList = this.$store.getters.permissionList
 
       // Retrieve the model ID based from the route.

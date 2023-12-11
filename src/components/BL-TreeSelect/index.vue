@@ -82,7 +82,8 @@ export default {
     // 自动收起
     accordion: { type: Boolean, default: false },
     defaultExpandAll: { type: Boolean, default: true },
-    multiple: { type: Boolean, default: false } // 是否多选，默认单选
+    multiple: { type: Boolean, default: false }, // 是否多选，默认单选
+    checkHalfNodes: { type: Boolean, default: false } // 多选模式下，半选中节点是否也输出，默认不输出
   },
   data() {
     return {
@@ -188,7 +189,14 @@ export default {
           }
         }
       } else {
-        selectedTextData = this.$refs.selectTree.getCheckedNodes()
+        if (this.checkHalfNodes) {
+          const parentNodes = this.$refs.selectTree.getHalfCheckedNodes()
+          const childNodes = this.$refs.selectTree.getCheckedNodes()
+          const allNodes = [...parentNodes, ...childNodes]
+          selectedTextData = [...new Set(allNodes)]
+        } else {
+          selectedTextData = this.$refs.selectTree.getCheckedNodes()
+        }
         for (let i = 0; i < selectedTextData.length; i++) {
           const e = selectedTextData[i]
           selectedData.push(e[this.props.value])

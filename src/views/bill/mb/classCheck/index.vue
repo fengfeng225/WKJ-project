@@ -3,9 +3,29 @@
 
     <!-- right -->
     <div class="BL-common-layout-center BL-flex-main">
-      <el-row class="BL-common-search-box">
-        <div style="display: flex; justify-content: space-between; padding: 5px;">
-          <div />
+      <el-row class="BL-common-search-box" :gutter="16">
+        <el-form @submit.native.prevent>
+          <el-col :span="6">
+            <el-form-item label="关键词">
+              <input
+                v-model.lazy="params.keyword"
+                class="el-textarea__inner"
+                placeholder="请输入关键词查询"
+                clearable
+                @keyup.enter="search"
+              >
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="6">
+            <el-form-item>
+              <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
+              <el-button icon="el-icon-refresh-right" @click="reset">重置</el-button>
+            </el-form-item>
+          </el-col>
+        </el-form>
+
+        <div class="BL-common-head-right">
           <div>
             <el-button v-if="hasRoleButton('btn_add')" icon="el-icon-plus" type="primary" @click="addOrUpdateHandle()">新建</el-button>
             <el-tooltip effect="dark" content="刷新" placement="top">
@@ -13,7 +33,7 @@
                 style="margin-left: 12px;"
                 icon="el-icon-refresh"
                 :underline="false"
-                @click="initData"
+                @click="reset"
               />
             </el-tooltip>
           </div>
@@ -132,6 +152,9 @@ export default {
     return {
       tableLoading: false,
       tableData: [],
+      params: {
+        keyword: ''
+      },
       classInfoDialogVisible: false,
       checkRecordsDrawerVisible: false,
       roleButtonOptions: ['btn_add', 'btn_edit', 'btn_delete', 'btn_record', 'btn_abnormalHandle'],
@@ -187,12 +210,21 @@ export default {
   methods: {
     initData() {
       this.tableLoading = true
-      getClassWithCheckStatus().then(res => {
+      getClassWithCheckStatus(this.params).then(res => {
         this.tableData = res.data.list
         this.tableLoading = false
       }).catch(() => {
         this.tableLoading = false
       })
+    },
+
+    reset() {
+      this.params.keyword = ''
+      this.initData()
+    },
+
+    search() {
+      this.initData()
     },
 
     addOrUpdateHandle(id) {

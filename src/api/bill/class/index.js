@@ -1,9 +1,10 @@
 import request from '@/utils/request'
 
-export function getClassWithCheckStatus() {
+export function getClassWithCheckStatus(data) {
   return request({
     url: `/api/admin/bill/class/checkStatus`,
-    method: 'GET'
+    method: 'GET',
+    data
   })
 }
 
