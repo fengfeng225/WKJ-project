@@ -49,7 +49,7 @@ export default {
       },
       dataRule: {
         classIds: [
-          { required: true, message: '请选择要检查的班组', trigger: 'change' }
+          { required: true, message: '请选择要检查的班组', trigger: 'input' }
         ],
         inspector: [
           { required: true, message: '请输入检查人员', trigger: 'blur' }
