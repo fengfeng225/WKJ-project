@@ -21,19 +21,19 @@
       </el-row>
 
       <div class="BL-common-layout-main BL-flex-main">
-        <BL-table ref="BLTable" v-loading="tableLoading" :data="tableData" row-key="id">
+        <BL-table ref="BLTable" v-loading="tableLoading" :data="tableData" row-key="id" default-expand-all>
           <template v-for="item in computedRoleColumnOptions">
             <template v-if="item.prop === 'action'">
-              <ex-table-column v-if="hasRoleButton(['btn_edit', 'btn_delete'])" :key="item.prop" :label="item.label" width="150" fixed="right">
+              <ex-table-column v-if="hasRoleButton(['btn_edit', 'btn_delete', 'btn_record'])" :key="item.prop" :label="item.label" width="150" fixed="right">
                 <template #default="scope">
                   <el-button v-if="hasRoleButton('btn_edit')" type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
                   <el-button v-if="hasRoleButton('btn_delete')" class="BL-table-delBtn" type="text" @click="removeHandle(scope.row.id)">删除</el-button>
-                  <BL-Dropdown style="margin-left: 8px;">
+                  <BL-Dropdown v-if="hasRoleButton(['btn_record']) && scope.row.parentId !== null" style="margin-left: 8px;">
                     <span>
                       <el-button type="text" size="small">更多<i class="el-icon-arrow-down el-icon--right" /></el-button>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item @click.native="showCheckRecords(scope.row.id)">检查记录</el-dropdown-item>
+                      <el-dropdown-item v-if="hasRoleButton('btn_record')" @click.native="showCheckRecords(scope.row.id)">检查记录</el-dropdown-item>
                     </el-dropdown-menu>
                   </BL-Dropdown>
                 </template>
@@ -42,7 +42,8 @@
             <template v-else-if="item.prop === 'shortBillCheckingStatus'">
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
-                  <span v-if="scope.row.shortBillCheckingStatus === -1">-</span>
+                  <span v-if="!scope.row.parentId" />
+                  <span v-else-if="scope.row.shortBillCheckingStatus === -1">-</span>
                   <el-tag v-else :type="getCheckingStatusStyle(scope.row.shortBillCheckingStatus)" disable-transitions>
                     {{ getCheckingStatusLabel(scope.row.shortBillCheckingStatus) }}
                   </el-tag>
@@ -52,7 +53,8 @@
             <template v-else-if="item.prop === 'shortBillCheckedStatus'">
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
-                  <el-tag :type="getCheckedStatusStyle(scope.row.shortBillCheckedStatus)" disable-transitions>
+                  <span v-if="!scope.row.parentId" />
+                  <el-tag v-else :type="getCheckedStatusStyle(scope.row.shortBillCheckedStatus)" disable-transitions>
                     {{ getCheckedStatusLabel(scope.row.shortBillCheckedStatus) }}
                   </el-tag>
                 </template>
@@ -61,7 +63,8 @@
             <template v-else-if="item.prop === 'longBillCheckingStatus'">
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
-                  <span v-if="scope.row.longBillCheckingStatus === -1">-</span>
+                  <span v-if="!scope.row.parentId" />
+                  <span v-else-if="scope.row.longBillCheckingStatus === -1">-</span>
                   <el-tag v-else :type="getCheckingStatusStyle(scope.row.longBillCheckingStatus)" disable-transitions>
                     {{ getCheckingStatusLabel(scope.row.longBillCheckingStatus) }}
                   </el-tag>
@@ -71,7 +74,8 @@
             <template v-else-if="item.prop === 'longBillCheckedStatus'">
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
-                  <el-tag :type="getCheckedStatusStyle(scope.row.longBillCheckedStatus)" disable-transitions>
+                  <span v-if="!scope.row.parentId" />
+                  <el-tag v-else :type="getCheckedStatusStyle(scope.row.longBillCheckedStatus)" disable-transitions>
                     {{ getCheckedStatusLabel(scope.row.longBillCheckedStatus) }}
                   </el-tag>
                 </template>
@@ -89,12 +93,12 @@
     </div>
 
     <ClassInfoDialog v-if="classInfoDialogVisible" ref="ClassInfoDialog" @refreshDataList="initData" />
-    <CheckRecordsDrawer v-if="checkRecordsDrawerVisible" ref="CheckRecordsDrawer" @close="closeDrawer" />
+    <CheckRecordsDrawer v-if="checkRecordsDrawerVisible" ref="CheckRecordsDrawer" :can-handle-abnormal="hasRoleButton('btn_abnormalHandle')" @close="closeDrawer" />
   </div>
 </template>
 
 <script>
-import { getClassWithCheckStatus, deleteClass } from '@/api/bill/mb/classCheck'
+import { getClassWithCheckStatus, deleteClass } from '@/api/bill/class'
 import {
   getCheckingStatusStyle,
   getCheckingStatusLabel,
@@ -103,7 +107,7 @@ import {
 } from '@/utils/helperHandlers'
 import { dateFormatTable } from '@/utils'
 
-import ClassInfoDialog from './ClassInfoDialog'
+import ClassInfoDialog from '../../components/ClassInfoDialog'
 import CheckRecordsDrawer from '../../components/checkRecordsDrawer'
 
 const typeList = [
@@ -130,7 +134,7 @@ export default {
       tableData: [],
       classInfoDialogVisible: false,
       checkRecordsDrawerVisible: false,
-      roleButtonOptions: ['btn_add', 'btn_edit', 'btn_delete'],
+      roleButtonOptions: ['btn_add', 'btn_edit', 'btn_delete', 'btn_record', 'btn_abnormalHandle'],
       roleColumnOptions: [
         {
           label: '名称',

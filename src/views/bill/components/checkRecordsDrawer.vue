@@ -18,43 +18,48 @@
         <el-button type="primary" icon="el-icon-search" :disabled="!type" @click="search">查询</el-button>
       </div>
       <el-divider />
-      <el-timeline v-loading="loading">
-        <el-timeline-item
-          v-for="item in recordList"
-          :key="item.id"
-          size="large"
-          :icon="getCheckRecordIcon(item.checkStatus)"
-          :type="getCheckRecordType(item.checkStatus)"
-          :timestamp="item.creatorTime"
-          placement="top"
-        >
-          <el-card>
-            <div class="basic">
-              <h4 style="font-size: 16px;">{{ item.fullName }}</h4>
-              <div class="user-info">
-                <table>
-                  <tr>
-                    <td align="right">检查人员：</td>
-                    <td><span style="margin-left:8px;">{{ item.inspector }}</span></td>
-                  </tr>
-                  <tr>
-                    <td align="right">检查时间：</td>
-                    <td><span style="margin-left:8px;">{{ item.checkedTime }}</span></td>
-                  </tr>
-                  <tr>
-                    <td align="right">台账类别：</td>
-                    <td><span style="margin-left:8px;">{{ item.type }}</span></td>
-                  </tr>
-                </table>
+      <div v-loading="loading" class="record-main">
+        <el-timeline v-if="recordList.length">
+          <el-timeline-item
+            v-for="item in recordList"
+            :key="item.id"
+            size="large"
+            :icon="getCheckRecordIcon(item.checkStatus)"
+            :type="getCheckRecordType(item.checkStatus)"
+            :timestamp="item.creatorTime"
+            placement="top"
+          >
+            <el-card>
+              <div class="basic">
+                <h4 style="font-size: 16px;">{{ item.fullName }}</h4>
+                <div class="user-info">
+                  <table>
+                    <tr>
+                      <td align="right">检查人员：</td>
+                      <td><span style="margin-left:8px;">{{ item.inspector }}</span></td>
+                    </tr>
+                    <tr>
+                      <td align="right">检查时间：</td>
+                      <td><span style="margin-left:8px;">{{ item.checkedTime }}</span></td>
+                    </tr>
+                    <tr>
+                      <td align="right">台账类别：</td>
+                      <td><span style="margin-left:8px;">{{ item.type }}</span></td>
+                    </tr>
+                  </table>
+                </div>
               </div>
-            </div>
-            <div v-if="item.checkStatus === -1">
-              <el-button size="mini" type="primary" @click="showDialog(item.id)">点击处理</el-button>
-            </div>
-            <div v-if="item.checkStatus === 2" class="remark">处理说明：{{ item.description }}</div>
-          </el-card>
-        </el-timeline-item>
-      </el-timeline>
+              <div v-if="item.checkStatus === -1">
+                <el-button v-if="canHandleAbnormal" size="mini" type="primary" @click="showDialog(item.id)">点击处理</el-button>
+              </div>
+              <div v-if="item.checkStatus === 2" class="remark">处理说明：{{ item.description }}</div>
+            </el-card>
+          </el-timeline-item>
+        </el-timeline>
+        <div v-else class="no-data-text">
+          <p>暂无记录</p>
+        </div>
+      </div>
     </div>
 
     <el-dialog
@@ -86,6 +91,13 @@
 import { getCheckRecords, fixRecord } from '@/api/bill/class'
 
 export default {
+  props: {
+    canHandleAbnormal: {
+      type: Boolean,
+      default: false
+    }
+  },
+
   data() {
     return {
       drawer: false,
@@ -205,24 +217,35 @@ export default {
       margin-right: 10px;
     }
   }
-  .el-timeline {
+  .record-main {
     flex: 1;
-    .basic {
-      width: 50%;
-      .user-info {
-        padding-top: 10px;
-        table {
-          color: #909399;
-          font-size: 12px;
-          td {
-            word-break: break-all;
+    display: flex;
+    .el-timeline {
+      flex: 1;
+      .basic {
+        width: 60%;
+        .user-info {
+          padding-top: 10px;
+          table {
+            color: #909399;
+            font-size: 12px;
+            td {
+              word-break: break-all;
+            }
           }
         }
       }
+      .remark {
+        width: 40%;
+        // word-break: break-all;
+      }
     }
-    .remark {
-      width: 40%;
-      word-break: break-all;
+
+    .no-data-text {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 }

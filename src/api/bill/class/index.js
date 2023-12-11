@@ -7,9 +7,30 @@ export function getClassWithCheckStatus() {
   })
 }
 
-export function getClasses() {
+export function getParentClassWithCheckStatus() {
   return request({
-    url: `/api/admin/bill/class`,
+    url: `/api/admin/bill/class/parentCheckStatus`,
+    method: 'GET'
+  })
+}
+
+export function getClassBasic() {
+  return request({
+    url: `/api/admin/bill/class/basic`,
+    method: 'GET'
+  })
+}
+
+export function getClassSelector() {
+  return request({
+    url: `/api/admin/bill/class/basic/selector`,
+    method: 'GET'
+  })
+}
+
+export function getClassLeaf() {
+  return request({
+    url: `/api/admin/bill/class/basic/leaf`,
     method: 'GET'
   })
 }

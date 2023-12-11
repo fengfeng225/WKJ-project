@@ -67,23 +67,19 @@ export default {
     },
 
     dataFormSubmit() {
-      this.$refs.dataForm.validate((valid) => {
-        if (valid) {
-          this.btnLoading = true
-          updateClassAuthorize(this.roleId, this.dataForm).then(res => {
-            this.$message({
-              message: res.message,
-              type: 'success',
-              duration: 1500,
-              onClose: () => {
-                this.visible = false
-                this.btnLoading = false
-              }
-            })
-          }).catch(() => {
+      this.btnLoading = true
+      updateClassAuthorize(this.roleId, this.dataForm).then(res => {
+        this.$message({
+          message: res.message,
+          type: 'success',
+          duration: 1500,
+          onClose: () => {
+            this.visible = false
             this.btnLoading = false
-          })
-        }
+          }
+        })
+      }).catch(() => {
+        this.btnLoading = false
       })
     },
 
@@ -96,7 +92,7 @@ export default {
     },
 
     close() {
-      this.$refs.dataForm.resetFields()
+      this.$emit('close')
     }
   }
 }

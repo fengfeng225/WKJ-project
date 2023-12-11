@@ -143,7 +143,7 @@ export default {
       this.visible = true
 
       // 获取上级菜单
-      getMenuSelector(id || 0).then(res => {
+      getMenuSelector(id || '').then(res => {
         const topItem = {
           fullName: '顶级节点',
           hasChildren: true,

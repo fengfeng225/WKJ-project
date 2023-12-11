@@ -14,9 +14,15 @@
       label-width="100px"
     >
       <el-form-item label="班组" prop="classIds">
-        <el-select v-model="dataForm.classIds" multiple placeholder="请选择要检查的班组">
+        <!-- <el-select v-model="dataForm.classIds" multiple placeholder="请选择要检查的班组">
           <el-option v-for="item in classList" :key="item.id" :label="item.fullName" :value="item.id" />
-        </el-select>
+        </el-select> -->
+        <BL-TreeSelect
+          v-model="dataForm.classIds"
+          :options="classList"
+          placeholder="请选择要检查的班组"
+          multiple
+        />
       </el-form-item>
       <el-form-item label="检查人员" prop="inspector">
         <el-input v-model="dataForm.inspector" placeholder="请输入检查人员" />
@@ -30,7 +36,7 @@
 </template>
 
 <script>
-import { getClasses, checkAll } from '@/api/bill/class'
+import { getClassBasic, checkAll } from '@/api/bill/class'
 
 export default {
   data() {
@@ -60,7 +66,7 @@ export default {
       this.dataForm.type = type
       this.visible = true
       this.formLoading = true
-      getClasses().then(res => {
+      getClassBasic().then(res => {
         this.classList = res.data.list
         this.formLoading = false
       }).catch(() => {

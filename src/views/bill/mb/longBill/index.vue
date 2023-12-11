@@ -131,7 +131,7 @@
 
 <script>
 import { getAllLongBills, getLongBills, deleteLongBill } from '@/api/bill/mb/bill'
-import { getClasses } from '@/api/bill/class'
+import { getClassBasic } from '@/api/bill/class'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 import { getMBStatusStyle, getMBStatusLabel } from '@/utils/helperHandlers'
 import { dateFormatTable, transToTDArray } from '@/utils'
@@ -252,13 +252,13 @@ export default {
 
   created() {
     this.getDeviceNameList()
-    this.getClasses()
+    this.getClassBasic()
   },
 
   methods: {
-    getClasses() {
+    getClassBasic() {
       this.treeLoading = true
-      getClasses().then(res => {
+      getClassBasic().then(res => {
         const parent = [{
           fullName: '全部',
           hasChildren: true,
