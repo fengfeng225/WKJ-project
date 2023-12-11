@@ -142,7 +142,8 @@
 </template>
 
 <script>
-import { getLongBillInfo, updateLongBill, createLongBill, getClasses } from '@/api/bill/mb/bill'
+import { getLongBillInfo, updateLongBill, createLongBill } from '@/api/bill/mb/bill'
+import { getClasses } from '@/api/bill/class'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 
 export default {

@@ -30,8 +30,7 @@
 </template>
 
 <script>
-import { getClasses } from '@/api/bill/mb/bill'
-import { checkAll } from '@/api/scheduledTask/billCheck'
+import { getClasses, checkAll } from '@/api/bill/class'
 
 export default {
   data() {

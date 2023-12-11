@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import { getCheckPlanList, stopCheckPlan, enableCheckPlan } from '@/api/scheduledTask/billCheck'
+import { getCheckPlanList, stopCheckPlan, enableCheckPlan } from '@/api/scheduledTask/billCheckPlan'
 import { dateFormatTable } from '@/utils'
 
 import ConfigForm from './configForm'

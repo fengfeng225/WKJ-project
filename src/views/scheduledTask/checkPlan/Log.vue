@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { getCheckPlanLog } from '@/api/scheduledTask/billCheck'
+import { getCheckPlanLog } from '@/api/scheduledTask/billCheckPlan'
 import { dateFormatTable } from '@/utils'
 
 export default {

@@ -132,7 +132,8 @@
 </template>
 
 <script>
-import { getAllShortBills, getShortBills, deleteShortBill, getClasses } from '@/api/bill/mb/bill'
+import { getAllShortBills, getShortBills, deleteShortBill } from '@/api/bill/mb/bill'
+import { getClasses } from '@/api/bill/class'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 import { getMBStatusStyle, getMBStatusLabel } from '@/utils/helperHandlers'
 import { dateFormatTable, transToTDArray } from '@/utils'

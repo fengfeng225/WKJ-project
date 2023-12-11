@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import { getCheckRecords, fixRecord } from '@/api/scheduledTask/billCheck'
+import { getCheckRecords, fixRecord } from '@/api/bill/class'
 
 export default {
   data() {

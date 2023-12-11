@@ -117,7 +117,8 @@
 </template>
 
 <script>
-import { getDisassembleDetails, removeDisassembleDetail, getClasses } from '@/api/bill/mb/bill'
+import { getDisassembleDetails, removeDisassembleDetail } from '@/api/bill/mb/bill'
+import { getClasses } from '@/api/bill/class'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 import { getMBStatusStyle, getMBStatusLabel, getCycleTypeLabel } from '@/utils/helperHandlers'
 import { dateFormatTable } from '@/utils'

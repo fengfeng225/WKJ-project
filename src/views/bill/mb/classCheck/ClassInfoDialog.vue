@@ -38,7 +38,7 @@ import {
   createClass,
   updateClass,
   getClassInfo
-} from '@/api/bill/mb/classCheck'
+} from '@/api/bill/class'
 
 export default {
   data() {

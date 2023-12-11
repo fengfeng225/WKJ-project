@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { getCheckPlanInfo, updateCheckPlan } from '@/api/scheduledTask/billCheck'
+import { getCheckPlanInfo, updateCheckPlan } from '@/api/scheduledTask/billCheckPlan'
 import vcrontab from '@/components/vcrontab'
 
 export default {

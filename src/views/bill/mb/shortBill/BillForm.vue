@@ -142,7 +142,8 @@
 </template>
 
 <script>
-import { getShortBillInfo, updateShortBill, createShortBill, getClasses } from '@/api/bill/mb/bill'
+import { getShortBillInfo, updateShortBill, createShortBill } from '@/api/bill/mb/bill'
+import { getClasses } from '@/api/bill/class'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 
 export default {
