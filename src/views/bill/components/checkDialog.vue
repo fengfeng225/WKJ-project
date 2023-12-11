@@ -14,12 +14,9 @@
       label-width="100px"
     >
       <el-form-item label="班组" prop="classIds">
-        <!-- <el-select v-model="dataForm.classIds" multiple placeholder="请选择要检查的班组">
-          <el-option v-for="item in classList" :key="item.id" :label="item.fullName" :value="item.id" />
-        </el-select> -->
         <BL-TreeSelect
           v-model="dataForm.classIds"
-          :options="classList"
+          :options="treeData"
           placeholder="请选择要检查的班组"
           multiple
         />
@@ -44,9 +41,9 @@ export default {
       visible: false,
       formLoading: false,
       btnLoading: false,
-      classList: [],
+      treeData: [],
       dataForm: {
-        classIds: [],
+        classIds: '',
         inspector: '',
         type: ''
       },
@@ -67,7 +64,7 @@ export default {
       this.visible = true
       this.formLoading = true
       getClassBasic().then(res => {
-        this.classList = res.data.list
+        this.treeData = res.data.list
         this.formLoading = false
       }).catch(() => {
         this.formLoading = false
