@@ -48,6 +48,7 @@
 
         <div class="BL-common-head-right">
           <div>
+            <el-button v-if="hasRoleButton('btn_check')" @click="showCheckDialog">一键检查</el-button>
             <el-button v-if="hasRoleButton('btn_export')" icon="el-icon-download" :loading="exportLoading" @click="exportData">导出</el-button>
             <el-button v-if="hasRoleButton('btn_add')" icon="el-icon-plus" type="primary" @click="addOrUpdateHandle()">新建</el-button>
             <el-tooltip effect="dark" content="刷新" placement="top">
@@ -124,6 +125,7 @@
         />
 
         <BillForm v-if="billFormVisible" ref="BillForm" @close="closeForm" />
+        <CheckDialog v-if="checkDialogVisible" ref="CheckDialog" :role-class-list="roleClassList" @close="checkDialogVisible = false" />
       </div>
     </div>
   </div>
@@ -137,11 +139,13 @@ import { getMBStatusStyle, getMBStatusLabel } from '@/utils/helperHandlers'
 import { dateFormatTable, transToTDArray } from '@/utils'
 
 import BillForm from './BillForm'
+import CheckDialog from '../../components/checkDialog'
 
 export default {
   name: 'LongBill',
   components: {
-    BillForm
+    BillForm,
+    CheckDialog
   },
   data() {
     return {
@@ -165,7 +169,8 @@ export default {
       deviceNameListForFilter: [],
       importLoading: false,
       exportLoading: false,
-      roleButtonOptions: ['btn_add', 'btn_edit', 'btn_export', 'btn_delete'],
+      roleClassList: [],
+      roleButtonOptions: ['btn_add', 'btn_edit', 'btn_export', 'btn_delete', 'btn_check'],
       roleColumnOptions: [
         {
           label: '装置名称',
@@ -238,7 +243,8 @@ export default {
           prop: 'action'
         }
       ],
-      billFormVisible: false
+      billFormVisible: false,
+      checkDialogVisible: false
     }
   },
 
@@ -427,6 +433,13 @@ export default {
       })
     },
 
+    showCheckDialog() {
+      this.checkDialogVisible = true
+      this.$nextTick(() => {
+        this.$refs.CheckDialog.init('longBill')
+      })
+    },
+
     handleNodeClick(data) {
       if (this.params.classId === data.id) return
 
@@ -466,6 +479,7 @@ export default {
 
     setPermissions() {
       // Get the list with all the user permissions from the store.
+      this.roleClassList = this.$store.getters.classList
       const permissionList = this.$store.getters.permissionList
 
       // Retrieve the model ID based from the route.

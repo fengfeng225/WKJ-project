@@ -1,5 +1,5 @@
 <template>
-  <div ref="echarts" :style="{width: '60%', height: height}" />
+  <div ref="echarts" :style="{width: '40%', height: height}" />
 </template>
 
 <script>
@@ -7,7 +7,7 @@ import * as echarts from 'echarts'
 import resize from '@/mixins/resize'
 
 export default {
-  name: 'OverviewBar',
+  name: 'MbPie',
   mixins: [resize],
   props: {
     height: {
@@ -18,7 +18,7 @@ export default {
       type: Array,
       default: () => []
     },
-    xAxis: {
+    legend: {
       type: Array,
       default: () => []
     }
@@ -28,43 +28,40 @@ export default {
       chart: null,
       options: {
         title: {
-          text: '互窜点',
+          text: '盲板',
           left: 'center'
         },
         tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'none'
-          }
+          trigger: 'item',
+          formatter: '{b}: {d}%'
         },
-        grid: {
-          top: '60px',
-          bottom: '20px',
-          left: '45px',
-          right: '65px'
-        },
-        xAxis: {
-          type: 'category',
-          name: '台账类别',
-          data: this.xAxis,
-          axisTick: {
-            alignWithLabel: true
-          }
-        },
-        yAxis: {
-          type: 'value',
-          name: '总数',
-          axisLine: {
-            show: true
+        legend: {
+          orient: 'vertical',
+          left: 'left',
+          data: this.legend,
+          formatter: (params) => {
+            const value = this.data.find(item => params === item.name).value
+            return value ? params + '\t' + value : params + '\t' + 0
           }
         },
         series: {
-          name: '总数',
-          type: 'bar',
-          barWidth: '30%',
+          type: 'pie',
+          avoidLabelOverlap: true,
+          // center: ['40%', '50%'],
+          radius: ['35%', '60%'],
+          minAngle: 5,
+          itemStyle: {
+            borderRadius: 8,
+            borderColor: '#fff',
+            borderWidth: 2
+          },
           label: {
             show: true,
-            position: 'top'
+            position: 'center',
+            formatter: () => {
+              const count = this.data.reduce((count, item) => count + item.value, 0)
+              return '总数: ' + count
+            }
           },
           data: this.data
         }
@@ -72,7 +69,9 @@ export default {
     }
   },
   mounted() {
-    this.$nextTick(this.initChart)
+    this.$nextTick(() => {
+      this.initChart()
+    })
   },
   beforedestroy() {
     if (!this.chart) {
@@ -99,4 +98,3 @@ export default {
 <style>
 
 </style>
-

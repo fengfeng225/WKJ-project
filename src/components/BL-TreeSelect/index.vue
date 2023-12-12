@@ -26,6 +26,7 @@
         :default-expanded-keys="defaultExpandedKey"
         :filter-node-method="filterNode"
         :show-checkbox="multiple"
+        :check-strictly="checkStrictly"
         :check-on-click-node="multiple"
         :class="{'single':!multiple}"
         :expand-on-click-node="!multiple"
@@ -83,7 +84,7 @@ export default {
     accordion: { type: Boolean, default: false },
     defaultExpandAll: { type: Boolean, default: true },
     multiple: { type: Boolean, default: false }, // 是否多选，默认单选
-    checkHalfNodes: { type: Boolean, default: false } // 多选模式下，半选中节点是否也输出，默认不输出
+    checkStrictly: { type: Boolean, default: false } // 是否严格的遵循父子不互相关联的做法, 默认为 false
   },
   data() {
     return {
@@ -189,14 +190,7 @@ export default {
           }
         }
       } else {
-        if (this.checkHalfNodes) {
-          const parentNodes = this.$refs.selectTree.getHalfCheckedNodes()
-          const childNodes = this.$refs.selectTree.getCheckedNodes()
-          const allNodes = [...parentNodes, ...childNodes]
-          selectedTextData = [...new Set(allNodes)]
-        } else {
-          selectedTextData = this.$refs.selectTree.getCheckedNodes()
-        }
+        selectedTextData = this.$refs.selectTree.getCheckedNodes()
         for (let i = 0; i < selectedTextData.length; i++) {
           const e = selectedTextData[i]
           selectedData.push(e[this.props.value])

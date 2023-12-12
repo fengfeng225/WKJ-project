@@ -197,7 +197,7 @@ export default {
 
   computed: {
     computedRoleColumnOptions() {
-      // this.setPermissions()
+      this.setPermissions()
 
       return this.roleColumnOptions
     }

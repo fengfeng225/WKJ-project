@@ -6,3 +6,10 @@ export function getSumBills() {
     method: 'GET'
   })
 }
+
+export function getNewCheckRecords() {
+  return request({
+    url: '/api/admin/home/newCheckRecord',
+    method: 'GET'
+  })
+}

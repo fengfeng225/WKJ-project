@@ -19,7 +19,7 @@
           :options="treeData"
           placeholder="请选择要检查的班组"
           multiple
-          check-half-nodes
+          check-strictly
         />
       </el-form-item>
       <el-form-item label="检查人员" prop="inspector">
