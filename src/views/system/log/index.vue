@@ -24,6 +24,7 @@
                 value-format="timestamp"
                 clearable
                 :editable="false"
+                style="width: 100%;"
               />
             </el-form-item>
           </el-col>

@@ -173,7 +173,7 @@ export default {
     flex-direction: column;
     padding: 0 0 10px;
 
-    :deep(.el-table) {
+    ::v-deep .el-table {
       flex: 1;
       border-top: none;
     }
