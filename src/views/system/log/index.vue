@@ -76,6 +76,7 @@
               <el-table-column prop="userName" label="请求用户" width="120" />
               <el-table-column prop="requestURL" label="请求地址" show-overflow-tooltip />
               <el-table-column prop="requestMethod" label="请求类型" width="120" />
+              <el-table-column prop="userAgent" label="user-agent" />
             </BL-table>
           </el-tab-pane>
           <el-tab-pane label="异常日志" name="2">
