@@ -8,10 +8,11 @@ export function getClassWithCheckStatus(data) {
   })
 }
 
-export function getParentClassWithCheckStatus() {
+export function getParentClassWithCheckStatus(data) {
   return request({
     url: `/api/admin/bill/class/parentCheckStatus`,
-    method: 'GET'
+    method: 'GET',
+    data
   })
 }
 
