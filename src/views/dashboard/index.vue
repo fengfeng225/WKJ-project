@@ -29,7 +29,7 @@
         </div>
         <ul class="check-record-list">
           <template v-for="item in checkRecordList">
-            <el-tooltip :key="item.id" effect="dark" :content="getDaysLeft(item.nextRunTime)" placement="top" :open-delay="500">
+            <el-tooltip :key="item.id" :disabled="item.checkStatus === 1" effect="dark" :content="getDaysLeft(item.nextRunTime)" placement="top" :open-delay="500">
               <el-badge :value="item.checkStatus === 0 ? '待检查' : ''" type="primary">
                 <li
                   :style="{
@@ -164,6 +164,7 @@ export default {
       const now = Date.now()
       const endDate = new Date(nextRunTime).getTime()
       const daysTimeStamp = endDate - now
+      if (daysTimeStamp < 0) return '已过期'
       const days = Math.floor(daysTimeStamp / (1000 * 60 * 60 * 24))
       if (days < 1) return '剩余时间：小于1天'
       return '剩余时间：' + days + '天'

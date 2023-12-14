@@ -61,7 +61,25 @@
               </el-tooltip>
             </div>
           </div>
-          <el-tab-pane label="请求日志" name="1">
+          <el-tab-pane label="登录日志" name="1">
+            <BL-table
+              v-loading="listLoading"
+              :data="loginLogData"
+              has-c
+              @selection-change="handleSelectionChange"
+            >
+              <el-table-column
+                prop="creatorTime"
+                :formatter="dateFormatTable"
+                label="登录时间"
+                width="150"
+              />
+              <el-table-column prop="userName" label="登录用户" width="120" />
+              <el-table-column prop="IPAddress" label="登录IP" width="120" />
+              <el-table-column prop="userAgent" label="登录摘要" show-overflow-tooltip />
+            </BL-table>
+          </el-tab-pane>
+          <el-tab-pane label="请求日志" name="2">
             <BL-table
               v-loading="listLoading"
               :data="requestLogData"
@@ -72,15 +90,16 @@
                 prop="creatorTime"
                 :formatter="dateFormatTable"
                 label="请求时间"
-                width="120"
+                width="150"
               />
               <el-table-column prop="userName" label="请求用户" width="120" />
-              <el-table-column prop="requestURL" label="请求地址" show-overflow-tooltip />
+              <el-table-column prop="IPAddress" label="请求IP" width="120" />
               <el-table-column prop="requestMethod" label="请求类型" width="120" />
-              <el-table-column prop="userAgent" label="user-agent" />
+              <el-table-column prop="requestURL" label="请求地址" show-overflow-tooltip />
+              <el-table-column prop="userAgent" label="请求设备" show-overflow-tooltip />
             </BL-table>
           </el-tab-pane>
-          <el-tab-pane label="异常日志" name="2">
+          <el-tab-pane label="异常日志" name="3">
             <BL-table
               v-loading="listLoading"
               :data="errorLogData"
@@ -91,13 +110,14 @@
                 prop="creatorTime"
                 :formatter="dateFormatTable"
                 label="创建时间"
-                width="120"
+                width="150"
               />
               <el-table-column prop="userName" label="创建用户" width="120" />
-              <el-table-column prop="json" label="异常描述">
+              <el-table-column prop="IPAddress" label="异常IP" width="120" />
+              <el-table-column prop="errorMessage" label="异常描述">
                 <template slot-scope="scope">
-                  <el-link style="font-size:12px" @click="goDetail(scope.row.json)">
-                    <p class="line1">{{ scope.row.json }}</p>
+                  <el-link style="font-size:12px" @click="goDetail(scope.row.errorMessage)">
+                    <p class="line1">{{ scope.row.errorMessage }}</p>
                   </el-link>
                 </template>
               </el-table-column>
@@ -130,6 +150,7 @@ export default {
       formVisible: false,
       listLoading: false,
       activeName: '1',
+      loginLogData: [],
       errorLogData: [],
       requestLogData: [],
       multipleSelection: [],
@@ -172,15 +193,16 @@ export default {
     }
   },
   created() {
-    // this.initData()
+    this.initData()
   },
   methods: {
     initData() {
       const activeId = this.activeName
       this.listLoading = true
       getLogList(activeId, this.params).then(res => {
-        if (activeId === '1') this.requestLogData = res.data.list
-        if (activeId === '2') this.errorLogData = res.data.list
+        if (activeId === '1') this.loginLogData = res.data.list
+        if (activeId === '2') this.requestLogData = res.data.list
+        if (activeId === '3') this.errorLogData = res.data.list
         this.total = res.data.pagination.total
         this.listLoading = false
       }).catch(() => {

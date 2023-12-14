@@ -429,3 +429,22 @@
 .el-form-item__label {
   font-weight: 400;
 }
+
+.BL-el_tabs {
+  height: 100%;
+
+  &.el-tabs--top {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .el-tabs__content {
+    flex: 1;
+    overflow: auto;
+    overflow-x: hidden;
+
+    .el-tab-pane {
+      height: 100%;
+    }
+  }
+}

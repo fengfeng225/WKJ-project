@@ -133,7 +133,7 @@
 
 <script>
 import { getAllLongBills, getLongBills, deleteLongBill } from '@/api/bill/mb/bill'
-import { getClassBasic } from '@/api/bill/class'
+import { getClassBasic, getClassLeaf } from '@/api/bill/class'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 import { getMBStatusStyle, getMBStatusLabel } from '@/utils/helperHandlers'
 import { dateFormatTable, transToTDArray } from '@/utils'
@@ -167,7 +167,6 @@ export default {
       tableData: [],
       deviceNameList: [],
       deviceNameListForFilter: [],
-      importLoading: false,
       exportLoading: false,
       roleClassList: [],
       roleButtonOptions: ['btn_add', 'btn_edit', 'btn_export', 'btn_delete', 'btn_check'],
@@ -340,7 +339,7 @@ export default {
       return ''
     },
 
-    exportData() {
+    async exportData() {
       this.exportLoading = true
 
       // 定义表头对应关系
@@ -363,22 +362,17 @@ export default {
         '管理干部': 'manager'
       }
 
-      const classes = {}
-      this.treeData[0].children.forEach(item => {
-        classes[item.id] = item.fullName
-      })
+      try {
+        const { data } = await getClassLeaf()
+        const classes = {}
+        data.list.forEach(item => {
+          classes[item.id] = item.fullName
+        })
 
-      const deviceNames = {}
-      this.deviceNameList.forEach(item => {
-        deviceNames[item.entityCode] = item.fullName
-      })
-
-      import('@/vendor/Export2Excel').then(async excel => {
-        try {
+        import('@/vendor/Export2Excel').then(async excel => {
           const { data: { list }} = await getAllLongBills()
           list.forEach(row => {
             row.classId = classes[row.classId]
-            row.name = deviceNames[row.name]
             row.status = row.status ? '通' : '盲'
           })
 
@@ -420,17 +414,17 @@ export default {
           excel.export_json_to_excel({
             header: Object.keys(headers),
             data,
-            filename: '短期盲板台账',
+            filename: '长期盲板台账',
             multiHeader,
             merges,
             autoWidth: true,
             bookType: 'xlsx'
           })
           this.exportLoading = false
-        } catch (error) {
-          this.exportLoading = false
-        }
-      })
+        })
+      } catch (error) {
+        this.exportLoading = false
+      }
     },
 
     showCheckDialog() {

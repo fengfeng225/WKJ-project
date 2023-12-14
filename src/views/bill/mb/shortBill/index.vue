@@ -97,11 +97,7 @@
               </ex-table-column>
             </template>
             <template v-else-if="item.prop === 'name'">
-              <ex-table-column :key="item.prop" :label="item.label" :filters="deviceNameListForFilter">
-                <template #default="scope">
-                  {{ getDeviceName(scope.row.name) }}
-                </template>
-              </ex-table-column>
+              <ex-table-column :key="item.prop" :label="item.label" :filters="deviceNameListForFilter" />
             </template>
             <template v-else-if="item.prop === 'size'">
               <el-table-column :key="item.prop" :label="item.label" :prop="item.prop" width="75" />
@@ -133,7 +129,7 @@
 
 <script>
 import { getAllShortBills, getShortBills, deleteShortBill } from '@/api/bill/mb/bill'
-import { getClassBasic } from '@/api/bill/class'
+import { getClassBasic, getClassLeaf } from '@/api/bill/class'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 import { getMBStatusStyle, getMBStatusLabel } from '@/utils/helperHandlers'
 import { dateFormatTable, transToTDArray } from '@/utils'
@@ -167,7 +163,6 @@ export default {
       tableData: [],
       deviceNameList: [],
       deviceNameListForFilter: [],
-      importLoading: false,
       exportLoading: false,
       roleClassList: [],
       roleButtonOptions: ['btn_add', 'btn_edit', 'btn_export', 'btn_delete', 'btn_check'],
@@ -329,18 +324,7 @@ export default {
       this.initData()
     },
 
-    getDeviceName(code) {
-      if (this.deviceNameList) {
-        const res = this.deviceNameList.find(x => x.entityCode === code)
-        if (res) {
-          return res.fullName
-        }
-      }
-
-      return ''
-    },
-
-    exportData() {
+    async exportData() {
       this.exportLoading = true
 
       // 定义表头对应关系
@@ -363,22 +347,17 @@ export default {
         '管理干部': 'manager'
       }
 
-      const classes = {}
-      this.treeData[0].children.forEach(item => {
-        classes[item.id] = item.fullName
-      })
+      try {
+        const { data } = await getClassLeaf()
+        const classes = {}
+        data.list.forEach(item => {
+          classes[item.id] = item.fullName
+        })
 
-      const deviceNames = {}
-      this.deviceNameList.forEach(item => {
-        deviceNames[item.entityCode] = item.fullName
-      })
-
-      import('@/vendor/Export2Excel').then(async excel => {
-        try {
+        import('@/vendor/Export2Excel').then(async excel => {
           const { data: { list }} = await getAllShortBills()
           list.forEach(row => {
             row.classId = classes[row.classId]
-            row.name = deviceNames[row.name]
             row.status = row.status ? '通' : '盲'
           })
 
@@ -427,10 +406,10 @@ export default {
             bookType: 'xlsx'
           })
           this.exportLoading = false
-        } catch (error) {
-          this.exportLoading = false
-        }
-      })
+        })
+      } catch (error) {
+        this.exportLoading = false
+      }
     },
 
     showCheckDialog() {
