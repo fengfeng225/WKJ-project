@@ -38,7 +38,7 @@
                 </el-col>
                 <el-col :span="24">
                   <el-form-item label="互窜点位置" prop="position">
-                    <el-input v-model="dataForm.position" type="textarea" resize="none" :autosize="{ minRows: 3, maxRows: 3}" placeholder="请输入互窜点位置" />
+                    <el-input v-model="dataForm.position" type="textarea" resize="none" :autosize="{ maxRows: 3}" placeholder="请输入互窜点位置" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -47,7 +47,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="前/后压力(MPa)" prop="pressure" label-width="120px">
+                  <el-form-item label="前/后压力(MPa)" prop="pressure">
                     <el-input v-model="dataForm.pressure" placeholder="请输入前/后压力(MPa)" />
                   </el-form-item>
                 </el-col>
@@ -57,13 +57,13 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="24">
-                  <el-form-item label="互窜后风险评价" prop="riskAssessment" label-width="120px">
-                    <el-input v-model="dataForm.riskAssessment" type="textarea" resize="none" :autosize="{ minRows: 3, maxRows: 3}" placeholder="请输入互窜后风险评价" />
+                  <el-form-item label="互窜后风险评价" prop="riskAssessment">
+                    <el-input v-model="dataForm.riskAssessment" type="textarea" resize="none" :autosize="{ maxRows: 3}" placeholder="请输入互窜后风险评价" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="24">
-                  <el-form-item label="防互窜控制措施" prop="controlMeasure" label-width="120px">
-                    <el-input v-model="dataForm.controlMeasure" type="textarea" resize="none" :autosize="{ minRows: 3, maxRows: 3}" placeholder="请输入防互窜控制措施" />
+                  <el-form-item label="防互窜控制措施" prop="controlMeasure">
+                    <el-input v-model="dataForm.controlMeasure" type="textarea" resize="none" :autosize="{ maxRows: 3}" placeholder="请输入防互窜控制措施" />
                   </el-form-item>
                 </el-col>
               </el-row>

@@ -83,7 +83,11 @@
               </ex-table-column>
             </template>
             <template v-else-if="item.prop === 'name'">
-              <ex-table-column :key="item.prop" :label="item.label" :filters="deviceNameListForFilter" />
+              <ex-table-column :key="item.prop" :label="item.label" :filters="deviceNameListForFilter">
+                <template #default="scope">
+                  {{ getDeviceName(scope.row.name) }}
+                </template>
+              </ex-table-column>
             </template>
             <template v-else-if="item.prop === 'creatorTime'">
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :formatter="dateFormatTable" />
@@ -267,6 +271,17 @@ export default {
       this.params.currentPage = 1
       this.params.pageSize = 20
       this.initData()
+    },
+
+    getDeviceName(code) {
+      if (this.deviceNameList) {
+        const res = this.deviceNameList.find(x => x.entityCode === code)
+        if (res) {
+          return res.fullName
+        }
+      }
+
+      return ''
     },
 
     async exportData() {
