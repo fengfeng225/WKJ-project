@@ -97,7 +97,7 @@ export default {
           name: '关键点',
           path: 'mutualChannelingPoints/keyPoint'
         },
-        totalLong: {
+        totalOtherPoint: {
           name: '其他',
           path: 'mutualChannelingPoints/otherPoint'
         }

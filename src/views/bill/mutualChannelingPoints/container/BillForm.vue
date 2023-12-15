@@ -16,7 +16,7 @@
               ref="dataForm"
               :model="dataForm"
               :rules="dataRule"
-              label-width="100px"
+              label-width="150px"
             >
               <div class="BL-common-title BL-20">
                 <h2 class="bold">基础信息</h2>
@@ -31,7 +31,7 @@
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="负责班组" prop="classId">
-                    <el-select v-model="dataForm.classId" placeholder="请选择负责班组" style="width: 100%;">
+                    <el-select v-model="dataForm.classId" placeholder="请选择负责班组">
                       <el-option v-for="item in classes" :key="item.id" :label="item.fullName" :value="item.id" />
                     </el-select>
                   </el-form-item>

@@ -45,7 +45,7 @@
             <template v-if="item.prop === 'action'">
               <ex-table-column v-if="hasRoleButton('btn_record')" :key="item.prop" :label="item.label" width="80" fixed="right">
                 <template #default="scope">
-                  <el-button v-if="hasRoleButton('btn_record')" type="text" @click="showCheckRecords(scope.row.id)">检查记录</el-button>
+                  <el-button v-if="hasRoleButton('btn_record') && !!scope.row.parentId" type="text" @click="showCheckRecords(scope.row.id)">检查记录</el-button>
                 </template>
               </ex-table-column>
             </template>

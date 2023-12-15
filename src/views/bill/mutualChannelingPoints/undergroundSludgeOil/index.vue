@@ -93,10 +93,10 @@
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :formatter="dateFormatTable" />
             </template>
             <template v-else-if="item.prop === 'riskAssessment'">
-              <el-table-column :key="item.prop" :label="item.label" :prop="item.prop" show-overflow-tooltip />
+              <el-table-column :key="item.prop" :label="item.label" :prop="item.prop" width="400" show-overflow-tooltip />
             </template>
             <template v-else-if="item.prop === 'controlMeasure'">
-              <el-table-column :key="item.prop" :label="item.label" :prop="item.prop" show-overflow-tooltip />
+              <el-table-column :key="item.prop" :label="item.label" :prop="item.prop" width="300" show-overflow-tooltip />
             </template>
             <template v-else>
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" />
