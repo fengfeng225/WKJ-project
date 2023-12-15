@@ -58,7 +58,7 @@ export const getCheckedStatusStyle = function(value) {
   switch (value) {
     case 1:
       return 'success'
-    case -1:
+    case 0:
       return 'danger'
     default:
       return 'warning'
@@ -69,7 +69,7 @@ export const getCheckedStatusLabel = function(value) {
   switch (value) {
     case 1:
       return '正常'
-    case -1:
+    case 0:
       return '异常'
     default:
       return '未知'

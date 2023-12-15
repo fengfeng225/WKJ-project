@@ -89,10 +89,7 @@
                 </template>
               </ex-table-column>
             </template>
-            <template v-else-if="item.prop === 'endoleakageRiskAssessment'">
-              <el-table-column :key="item.prop" :label="item.label" :prop="item.prop" show-overflow-tooltip />
-            </template>
-            <template v-else-if="item.prop === 'endoleakageDispose'">
+            <template v-else-if="item.prop === 'controlMeasure'">
               <el-table-column :key="item.prop" :label="item.label" :prop="item.prop" show-overflow-tooltip />
             </template>
             <template v-else-if="item.prop === 'creatorTime'">
@@ -118,7 +115,7 @@
 </template>
 
 <script>
-import { getAllHeatExchangerBills, getHeatExchangerBills, deleteHeatExchangerBill } from '@/api/bill/mutualChannelingPoints/heatExchanger'
+import { getAllOtherPointBills, getOtherPointBills, deleteOtherPointBill } from '@/api/bill/mutualChannelingPoints/otherPoint'
 import { getClassSelector } from '@/api/bill/class'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 import { dateFormatTable, transToTDArray } from '@/utils'
@@ -127,7 +124,7 @@ import BillForm from './BillForm'
 import CheckDialog from '../../components/checkDialog'
 
 export default {
-  name: 'HeatExchanger',
+  name: 'OtherPoint',
   components: {
     BillForm,
     CheckDialog
@@ -161,40 +158,28 @@ export default {
           prop: 'name'
         },
         {
-          label: '设备名称',
-          prop: 'equipmentName'
+          label: '互窜点位置',
+          prop: 'position'
         },
         {
-          label: '设备位号',
-          prop: 'equipmentTag'
-        },
-        {
-          label: '设计(操作)压力  管/壳',
-          prop: 'pressure'
-        },
-        {
-          label: '设计(操作)温度 管/壳',
-          prop: 'temperature'
-        },
-        {
-          label: '介质 壳/管',
+          label: '前/后介质',
           prop: 'media'
         },
         {
-          label: '规格型号',
-          prop: 'size'
+          label: '前/后压力 (MPa)',
+          prop: 'pressure'
         },
         {
-          label: '内漏判断',
-          prop: 'endoleakageJudge'
+          label: '隔离方式',
+          prop: 'isolationWay'
         },
         {
-          label: '内漏后风险评价',
-          prop: 'endoleakageRiskAssessment'
+          label: '互窜后风险',
+          prop: 'risk'
         },
         {
-          label: '内漏后处理',
-          prop: 'endoleakageDispose'
+          label: '防互窜控制措施',
+          prop: 'controlMeasure'
         },
         {
           label: '创建时间',
@@ -257,7 +242,7 @@ export default {
 
     initData() {
       this.tableLoading = true
-      getHeatExchangerBills(this.params).then(res => {
+      getOtherPointBills(this.params).then(res => {
         this.tableData = res.data.list
         this.total = res.data.pagination.total
         this.tableLoading = false
@@ -309,15 +294,12 @@ export default {
       const headers = {
         '班组': 'classId',
         '装置名称': 'name',
-        '设备名称': 'equipmentName',
-        '设备位号': 'equipmentTag',
-        '设计(操作)压力  管/壳': 'pressure',
-        '设计(操作)温度 管/壳': 'temperature',
-        '介质 壳/管': 'media',
-        '规格型号': 'size',
-        '内漏判断': 'endoleakageJudge',
-        '内漏后风险评价': 'endoleakageRiskAssessment',
-        '内漏后处理': 'endoleakageDispose'
+        '互窜点位置': 'position',
+        '前/后介质': 'media',
+        '前/后压力 (MPa)': 'pressure',
+        '隔离方式': 'isolationWay',
+        '互窜后风险': 'risk',
+        '防互窜控制措施': 'controlMeasure'
       }
 
       try {
@@ -328,7 +310,7 @@ export default {
         })
 
         import('@/vendor/Export2Excel').then(async excel => {
-          const { data: { list }} = await getAllHeatExchangerBills()
+          const { data: { list }} = await getAllOtherPointBills()
           list.forEach(row => {
             row.classId = classes[row.classId]
           })
@@ -337,7 +319,7 @@ export default {
           excel.export_json_to_excel({
             header: Object.keys(headers),
             data,
-            filename: '换热器互窜点台账',
+            filename: '其他互窜点台账',
             autoWidth: true,
             bookType: 'xlsx'
           })
@@ -351,7 +333,7 @@ export default {
     showCheckDialog() {
       this.checkDialogVisible = true
       this.$nextTick(() => {
-        this.$refs.CheckDialog.init('heatExchanger')
+        this.$refs.CheckDialog.init('otherPoint')
       })
     },
 
@@ -379,7 +361,7 @@ export default {
       this.$confirm('您确定要删除该条数据吗?', '提示', {
         type: 'warning'
       }).then(() => {
-        deleteHeatExchangerBill(id).then(res => {
+        deleteOtherPointBill(id).then(res => {
           this.$message({
             message: res.message,
             type: 'success',

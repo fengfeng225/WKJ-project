@@ -48,7 +48,11 @@ export default {
           name: '台账类别',
           data: this.xAxis,
           axisTick: {
-            alignWithLabel: true
+            alignWithLabel: true,
+            interval: 0
+          },
+          axisLabel: {
+            interval: 0
           }
         },
         yAxis: {
@@ -66,7 +70,8 @@ export default {
             show: true,
             position: 'top'
           },
-          data: this.data
+          data: this.data,
+          color: '#73c0de'
         }
       }
     }

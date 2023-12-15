@@ -81,13 +81,25 @@ export default {
       chartLoading: true,
       // 互窜点柱状图
       barRelation: {
-        totalShort: {
-          name: '短期台账',
-          path: 'mb/shortBill'
+        totalSludgeOil: {
+          name: '地下污油',
+          path: 'mutualChannelingPoints/undergroundSludgeOil'
+        },
+        totalHeatExchanger: {
+          name: '换热器',
+          path: 'mutualChannelingPoints/heatExchanger'
+        },
+        totalContainer: {
+          name: '容器',
+          path: 'mutualChannelingPoints/container'
+        },
+        totalKeyPoint: {
+          name: '关键点',
+          path: 'mutualChannelingPoints/keyPoint'
         },
         totalLong: {
-          name: '长期台账',
-          path: 'mb/longBill'
+          name: '其他',
+          path: 'mutualChannelingPoints/otherPoint'
         }
       },
       barXAxis: [],
@@ -231,6 +243,6 @@ export default {
   }
 }
 .top-card {
-  height: 60%;
+  height: 70%;
 }
 </style>

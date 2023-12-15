@@ -30,14 +30,6 @@
               </el-form-item>
             </el-col>
             <el-col :span="24">
-              <el-form-item label="班组类型" prop="classType">
-                <el-select v-model="dataForm.classType" disabled>
-                  <el-option label="类别划分" value="categoryDivide" />
-                  <el-option label="班级划分" value="classDivide" />
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="24">
               <el-form-item label="检查周期" prop="cron">
                 <el-input v-model="dataForm.cron" placeholder="Cron表达式" readonly>
                   <el-button slot="append" icon="el-icon-edit-outline" @click="showCronDialog" />
@@ -101,7 +93,6 @@ export default {
         id: '',
         fullName: '',
         entityCode: '',
-        classType: '',
         cron: '',
         description: '',
         sortCode: 0
@@ -112,9 +103,6 @@ export default {
         ],
         entityCode: [
           { required: true, message: '编码不能为空', trigger: 'blur' }
-        ],
-        classType: [
-          { required: true, message: '请选择班组类型', trigger: 'change' }
         ],
         cron: [
           { required: true, message: 'Cron表达式不能为空', trigger: 'click' }

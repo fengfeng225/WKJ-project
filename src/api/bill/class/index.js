@@ -1,25 +1,10 @@
 import request from '@/utils/request'
 
-export function getClassWithCheckStatus(data) {
-  return request({
-    url: `/api/admin/bill/class/checkStatus`,
-    method: 'GET',
-    data
-  })
-}
-
-export function getParentClassWithCheckStatus(data) {
-  return request({
-    url: `/api/admin/bill/class/parentCheckStatus`,
-    method: 'GET',
-    data
-  })
-}
-
-export function getClassBasic() {
+export function getClassBasic(data) {
   return request({
     url: `/api/admin/bill/class/basic`,
-    method: 'GET'
+    method: 'GET',
+    data
   })
 }
 
@@ -34,6 +19,14 @@ export function getClassLeaf() {
   return request({
     url: `/api/admin/bill/class/basic/leaf`,
     method: 'GET'
+  })
+}
+
+export function getClassWithCheckStatus(data) {
+  return request({
+    url: `/api/admin/bill/class/checkStatus`,
+    method: 'GET',
+    data
   })
 }
 

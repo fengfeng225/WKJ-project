@@ -37,48 +37,23 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="设备名称" prop="equipmentName">
-                    <el-input v-model="dataForm.equipmentName" placeholder="请输入设备名称" />
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="设备位号" prop="equipmentTag">
-                    <el-input v-model="dataForm.equipmentTag" placeholder="请输入设备位号" />
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="设计(操作)压力  管/壳" prop="pressure">
-                    <el-input v-model="dataForm.pressure" placeholder="设计(操作)压力  管/壳" />
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="设计(操作)温度 管/壳" prop="temperature">
-                    <el-input v-model="dataForm.temperature" placeholder="设计(操作)温度 管/壳" />
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="介质 壳/管" prop="media">
-                    <el-input v-model="dataForm.media" placeholder="请输入介质 壳/管" />
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="规格型号" prop="size">
-                    <el-input v-model="dataForm.size" placeholder="请输入规格型号" />
+                  <el-form-item label="高压窜低压部位" prop="position">
+                    <el-input v-model="dataForm.position" placeholder="请输入高压窜低压部位" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="24">
-                  <el-form-item label="内漏判断" prop="endoleakageJudge">
-                    <el-input v-model="dataForm.endoleakageJudge" type="textarea" resize="none" :autosize="{ minRows: 3, maxRows: 3}" placeholder="请输入内漏判断" />
+                  <el-form-item label="现状描述" prop="description">
+                    <el-input v-model="dataForm.description" type="textarea" resize="none" :autosize="{ minRows: 3, maxRows: 5}" placeholder="请输入现状描述" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="24">
-                  <el-form-item label="内漏后风险评价" prop="endoleakageRiskAssessment">
-                    <el-input v-model="dataForm.endoleakageRiskAssessment" type="textarea" resize="none" :autosize="{ minRows: 3, maxRows: 3}" placeholder="请输入内漏后风险评价" />
+                  <el-form-item label="存在问题及风险分析" prop="riskAnalysis">
+                    <el-input v-model="dataForm.riskAnalysis" type="textarea" resize="none" :autosize="{ minRows: 3, maxRows: 5}" placeholder="请输入存在问题及风险分析" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="24">
-                  <el-form-item label="内漏后处理" prop="endoleakageDispose">
-                    <el-input v-model="dataForm.endoleakageDispose" type="textarea" resize="none" :autosize="{ minRows: 3, maxRows: 3}" placeholder="请输入内漏后处理" />
+                  <el-form-item label="现有或临时防窜措施" prop="measures">
+                    <el-input v-model="dataForm.measures" type="textarea" resize="none" :autosize="{ minRows: 3, maxRows: 5}" placeholder="请输入现有或临时防窜措施" />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -91,7 +66,7 @@
 </template>
 
 <script>
-import { getHeatExchangerBillInfo, updateHeatExchangerBill, createHeatExchangerBill } from '@/api/bill/mutualChannelingPoints/heatExchanger'
+import { getKeyPointBillInfo, updateKeyPointBill, createKeyPointBill } from '@/api/bill/mutualChannelingPoints/keyPoint'
 import { getClassSelector } from '@/api/bill/class'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 
@@ -104,15 +79,10 @@ export default {
         id: '',
         classId: '',
         name: '',
-        equipmentName: '',
-        equipmentTag: '',
-        pressure: '',
-        temperature: '',
-        media: '',
-        size: '',
-        endoleakageJudge: '',
-        endoleakageRiskAssessment: '',
-        endoleakageDispose: ''
+        position: '',
+        description: '',
+        riskAnalysis: '',
+        measures: ''
       },
       classes: [],
       deviceNameList: [],
@@ -123,32 +93,17 @@ export default {
         name: [
           { required: true, message: '请选择装置名称', trigger: 'change' }
         ],
-        equipmentName: [
-          { required: true, message: '请输入设备名称', trigger: 'blur' }
+        position: [
+          { required: true, message: '请输入高压窜低压部位', trigger: 'blur' }
         ],
-        equipmentTag: [
-          { required: true, message: '请输入设备位号', trigger: 'blur' }
+        description: [
+          { required: true, message: '请输入现状描述', trigger: 'blur' }
         ],
-        pressure: [
-          { required: true, message: '请输入设计(操作)压力  管/壳', trigger: 'blur' }
+        riskAnalysis: [
+          { required: true, message: '请输入存在问题及风险分析', trigger: 'blur' }
         ],
-        temperature: [
-          { required: true, message: '请输入设计(操作)温度 管/壳', trigger: 'blur' }
-        ],
-        media: [
-          { required: true, message: '请输入介质 壳/管', trigger: 'blur' }
-        ],
-        size: [
-          { required: true, message: '请输入规格型号', trigger: 'blur' }
-        ],
-        endoleakageJudge: [
-          { required: true, message: '请输入内漏判断', trigger: 'blur' }
-        ],
-        endoleakageRiskAssessment: [
-          { required: true, message: '请输入内漏后风险评价', trigger: 'blur' }
-        ],
-        endoleakageDispose: [
-          { required: true, message: '请输入内漏后处理', trigger: 'blur' }
+        measures: [
+          { required: true, message: '请输入现有或临时防窜措施', trigger: 'blur' }
         ]
       }
     }
@@ -164,7 +119,7 @@ export default {
       this.dataForm.id = id || ''
       if (id) {
         this.formLoading = true
-        getHeatExchangerBillInfo(id).then(res => {
+        getKeyPointBillInfo(id).then(res => {
           this.dataForm = res.data
           this.formLoading = false
         }).catch(() => {
@@ -192,7 +147,7 @@ export default {
     dataFormSubmit() {
       this.$refs.dataForm.validate().then(() => {
         this.btnLoading = true
-        const method = this.dataForm.id ? updateHeatExchangerBill : createHeatExchangerBill
+        const method = this.dataForm.id ? updateKeyPointBill : createKeyPointBill
         method(this.dataForm).then(res => {
           this.$message({
             message: res.message,

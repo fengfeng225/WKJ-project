@@ -27,7 +27,6 @@
 
         <div class="BL-common-head-right">
           <div>
-            <el-button v-if="hasRoleButton('btn_add')" icon="el-icon-plus" type="primary" @click="addOrUpdateHandle()">新建</el-button>
             <el-tooltip effect="dark" content="刷新" placement="top">
               <el-link
                 style="margin-left: 12px;"
@@ -44,25 +43,17 @@
         <BL-table ref="BLTable" v-loading="tableLoading" :data="tableData" row-key="id" default-expand-all>
           <template v-for="item in computedRoleColumnOptions">
             <template v-if="item.prop === 'action'">
-              <ex-table-column v-if="hasRoleButton(['btn_edit', 'btn_delete', 'btn_record'])" :key="item.prop" :label="item.label" width="150" fixed="right">
+              <ex-table-column v-if="hasRoleButton('btn_record')" :key="item.prop" :label="item.label" width="80" fixed="right">
                 <template #default="scope">
-                  <el-button v-if="hasRoleButton('btn_edit')" type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
-                  <el-button v-if="hasRoleButton('btn_delete')" class="BL-table-delBtn" type="text" @click="removeHandle(scope.row.id)">删除</el-button>
-                  <BL-Dropdown v-if="hasRoleButton(['btn_record']) && scope.row.parentId !== null" style="margin-left: 8px;">
-                    <span>
-                      <el-button type="text" size="small">更多<i class="el-icon-arrow-down el-icon--right" /></el-button>
-                    </span>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item v-if="hasRoleButton('btn_record')" @click.native="showCheckRecords(scope.row.id)">检查记录</el-dropdown-item>
-                    </el-dropdown-menu>
-                  </BL-Dropdown>
+                  <el-button v-if="hasRoleButton('btn_record') && !!scope.row.parentId" type="text" @click="showCheckRecords(scope.row.id)">检查记录</el-button>
                 </template>
               </ex-table-column>
             </template>
             <template v-else-if="item.prop === 'undergroundSludgeOilCheckingStatus'">
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
-                  <span v-if="scope.row.undergroundSludgeOilCheckingStatus === -1">-</span>
+                  <span v-if="!scope.row.parentId" />
+                  <span v-else-if="scope.row.undergroundSludgeOilCheckingStatus === -1">-</span>
                   <el-tag v-else :type="getCheckingStatusStyle(scope.row.undergroundSludgeOilCheckingStatus)" disable-transitions>
                     {{ getCheckingStatusLabel(scope.row.undergroundSludgeOilCheckingStatus) }}
                   </el-tag>
@@ -72,15 +63,101 @@
             <template v-else-if="item.prop === 'undergroundSludgeOilCheckedStatus'">
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
-                  <el-tag :type="getCheckedStatusStyle(scope.row.undergroundSludgeOilCheckedStatus)" disable-transitions>
+                  <span v-if="!scope.row.parentId" />
+                  <span v-else-if="scope.row.undergroundSludgeOilCheckedStatus === -1">-</span>
+                  <el-tag v-else :type="getCheckedStatusStyle(scope.row.undergroundSludgeOilCheckedStatus)" disable-transitions>
                     {{ getCheckedStatusLabel(scope.row.undergroundSludgeOilCheckedStatus) }}
                   </el-tag>
                 </template>
               </ex-table-column>
             </template>
-
-            <template v-else-if="item.prop === 'creatorTime'">
-              <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :formatter="dateFormatTable" />
+            <template v-else-if="item.prop === 'heatExchangerCheckingStatus'">
+              <ex-table-column :key="item.prop" :label="item.label">
+                <template #default="scope">
+                  <span v-if="!scope.row.parentId" />
+                  <span v-else-if="scope.row.heatExchangerCheckingStatus === -1">-</span>
+                  <el-tag v-else :type="getCheckingStatusStyle(scope.row.heatExchangerCheckingStatus)" disable-transitions>
+                    {{ getCheckingStatusLabel(scope.row.heatExchangerCheckingStatus) }}
+                  </el-tag>
+                </template>
+              </ex-table-column>
+            </template>
+            <template v-else-if="item.prop === 'heatExchangerCheckedStatus'">
+              <ex-table-column :key="item.prop" :label="item.label">
+                <template #default="scope">
+                  <span v-if="!scope.row.parentId" />
+                  <span v-else-if="scope.row.heatExchangerCheckedStatus === -1">-</span>
+                  <el-tag v-else :type="getCheckedStatusStyle(scope.row.heatExchangerCheckedStatus)" disable-transitions>
+                    {{ getCheckedStatusLabel(scope.row.heatExchangerCheckedStatus) }}
+                  </el-tag>
+                </template>
+              </ex-table-column>
+            </template>
+            <template v-else-if="item.prop === 'containerCheckingStatus'">
+              <ex-table-column :key="item.prop" :label="item.label">
+                <template #default="scope">
+                  <span v-if="!scope.row.parentId" />
+                  <span v-else-if="scope.row.containerCheckingStatus === -1">-</span>
+                  <el-tag v-else :type="getCheckingStatusStyle(scope.row.containerCheckingStatus)" disable-transitions>
+                    {{ getCheckingStatusLabel(scope.row.containerCheckingStatus) }}
+                  </el-tag>
+                </template>
+              </ex-table-column>
+            </template>
+            <template v-else-if="item.prop === 'containerCheckedStatus'">
+              <ex-table-column :key="item.prop" :label="item.label">
+                <template #default="scope">
+                  <span v-if="!scope.row.parentId" />
+                  <span v-else-if="scope.row.containerCheckedStatus === -1">-</span>
+                  <el-tag v-else :type="getCheckedStatusStyle(scope.row.containerCheckedStatus)" disable-transitions>
+                    {{ getCheckedStatusLabel(scope.row.containerCheckedStatus) }}
+                  </el-tag>
+                </template>
+              </ex-table-column>
+            </template>
+            <template v-else-if="item.prop === 'keyPointCheckingStatus'">
+              <ex-table-column :key="item.prop" :label="item.label">
+                <template #default="scope">
+                  <span v-if="!scope.row.parentId" />
+                  <span v-else-if="scope.row.keyPointCheckingStatus === -1">-</span>
+                  <el-tag v-else :type="getCheckingStatusStyle(scope.row.keyPointCheckingStatus)" disable-transitions>
+                    {{ getCheckingStatusLabel(scope.row.keyPointCheckingStatus) }}
+                  </el-tag>
+                </template>
+              </ex-table-column>
+            </template>
+            <template v-else-if="item.prop === 'keyPointCheckedStatus'">
+              <ex-table-column :key="item.prop" :label="item.label">
+                <template #default="scope">
+                  <span v-if="!scope.row.parentId" />
+                  <span v-else-if="scope.row.keyPointCheckedStatus === -1">-</span>
+                  <el-tag v-else :type="getCheckedStatusStyle(scope.row.keyPointCheckedStatus)" disable-transitions>
+                    {{ getCheckedStatusLabel(scope.row.keyPointCheckedStatus) }}
+                  </el-tag>
+                </template>
+              </ex-table-column>
+            </template>
+            <template v-else-if="item.prop === 'otherPointCheckingStatus'">
+              <ex-table-column :key="item.prop" :label="item.label">
+                <template #default="scope">
+                  <span v-if="!scope.row.parentId" />
+                  <span v-else-if="scope.row.otherPointCheckingStatus === -1">-</span>
+                  <el-tag v-else :type="getCheckingStatusStyle(scope.row.otherPointCheckingStatus)" disable-transitions>
+                    {{ getCheckingStatusLabel(scope.row.otherPointCheckingStatus) }}
+                  </el-tag>
+                </template>
+              </ex-table-column>
+            </template>
+            <template v-else-if="item.prop === 'otherPointCheckedStatus'">
+              <ex-table-column :key="item.prop" :label="item.label">
+                <template #default="scope">
+                  <span v-if="!scope.row.parentId" />
+                  <span v-else-if="scope.row.otherPointCheckedStatus === -1">-</span>
+                  <el-tag v-else :type="getCheckedStatusStyle(scope.row.otherPointCheckedStatus)" disable-transitions>
+                    {{ getCheckedStatusLabel(scope.row.otherPointCheckedStatus) }}
+                  </el-tag>
+                </template>
+              </ex-table-column>
             </template>
             <template v-else>
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" />
@@ -90,13 +167,12 @@
       </div>
     </div>
 
-    <ClassInfoDialog v-if="classInfoDialogVisible" ref="ClassInfoDialog" @refreshDataList="initData" />
     <CheckRecordsDrawer v-if="checkRecordsDrawerVisible" ref="CheckRecordsDrawer" :can-handle-abnormal="hasRoleButton('btn_abnormalHandle')" @close="closeDrawer" />
   </div>
 </template>
 
 <script>
-import { getParentClassWithCheckStatus, deleteClass } from '@/api/bill/class'
+import { getClassWithCheckStatus } from '@/api/bill/class'
 import {
   getCheckingStatusStyle,
   getCheckingStatusLabel,
@@ -105,20 +181,34 @@ import {
 } from '@/utils/helperHandlers'
 import { dateFormatTable } from '@/utils'
 
-import ClassInfoDialog from '../../components/ClassInfoDialog'
 import CheckRecordsDrawer from '../../components/checkRecordsDrawer'
 
 const typeList = [
   {
     label: '地下污油',
     value: 'undergroundSludgeOil'
+  },
+  {
+    label: '换热器',
+    value: 'heatExchanger'
+  },
+  {
+    label: '容器',
+    value: 'container'
+  },
+  {
+    label: '关键点',
+    value: 'keyPoint'
+  },
+  {
+    label: '其他',
+    value: 'otherPoint'
   }
 ]
 export default {
   name: 'ClassCheckMutualChannelingPoints',
 
   components: {
-    ClassInfoDialog,
     CheckRecordsDrawer
   },
 
@@ -129,29 +219,52 @@ export default {
       params: {
         keyword: ''
       },
-      classInfoDialogVisible: false,
       checkRecordsDrawerVisible: false,
-      roleButtonOptions: ['btn_add', 'btn_edit', 'btn_delete', 'btn_record', 'btn_abnormalHandle'],
+      roleButtonOptions: ['btn_record', 'btn_abnormalHandle'],
       roleColumnOptions: [
         {
           label: '名称',
           prop: 'fullName'
         },
         {
-          label: '本轮地下污油检查',
+          label: 'C-地下污油',
           prop: 'undergroundSludgeOilCheckingStatus'
         },
         {
-          label: '历史地下污油检查',
+          label: 'H-地下污油',
           prop: 'undergroundSludgeOilCheckedStatus'
         },
         {
-          label: '创建时间',
-          prop: 'creatorTime'
+          label: 'C-换热器',
+          prop: 'heatExchangerCheckingStatus'
         },
         {
-          label: '排序',
-          prop: 'sortCode'
+          label: 'H-换热器',
+          prop: 'heatExchangerCheckedStatus'
+        },
+        {
+          label: 'C-容器',
+          prop: 'containerCheckingStatus'
+        },
+        {
+          label: 'H-容器',
+          prop: 'containerCheckedStatus'
+        },
+        {
+          label: 'C-关键点',
+          prop: 'keyPointCheckingStatus'
+        },
+        {
+          label: 'H-关键点',
+          prop: 'keyPointCheckedStatus'
+        },
+        {
+          label: 'C-其他',
+          prop: 'otherPointCheckingStatus'
+        },
+        {
+          label: 'H-其他',
+          prop: 'otherPointCheckedStatus'
         },
         {
           label: '操作',
@@ -176,7 +289,7 @@ export default {
   methods: {
     initData() {
       this.tableLoading = true
-      getParentClassWithCheckStatus(this.params).then(res => {
+      getClassWithCheckStatus(this.params).then(res => {
         this.tableData = res.data.list
         this.tableLoading = false
       }).catch(() => {
@@ -191,30 +304,6 @@ export default {
 
     search() {
       this.initData()
-    },
-
-    addOrUpdateHandle(id) {
-      this.classInfoDialogVisible = true
-      this.$nextTick(() => {
-        this.$refs.ClassInfoDialog.init(id)
-      })
-    },
-
-    removeHandle(id) {
-      this.$confirm('您确定要删除该班吗?', '提示', {
-        type: 'warning'
-      }).then(() => {
-        deleteClass(id).then(res => {
-          this.$message({
-            message: res.message,
-            type: 'success',
-            duration: 1500,
-            onClose: () => {
-              this.initData()
-            }
-          })
-        }).catch(() => {})
-      }).catch(() => {})
     },
 
     showCheckRecords(id) {

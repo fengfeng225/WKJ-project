@@ -36,49 +36,34 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
-                  <el-form-item label="设备名称" prop="equipmentName">
-                    <el-input v-model="dataForm.equipmentName" placeholder="请输入设备名称" />
+                <el-col :span="24">
+                  <el-form-item label="互窜点位置" prop="position">
+                    <el-input v-model="dataForm.position" type="textarea" resize="none" :autosize="{ maxRows: 3}" placeholder="请输入互窜点位置" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="设备位号" prop="equipmentTag">
-                    <el-input v-model="dataForm.equipmentTag" placeholder="请输入设备位号" />
+                  <el-form-item label="设置液位高低报警">
+                    <el-checkbox v-model="dataForm.liquidLevelAlarm" :true-label="1" :false-label="0" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
-                  <el-form-item label="设计(操作)压力  管/壳" prop="pressure">
-                    <el-input v-model="dataForm.pressure" placeholder="设计(操作)压力  管/壳" />
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="设计(操作)温度 管/壳" prop="temperature">
-                    <el-input v-model="dataForm.temperature" placeholder="设计(操作)温度 管/壳" />
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="介质 壳/管" prop="media">
-                    <el-input v-model="dataForm.media" placeholder="请输入介质 壳/管" />
-                  </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                  <el-form-item label="规格型号" prop="size">
-                    <el-input v-model="dataForm.size" placeholder="请输入规格型号" />
+                  <el-form-item label="纳入平稳率管理">
+                    <el-checkbox v-model="dataForm.smoothnessRate" :true-label="1" :false-label="0" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="24">
-                  <el-form-item label="内漏判断" prop="endoleakageJudge">
-                    <el-input v-model="dataForm.endoleakageJudge" type="textarea" resize="none" :autosize="{ minRows: 3, maxRows: 3}" placeholder="请输入内漏判断" />
+                  <el-form-item label="互窜后风险" prop="risk">
+                    <el-input v-model="dataForm.risk" type="textarea" resize="none" :autosize="{ minRows: 3, maxRows: 3}" placeholder="请输入互窜后风险" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="24">
-                  <el-form-item label="内漏后风险评价" prop="endoleakageRiskAssessment">
-                    <el-input v-model="dataForm.endoleakageRiskAssessment" type="textarea" resize="none" :autosize="{ minRows: 3, maxRows: 3}" placeholder="请输入内漏后风险评价" />
+                  <el-form-item label="风险管控措施" prop="riskControlMeasure">
+                    <el-input v-model="dataForm.riskControlMeasure" type="textarea" resize="none" :autosize="{ minRows: 3, maxRows: 3}" placeholder="请输入风险管控措施" />
                   </el-form-item>
                 </el-col>
                 <el-col :span="24">
-                  <el-form-item label="内漏后处理" prop="endoleakageDispose">
-                    <el-input v-model="dataForm.endoleakageDispose" type="textarea" resize="none" :autosize="{ minRows: 3, maxRows: 3}" placeholder="请输入内漏后处理" />
+                  <el-form-item label="评价结果" prop="evaluation">
+                    <el-input v-model="dataForm.evaluation" type="textarea" resize="none" :autosize="{ minRows: 3, maxRows: 3}" placeholder="请输入评价结果" />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -91,7 +76,7 @@
 </template>
 
 <script>
-import { getHeatExchangerBillInfo, updateHeatExchangerBill, createHeatExchangerBill } from '@/api/bill/mutualChannelingPoints/heatExchanger'
+import { getContainerBillInfo, updateContainerBill, createContainerBill } from '@/api/bill/mutualChannelingPoints/container'
 import { getClassSelector } from '@/api/bill/class'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 
@@ -104,15 +89,12 @@ export default {
         id: '',
         classId: '',
         name: '',
-        equipmentName: '',
-        equipmentTag: '',
-        pressure: '',
-        temperature: '',
-        media: '',
-        size: '',
-        endoleakageJudge: '',
-        endoleakageRiskAssessment: '',
-        endoleakageDispose: ''
+        position: '',
+        liquidLevelAlarm: null,
+        smoothnessRate: null,
+        risk: '',
+        riskControlMeasure: '',
+        evaluation: ''
       },
       classes: [],
       deviceNameList: [],
@@ -123,32 +105,17 @@ export default {
         name: [
           { required: true, message: '请选择装置名称', trigger: 'change' }
         ],
-        equipmentName: [
-          { required: true, message: '请输入设备名称', trigger: 'blur' }
+        position: [
+          { required: true, message: '请输入互窜点位置', trigger: 'blur' }
         ],
-        equipmentTag: [
-          { required: true, message: '请输入设备位号', trigger: 'blur' }
+        risk: [
+          { required: true, message: '请输入互窜后风险', trigger: 'blur' }
         ],
-        pressure: [
-          { required: true, message: '请输入设计(操作)压力  管/壳', trigger: 'blur' }
+        riskControlMeasure: [
+          { required: true, message: '请输入风险管控措施', trigger: 'blur' }
         ],
-        temperature: [
-          { required: true, message: '请输入设计(操作)温度 管/壳', trigger: 'blur' }
-        ],
-        media: [
-          { required: true, message: '请输入介质 壳/管', trigger: 'blur' }
-        ],
-        size: [
-          { required: true, message: '请输入规格型号', trigger: 'blur' }
-        ],
-        endoleakageJudge: [
-          { required: true, message: '请输入内漏判断', trigger: 'blur' }
-        ],
-        endoleakageRiskAssessment: [
-          { required: true, message: '请输入内漏后风险评价', trigger: 'blur' }
-        ],
-        endoleakageDispose: [
-          { required: true, message: '请输入内漏后处理', trigger: 'blur' }
+        evaluation: [
+          { required: true, message: '请输入评价结果', trigger: 'blur' }
         ]
       }
     }
@@ -164,7 +131,7 @@ export default {
       this.dataForm.id = id || ''
       if (id) {
         this.formLoading = true
-        getHeatExchangerBillInfo(id).then(res => {
+        getContainerBillInfo(id).then(res => {
           this.dataForm = res.data
           this.formLoading = false
         }).catch(() => {
@@ -192,7 +159,7 @@ export default {
     dataFormSubmit() {
       this.$refs.dataForm.validate().then(() => {
         this.btnLoading = true
-        const method = this.dataForm.id ? updateHeatExchangerBill : createHeatExchangerBill
+        const method = this.dataForm.id ? updateContainerBill : createContainerBill
         method(this.dataForm).then(res => {
           this.$message({
             message: res.message,
