@@ -51,7 +51,7 @@ export default {
           radius: ['35%', '60%'],
           minAngle: 5,
           itemStyle: {
-            borderRadius: 8,
+            // borderRadius: 5,
             borderColor: '#fff',
             borderWidth: 2
           },

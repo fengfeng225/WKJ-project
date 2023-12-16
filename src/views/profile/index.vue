@@ -2,7 +2,7 @@
   <div class="app-container Profile-container">
     <el-tabs v-model="activeTab" tab-position="left" style="height:100%" class="profile-tabs">
       <el-tab-pane label="个人资料" name="user">
-        <UserInfo v-if="activeTab === 'user'" ref="user" />
+        <UserInfo v-if="activeTab === 'user'" ref="user" :user-info="userInfo" />
       </el-tab-pane>
       <el-tab-pane label="修改密码" name="password">
         <Password v-if="activeTab === 'password'" ref="password" />

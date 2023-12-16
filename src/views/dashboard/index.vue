@@ -27,7 +27,7 @@
         <div class="title">
           <p>当前检查</p>
         </div>
-        <ul class="check-record-list">
+        <ol v-loading="checkRecordLoading" class="check-record-list">
           <template v-for="item in checkRecordList">
             <el-tooltip :key="item.id" :disabled="item.checkStatus === 1" effect="dark" :content="getDaysLeft(item.nextRunTime)" placement="top" :open-delay="500">
               <el-badge :value="item.checkStatus === 0 ? '待检查' : ''" type="primary">
@@ -42,17 +42,19 @@
               </el-badge>
             </el-tooltip>
           </template>
-        </ul>
+        </ol>
       </el-card>
     </div>
     <div class="card-box-right">
       <el-card class="top-card">
         <div class="card-box-right-chart">
-          <MbPie v-if="!chartLoading" :data="pieSeriesData" :legend="pieLegend" />
-          <OverviewBar v-if="!chartLoading" :x-axis="barXAxis" :data="barSeriesData" />
+          <MbPie v-if="!deviceCountLoading" :data="pieSeriesData" :legend="pieLegend" />
+          <OverviewBar v-if="!deviceCountLoading" :x-axis="barXAxis" :data="barSeriesData" />
         </div>
       </el-card>
-      <el-card style="margin-top: 5px;">Check Record Charts</el-card>
+      <el-card style="margin-top: 5px;">
+        <CheckProgressBar v-if="!checkProgressLoading" :total-check="totalCheck" :data="checkProgressList" />
+      </el-card>
     </div>
 
     <FileContent v-if="fileContentVisible" ref="FileContent" />
@@ -60,11 +62,12 @@
 </template>
 
 <script>
-import { getSumBills, getNewCheckRecords } from '@/api/home'
+import { getSumBills, getNewCheckRecords, getCheckProgress } from '@/api/home'
 
 import FileContent from './components/FileContent'
 import OverviewBar from './components/OverviewBar'
 import MbPie from './components/MbPie'
+import CheckProgressBar from './components/CheckProgressBar'
 
 export default {
   name: 'Dashboard',
@@ -72,13 +75,14 @@ export default {
   components: {
     FileContent,
     OverviewBar,
-    MbPie
+    MbPie,
+    CheckProgressBar
   },
 
   data() {
     return {
       fileContentVisible: false,
-      chartLoading: true,
+      deviceCountLoading: true,
       // 互窜点柱状图
       barRelation: {
         totalSludgeOil: {
@@ -118,14 +122,19 @@ export default {
       pieSeriesData: [],
       pieLegend: [],
       // 检查列表
-      checkRecordLoading: true,
-      checkRecordList: []
+      checkRecordLoading: false,
+      checkRecordList: [],
+      // 检查进度图
+      checkProgressList: [],
+      totalCheck: 0,
+      checkProgressLoading: true
     }
   },
 
   created() {
     this.getSumBills()
     this.getNewCheckRecords()
+    this.getCheckProgress()
   },
 
   methods: {
@@ -137,7 +146,7 @@ export default {
     },
 
     getSumBills() {
-      this.chartLoading = true
+      this.deviceCountLoading = true
       getSumBills().then(res => {
         const sumBills = res.data
         // 互窜点
@@ -156,9 +165,9 @@ export default {
           this.pieLegend.push({ name })
           this.pieSeriesData.push({ value: total, path, name })
         }
-        this.chartLoading = false
+        this.deviceCountLoading = false
       }).catch(() => {
-        this.chartLoading = false
+        this.deviceCountLoading = false
       })
     },
 
@@ -169,6 +178,21 @@ export default {
         this.checkRecordLoading = false
       }).catch(() => {
         this.checkRecordLoading = false
+      })
+    },
+
+    getCheckProgress() {
+      this.checkProgressLoading = true
+      getCheckProgress().then(res => {
+        const progressList = res.data.list
+        progressList.sort((a, b) => a.progress - b.progress)
+        this.checkProgressList = progressList.map(item => {
+          return [item.progress, item.className]
+        })
+        this.totalCheck = res.data.totalCheck
+        this.checkProgressLoading = false
+      }).catch(() => {
+        this.checkProgressLoading = false
       })
     },
 
@@ -193,7 +217,7 @@ export default {
     flex-direction: column;
     margin-right: 5px;
     // flex: 1;
-    width: 35%;
+    width: 40%;
     .title {
       height: 30px;
       line-height: 30px;
@@ -215,7 +239,8 @@ export default {
     }
     .check-record-list {
       height: calc(100% - 30px);
-      padding-top: 10px;
+      padding-top: 20px;
+      padding-left: 20px;
       overflow-y: scroll;
       .el-badge {
         width: 85%;
@@ -232,7 +257,7 @@ export default {
   }
   .card-box-right {
     // flex: 1;
-    width: 65%;
+    width: 60%;
     display: flex;
     flex-direction: column;
     .card-box-right-chart {
@@ -243,6 +268,6 @@ export default {
   }
 }
 .top-card {
-  height: 70%;
+  height: 80%;
 }
 </style>

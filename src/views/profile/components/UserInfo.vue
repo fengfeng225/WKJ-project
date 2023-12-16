@@ -3,18 +3,15 @@
     <el-tabs class="HG-el_tabs">
       <el-tab-pane label="基本信息">
         <el-col :span="12">
-          <el-form :model="user" label-width="100px">
+          <el-form :model="userInfo" label-width="100px">
             <el-form-item label="账户">
-              <el-input v-model="user.account" readonly />
+              <el-input v-model="userInfo.account" readonly />
             </el-form-item>
-            <el-form-item label="角色">
-              <el-input v-model="user.roleId" readonly />
+            <el-form-item label="名称">
+              <el-input v-model="userInfo.userName" readonly />
             </el-form-item>
             <el-form-item label="注册时间">
               <el-input v-model="creatorTime" readonly />
-            </el-form-item>
-            <el-form-item label="上次登录时间">
-              <el-input v-model="prevLogTime" readonly />
             </el-form-item>
           </el-form>
         </el-col>
@@ -27,25 +24,16 @@
 import { dateFormat } from '@/utils'
 
 export default {
-  data() {
-    return {
-      user: {}
+  props: {
+    userInfo: {
+      type: Object,
+      default: () => {}
     }
   },
+
   computed: {
     creatorTime() {
-      return dateFormat(this.user.creatorTime)
-    },
-    prevLogTime() {
-      return dateFormat(this.user.prevLogTime)
-    }
-  },
-  created() {
-    this.getInfo()
-  },
-  methods: {
-    getInfo() {
-
+      return dateFormat(this.userInfo.creatorTime)
     }
   }
 }

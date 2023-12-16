@@ -13,3 +13,10 @@ export function getNewCheckRecords() {
     method: 'GET'
   })
 }
+
+export function getCheckProgress() {
+  return request({
+    url: '/api/admin/home/checkProgress',
+    method: 'GET'
+  })
+}
