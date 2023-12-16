@@ -240,7 +240,7 @@ export default {
     .check-record-list {
       height: calc(100% - 30px);
       padding-top: 20px;
-      padding-left: 20px;
+      padding-left: 30px;
       overflow-y: scroll;
       .el-badge {
         width: 85%;
