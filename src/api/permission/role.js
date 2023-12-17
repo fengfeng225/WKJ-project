@@ -53,3 +53,18 @@ export function updateAuthorizeList(roleId, data) {
     data
   })
 }
+
+export function getClassAuthorize(roleId) {
+  return request({
+    url: `/api/permission/role/classAuthorize/${roleId}`,
+    method: 'GET'
+  })
+}
+
+export function updateClassAuthorize(roleId, data) {
+  return request({
+    url: `/api/permission/role/classAuthorize/${roleId}`,
+    method: 'PUT',
+    data
+  })
+}

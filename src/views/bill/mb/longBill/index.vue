@@ -48,6 +48,7 @@
 
         <div class="BL-common-head-right">
           <div>
+            <el-button v-if="hasRoleButton('btn_check')" @click="showCheckDialog">一键检查</el-button>
             <el-button v-if="hasRoleButton('btn_export')" icon="el-icon-download" :loading="exportLoading" @click="exportData">导出</el-button>
             <el-button v-if="hasRoleButton('btn_add')" icon="el-icon-plus" type="primary" @click="addOrUpdateHandle()">新建</el-button>
             <el-tooltip effect="dark" content="刷新" placement="top">
@@ -124,23 +125,27 @@
         />
 
         <BillForm v-if="billFormVisible" ref="BillForm" @close="closeForm" />
+        <CheckDialog v-if="checkDialogVisible" ref="CheckDialog" :role-class-list="roleClassList" @close="checkDialogVisible = false" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getAllLongBills, getLongBills, deleteLongBill, getClasses } from '@/api/bill/mb/bill'
+import { getAllLongBills, getLongBills, deleteLongBill } from '@/api/bill/mb/bill'
+import { getClassBasic, getClassLeaf } from '@/api/bill/class'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 import { getMBStatusStyle, getMBStatusLabel } from '@/utils/helperHandlers'
 import { dateFormatTable, transToTDArray } from '@/utils'
 
 import BillForm from './BillForm'
+import CheckDialog from '../../components/checkDialog'
 
 export default {
   name: 'LongBill',
   components: {
-    BillForm
+    BillForm,
+    CheckDialog
   },
   data() {
     return {
@@ -162,9 +167,9 @@ export default {
       tableData: [],
       deviceNameList: [],
       deviceNameListForFilter: [],
-      importLoading: false,
       exportLoading: false,
-      roleButtonOptions: ['btn_add', 'btn_edit', 'btn_export', 'btn_delete'],
+      roleClassList: [],
+      roleButtonOptions: ['btn_add', 'btn_edit', 'btn_export', 'btn_delete', 'btn_check'],
       roleColumnOptions: [
         {
           label: '装置名称',
@@ -237,7 +242,8 @@ export default {
           prop: 'action'
         }
       ],
-      billFormVisible: false
+      billFormVisible: false,
+      checkDialogVisible: false
     }
   },
 
@@ -251,13 +257,13 @@ export default {
 
   created() {
     this.getDeviceNameList()
-    this.getClasses()
+    this.getClassBasic()
   },
 
   methods: {
-    getClasses() {
+    getClassBasic() {
       this.treeLoading = true
-      getClasses().then(res => {
+      getClassBasic().then(res => {
         const parent = [{
           fullName: '全部',
           hasChildren: true,
@@ -333,7 +339,7 @@ export default {
       return ''
     },
 
-    exportData() {
+    async exportData() {
       this.exportLoading = true
 
       // 定义表头对应关系
@@ -356,22 +362,17 @@ export default {
         '管理干部': 'manager'
       }
 
-      const classes = {}
-      this.treeData[0].children.forEach(item => {
-        classes[item.id] = item.fullName
-      })
+      try {
+        const { data } = await getClassLeaf()
+        const classes = {}
+        data.list.forEach(item => {
+          classes[item.id] = item.fullName
+        })
 
-      const deviceNames = {}
-      this.deviceNameList.forEach(item => {
-        deviceNames[item.entityCode] = item.fullName
-      })
-
-      import('@/vendor/Export2Excel').then(async excel => {
-        try {
+        import('@/vendor/Export2Excel').then(async excel => {
           const { data: { list }} = await getAllLongBills()
           list.forEach(row => {
             row.classId = classes[row.classId]
-            row.name = deviceNames[row.name]
             row.status = row.status ? '通' : '盲'
           })
 
@@ -413,16 +414,23 @@ export default {
           excel.export_json_to_excel({
             header: Object.keys(headers),
             data,
-            filename: '短期盲板台账',
+            filename: '长期盲板台账',
             multiHeader,
             merges,
             autoWidth: true,
             bookType: 'xlsx'
           })
           this.exportLoading = false
-        } catch (error) {
-          this.exportLoading = false
-        }
+        })
+      } catch (error) {
+        this.exportLoading = false
+      }
+    },
+
+    showCheckDialog() {
+      this.checkDialogVisible = true
+      this.$nextTick(() => {
+        this.$refs.CheckDialog.init('longBill')
       })
     },
 
@@ -465,6 +473,7 @@ export default {
 
     setPermissions() {
       // Get the list with all the user permissions from the store.
+      this.roleClassList = this.$store.getters.classList
       const permissionList = this.$store.getters.permissionList
 
       // Retrieve the model ID based from the route.

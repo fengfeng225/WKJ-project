@@ -3,6 +3,7 @@ const getters = {
   menuList: state => state.user.menuList,
   userInfo: state => state.user.userInfo,
   permissionList: state => state.user.permissionList,
+  classList: state => state.user.classList,
   sidebar: state => state.app.sidebar,
   size: state => state.app.size,
   device: state => state.app.device,

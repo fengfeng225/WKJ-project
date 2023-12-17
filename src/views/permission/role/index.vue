@@ -38,7 +38,7 @@
           <el-table-column prop="fullName" label="名称" />
           <el-table-column prop="entityCode" label="编码" />
           <el-table-column prop="description" label="说明" />
-          <el-table-column prop="creatorTime" label="创建时间" :formatter="dateFormatTable" width="120" />
+          <el-table-column prop="creatorTime" label="创建时间" :formatter="dateFormatTable" width="150" />
           <el-table-column prop="sortCode" label="排序" width="70" align="center" />
           <el-table-column label="操作" width="150">
             <template slot-scope="scope">
@@ -62,6 +62,7 @@
 
       <Form v-if="formVisible" ref="Form" @refreshDataList="initData" />
       <AuthorizeForm v-if="authorizeFormVisible" ref="AuthorizeForm" @close="removeAuthorizeForm" />
+      <ClassAuthorize v-if="classAuthorizeVisible" ref="ClassAuthorize" @close="classAuthorizeVisible = false" />
     </div>
   </div>
 </template>
@@ -75,13 +76,15 @@ import {
 import { dateFormatTable } from '@/utils'
 
 import Form from './Form'
-import AuthorizeForm from '@/views/permission/role/AuthorizeForm'
+import AuthorizeForm from './AuthorizeForm'
+import ClassAuthorize from './classAuthorize'
 
 export default {
   name: 'PermissionRole',
   components: {
     Form,
-    AuthorizeForm
+    AuthorizeForm,
+    ClassAuthorize
   },
   data() {
     return {
@@ -91,7 +94,8 @@ export default {
       },
       listLoading: true,
       formVisible: false,
-      authorizeFormVisible: false
+      authorizeFormVisible: false,
+      classAuthorizeVisible: false
     }
   },
   created() {
@@ -153,7 +157,10 @@ export default {
     },
 
     classAuthorize(id) {
-
+      this.classAuthorizeVisible = true
+      this.$nextTick(() => {
+        this.$refs.ClassAuthorize.init(id)
+      })
     },
 
     dateFormatTable

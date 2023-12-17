@@ -1,5 +1,5 @@
 <template>
-  <div ref="echarts" :style="{width: '100%', height: height}" />
+  <div ref="echarts" :style="{width: '60%', height: height}" />
 </template>
 
 <script>
@@ -27,14 +27,18 @@ export default {
     return {
       chart: null,
       options: {
+        title: {
+          text: '互窜点',
+          left: 'center'
+        },
         tooltip: {
           trigger: 'axis',
           axisPointer: {
-            type: 'none'
+            type: 'shadow'
           }
         },
         grid: {
-          top: '30px',
+          top: '60px',
           bottom: '20px',
           left: '45px',
           right: '65px'
@@ -44,7 +48,11 @@ export default {
           name: '台账类别',
           data: this.xAxis,
           axisTick: {
-            alignWithLabel: true
+            alignWithLabel: true,
+            interval: 0
+          },
+          axisLabel: {
+            interval: 0
           }
         },
         yAxis: {
@@ -62,7 +70,8 @@ export default {
             show: true,
             position: 'top'
           },
-          data: this.data
+          data: this.data,
+          color: '#73c0de'
         }
       }
     }

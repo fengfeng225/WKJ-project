@@ -3,17 +3,36 @@
 
     <!-- right -->
     <div class="BL-common-layout-center BL-flex-main">
-      <el-row class="BL-common-search-box">
-        <div style="display: flex; justify-content: space-between; padding: 5px;">
-          <div />
+      <el-row class="BL-common-search-box" :gutter="16">
+        <el-form @submit.native.prevent>
+          <el-col :span="6">
+            <el-form-item label="关键词">
+              <input
+                v-model.lazy="params.keyword"
+                class="el-textarea__inner"
+                placeholder="请输入关键词查询"
+                clearable
+                @keyup.enter="search"
+              >
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="6">
+            <el-form-item>
+              <el-button type="primary" icon="el-icon-search" @click="search">查询</el-button>
+              <el-button icon="el-icon-refresh-right" @click="reset">重置</el-button>
+            </el-form-item>
+          </el-col>
+        </el-form>
+
+        <div class="BL-common-head-right">
           <div>
-            <el-button v-if="hasRoleButton('btn_add')" icon="el-icon-plus" type="primary" @click="addOrUpdateHandle()">新建</el-button>
             <el-tooltip effect="dark" content="刷新" placement="top">
               <el-link
                 style="margin-left: 12px;"
                 icon="el-icon-refresh"
                 :underline="false"
-                @click="refresh"
+                @click="reset"
               />
             </el-tooltip>
           </div>
@@ -21,64 +40,58 @@
       </el-row>
 
       <div class="BL-common-layout-main BL-flex-main">
-        <BL-table ref="BLTable" v-loading="tableLoading" :data="tableData" row-key="id">
+        <BL-table ref="BLTable" v-loading="tableLoading" :data="tableData" row-key="id" default-expand-all>
           <template v-for="item in computedRoleColumnOptions">
             <template v-if="item.prop === 'action'">
-              <ex-table-column v-if="hasRoleButton(['btn_edit', 'btn_delete'])" :key="item.prop" :label="item.label" width="120" fixed="right">
+              <ex-table-column v-if="hasRoleButton('btn_record')" :key="item.prop" :label="item.label" width="80" fixed="right">
                 <template #default="scope">
-                  <el-button v-if="hasRoleButton('btn_edit')" type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
-                  <el-button v-if="hasRoleButton('btn_delete')" class="BL-table-delBtn" type="text" @click="removeHandle(scope.row.id)">删除</el-button>
-                  <BL-Dropdown style="margin-left: 8px;">
-                    <span>
-                      <el-button type="text" size="small">更多<i class="el-icon-arrow-down el-icon--right" /></el-button>
-                    </span>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item @click.native="showCheckRecords(scope.row.id)">检查记录</el-dropdown-item>
-                    </el-dropdown-menu>
-                  </BL-Dropdown>
+                  <el-button v-if="hasRoleButton('btn_record') && !!scope.row.parentId" type="text" @click="showCheckRecords(scope.row.id)">检查记录</el-button>
                 </template>
               </ex-table-column>
             </template>
-            <template v-else-if="item.prop === 'shortCheckingStatus'">
+            <template v-else-if="item.prop === 'shortBillCheckingStatus'">
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
-                  <span v-if="scope.row.shortCheckingStatus === -1">-</span>
-                  <el-tag v-else :type="getCheckingStatusStyle(scope.row.shortCheckingStatus)" disable-transitions>
-                    {{ getCheckingStatusLabel(scope.row.shortCheckingStatus) }}
+                  <span v-if="!scope.row.parentId" />
+                  <span v-else-if="scope.row.shortBillCheckingStatus === -1">-</span>
+                  <el-tag v-else :type="getCheckingStatusStyle(scope.row.shortBillCheckingStatus)" disable-transitions>
+                    {{ getCheckingStatusLabel(scope.row.shortBillCheckingStatus) }}
                   </el-tag>
                 </template>
               </ex-table-column>
             </template>
-            <template v-else-if="item.prop === 'shortCheckedStatus'">
+            <template v-else-if="item.prop === 'shortBillCheckedStatus'">
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
-                  <el-tag :type="getCheckedStatusStyle(scope.row.shortCheckedStatus)" disable-transitions>
-                    {{ getCheckedStatusLabel(scope.row.shortCheckedStatus) }}
+                  <span v-if="!scope.row.parentId" />
+                  <span v-else-if="scope.row.shortBillCheckedStatus === -1">-</span>
+                  <el-tag v-else :type="getCheckedStatusStyle(scope.row.shortBillCheckedStatus)" disable-transitions>
+                    {{ getCheckedStatusLabel(scope.row.shortBillCheckedStatus) }}
                   </el-tag>
                 </template>
               </ex-table-column>
             </template>
-            <template v-else-if="item.prop === 'longCheckingStatus'">
+            <template v-else-if="item.prop === 'longBillCheckingStatus'">
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
-                  <span v-if="scope.row.longCheckingStatus === -1">-</span>
-                  <el-tag v-else :type="getCheckingStatusStyle(scope.row.longCheckingStatus)" disable-transitions>
-                    {{ getCheckingStatusLabel(scope.row.longCheckingStatus) }}
+                  <span v-if="!scope.row.parentId" />
+                  <span v-else-if="scope.row.longBillCheckingStatus === -1">-</span>
+                  <el-tag v-else :type="getCheckingStatusStyle(scope.row.longBillCheckingStatus)" disable-transitions>
+                    {{ getCheckingStatusLabel(scope.row.longBillCheckingStatus) }}
                   </el-tag>
                 </template>
               </ex-table-column>
             </template>
-            <template v-else-if="item.prop === 'longCheckedStatus'">
+            <template v-else-if="item.prop === 'longBillCheckedStatus'">
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
-                  <el-tag :type="getCheckedStatusStyle(scope.row.longCheckedStatus)" disable-transitions>
-                    {{ getCheckedStatusLabel(scope.row.longCheckedStatus) }}
+                  <span v-if="!scope.row.parentId" />
+                  <span v-else-if="scope.row.longBillCheckedStatus === -1">-</span>
+                  <el-tag v-else :type="getCheckedStatusStyle(scope.row.longBillCheckedStatus)" disable-transitions>
+                    {{ getCheckedStatusLabel(scope.row.longBillCheckedStatus) }}
                   </el-tag>
                 </template>
               </ex-table-column>
-            </template>
-            <template v-else-if="item.prop === 'creatorTime'">
-              <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" :formatter="dateFormatTable" />
             </template>
             <template v-else>
               <ex-table-column :key="item.prop" :label="item.label" :prop="item.prop" />
@@ -88,13 +101,12 @@
       </div>
     </div>
 
-    <ClassInfoDialog v-if="classInfoDialogVisible" ref="ClassInfoDialog" @refreshDataList="initData" />
-    <CheckRecordsDrawer v-if="checkRecordsDrawerVisible" ref="CheckRecordsDrawer" @refreshDataList="initData" @close="checkRecordsDrawerVisible = false" />
+    <CheckRecordsDrawer v-if="checkRecordsDrawerVisible" ref="CheckRecordsDrawer" :can-handle-abnormal="hasRoleButton('btn_abnormalHandle')" @close="closeDrawer" />
   </div>
 </template>
 
 <script>
-import { getClassWithCheckStatus, deleteClass } from '@/api/bill/mb/classCheck'
+import { getClassWithCheckStatus } from '@/api/bill/class'
 import {
   getCheckingStatusStyle,
   getCheckingStatusLabel,
@@ -103,14 +115,22 @@ import {
 } from '@/utils/helperHandlers'
 import { dateFormatTable } from '@/utils'
 
-import ClassInfoDialog from './ClassInfoDialog'
 import CheckRecordsDrawer from '../../components/checkRecordsDrawer'
 
+const typeList = [
+  {
+    label: '短期盲板',
+    value: 'shortBill'
+  },
+  {
+    label: '长期盲板',
+    value: 'longBill'
+  }
+]
 export default {
   name: 'ClassCheckMb',
 
   components: {
-    ClassInfoDialog,
     CheckRecordsDrawer
   },
 
@@ -118,37 +138,31 @@ export default {
     return {
       tableLoading: false,
       tableData: [],
-      classInfoDialogVisible: false,
+      params: {
+        keyword: ''
+      },
       checkRecordsDrawerVisible: false,
-      roleButtonOptions: ['btn_add', 'btn_edit', 'btn_delete'],
+      roleButtonOptions: ['btn_record', 'btn_abnormalHandle'],
       roleColumnOptions: [
         {
           label: '名称',
           prop: 'fullName'
         },
         {
-          label: '当前检查(短期)',
-          prop: 'shortCheckingStatus'
+          label: 'C-短期',
+          prop: 'shortBillCheckingStatus'
         },
         {
-          label: '历史检查(短期)',
-          prop: 'shortCheckedStatus'
+          label: 'H-短期',
+          prop: 'shortBillCheckedStatus'
         },
         {
-          label: '当前检查(长期)',
-          prop: 'longCheckingStatus'
+          label: 'C-长期',
+          prop: 'longBillCheckingStatus'
         },
         {
-          label: '历史检查(长期)',
-          prop: 'longCheckedStatus'
-        },
-        {
-          label: '排序',
-          prop: 'sortCode'
-        },
-        {
-          label: '创建时间',
-          prop: 'creatorTime'
+          label: 'H-长期',
+          prop: 'longBillCheckedStatus'
         },
         {
           label: '操作',
@@ -173,7 +187,7 @@ export default {
   methods: {
     initData() {
       this.tableLoading = true
-      getClassWithCheckStatus().then(res => {
+      getClassWithCheckStatus(this.params).then(res => {
         this.tableData = res.data.list
         this.tableLoading = false
       }).catch(() => {
@@ -181,35 +195,26 @@ export default {
       })
     },
 
-    addOrUpdateHandle(id) {
-      this.classInfoDialogVisible = true
-      this.$nextTick(() => {
-        this.$refs.ClassInfoDialog.init(id)
-      })
+    reset() {
+      this.params.keyword = ''
+      this.initData()
     },
 
-    removeHandle(id) {
-      this.$confirm('您确定要删除该班吗?', '提示', {
-        type: 'warning'
-      }).then(() => {
-        deleteClass(id).then(res => {
-          this.$message({
-            message: res.message,
-            type: 'success',
-            duration: 1500,
-            onClose: () => {
-              this.initData()
-            }
-          })
-        }).catch(() => {})
-      }).catch(() => {})
+    search() {
+      this.initData()
     },
 
     showCheckRecords(id) {
       this.checkRecordsDrawerVisible = true
       this.$nextTick(() => {
-        this.$refs.CheckRecordsDrawer.init(id)
+        this.$refs.CheckRecordsDrawer.init(id, typeList)
       })
+    },
+
+    closeDrawer(isRefresh) {
+      this.checkRecordsDrawerVisible = false
+
+      if (isRefresh) this.initData()
     },
 
     setPermissions() {

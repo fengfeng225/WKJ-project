@@ -117,7 +117,8 @@
 </template>
 
 <script>
-import { getDisassembleDetails, removeDisassembleDetail, getClasses } from '@/api/bill/mb/bill'
+import { getDisassembleDetails, removeDisassembleDetail } from '@/api/bill/mb/bill'
+import { getClassBasic } from '@/api/bill/class'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 import { getMBStatusStyle, getMBStatusLabel, getCycleTypeLabel } from '@/utils/helperHandlers'
 import { dateFormatTable } from '@/utils'
@@ -230,13 +231,13 @@ export default {
     getOptionsByCode('deviceName').then(res => {
       this.deviceNameList = res.data.list
     })
-    this.getClasses()
+    this.getClassBasic()
   },
 
   methods: {
-    getClasses() {
+    getClassBasic() {
       this.treeLoading = true
-      getClasses().then(res => {
+      getClassBasic().then(res => {
         const parent = [{
           fullName: '全部',
           hasChildren: true,

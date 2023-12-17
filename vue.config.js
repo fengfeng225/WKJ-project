@@ -67,10 +67,10 @@ module.exports = {
     ]
   },
   chainWebpack(config) {
-    // config.externals({
-    //   // 'monaco-editor': 'monaco-editor',
-    //   'echarts': 'echarts'
-    // })
+    config.externals({
+      // 'monaco-editor': 'monaco-editor',
+      'echarts': 'echarts'
+    })
     // it can improve the speed of the first screen, it is recommended to turn on preload
     config.plugin('preload').tap(() => [
       {

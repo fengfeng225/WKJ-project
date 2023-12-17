@@ -6,7 +6,7 @@
   background: #EBEEF5;
 
   .BL-common-layout-left {
-    width: 220px;
+    width: 180px;
     background-color: #fff;
     height: 100%;
     display: flex;
@@ -68,7 +68,7 @@
 
   .options {
 
-    & > i,
+    &>i,
     .el-link {
       font-size: 16px;
       margin-left: 6px;
@@ -76,7 +76,7 @@
     }
   }
 
-  & + .el-table {
+  &+.el-table {
     border-top: none;
   }
 }
@@ -101,7 +101,7 @@
     overflow: hidden;
   }
 
-  i + .text {
+  i+.text {
     padding-left: 6px;
   }
 
@@ -111,13 +111,14 @@
 }
 
 .BL-20 {
-  margin-bottom: 20px!important;
+  margin-bottom: 20px !important;
 }
 
 .BL-common-layout-center {
   flex: 1;
   height: 100%;
   overflow: hidden;
+
   .BL-common-layout-main {
     flex: 1;
     padding: 0 0 10px;
@@ -130,6 +131,7 @@
 .BL-flex-main {
   display: flex;
   flex-direction: column;
+
   .el-table {
     flex: 1;
 
@@ -150,6 +152,7 @@
   background-color: #fff;
   margin-bottom: 3px;
   padding: 5px 10px 0;
+
   .el-form-item {
     width: 100%;
     display: flex;
@@ -165,6 +168,7 @@
       flex: 1;
     }
   }
+
   .BL-common-head-right {
     display: flex;
     justify-content: flex-end;
@@ -180,6 +184,7 @@
   align-items: center;
   padding: 3px 10px;
   flex-shrink: 0;
+
   .BL-common-head-right {
     flex-shrink: 0;
     font-size: 0;
@@ -201,7 +206,7 @@
     padding: 0 px;
     margin-bottom: 0;
 
-    & > span {
+    &>span {
       line-height: 60px;
     }
   }
@@ -239,6 +244,7 @@
       font-weight: normal;
       color: #606266;
       padding: 2px;
+
       th.el-table__cell {
         padding: 2px;
         background-color: #f5f7fa;
@@ -422,4 +428,27 @@
 
 .el-form-item__label {
   font-weight: 400;
+}
+
+.BL-el_tabs {
+  height: 100%;
+
+  &.el-tabs--top {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .el-tabs__content {
+    flex: 1;
+    overflow: auto;
+    overflow-x: hidden;
+
+    .el-tab-pane {
+      height: 100%;
+    }
+  }
+}
+
+.el-tooltip__popper.is-dark {
+  max-width: 500px;
 }

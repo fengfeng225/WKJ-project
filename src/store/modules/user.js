@@ -8,6 +8,7 @@ const state = {
   token: getToken(),
   menuList: [],
   permissionList: [],
+  classList: [],
   userInfo: {}
 }
 
@@ -20,6 +21,9 @@ const mutations = {
   },
   SET_PERMISSION_LIST: (state, permissionList) => {
     state.permissionList = permissionList
+  },
+  SET_CLASS_LIST: (state, classList) => {
+    state.classList = classList
   },
   SET_USERINFO: (state, userInfo) => {
     state.userInfo = userInfo
@@ -53,7 +57,7 @@ const actions = {
 
         if (!data) reject('验证失败，请重新登录。')
 
-        const { menuList, userInfo, permissionList } = data
+        const { menuList, userInfo, permissionList, classList } = data
 
         // roles must be a non-empty array
         if (!menuList.length) {
@@ -107,6 +111,7 @@ const actions = {
         commit('SET_MENULIST', menuList)
         commit('SET_USERINFO', userInfo)
         commit('SET_PERMISSION_LIST', permissionList)
+        commit('SET_CLASS_LIST', classList)
         resolve(routerList)
       }).catch(error => {
         reject(error)
@@ -122,6 +127,7 @@ const actions = {
         commit('SET_MENULIST', [])
         commit('SET_USERINFO', {})
         commit('SET_PERMISSION_LIST', [])
+        commit('SET_CLASS_LIST', [])
         removeToken()
         resetRouter()
 
@@ -143,6 +149,7 @@ const actions = {
       commit('SET_MENULIST', [])
       commit('SET_USERINFO', {})
       commit('SET_PERMISSION_LIST', [])
+      commit('SET_CLASS_LIST', [])
       removeToken()
       resolve()
     })

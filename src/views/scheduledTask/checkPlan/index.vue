@@ -33,13 +33,13 @@
           <el-table-column
             prop="lastRunTime"
             label="最后下发时间"
-            width="120"
+            width="150"
             :formatter="dateFormatTable"
           />
           <el-table-column
             prop="nextRunTime"
             label="下次下发时间"
-            width="120"
+            width="150"
             :formatter="dateFormatTable"
           />
           <ex-table-column prop="description" label="说明" />
@@ -56,7 +56,7 @@
               />
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="150" fixed="right">
+          <el-table-column label="操作" width="100" fixed="right">
             <template slot-scope="scope">
               <el-button type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
               <BL-Dropdown style="margin-left: 8px;">
@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import { getCheckPlanList, stopCheckPlan, enableCheckPlan } from '@/api/scheduledTask/billCheck'
+import { getCheckPlanList, stopCheckPlan, enableCheckPlan } from '@/api/scheduledTask/billCheckPlan'
 import { dateFormatTable } from '@/utils'
 
 import ConfigForm from './configForm'
@@ -140,6 +140,7 @@ export default {
             duration: 1500,
             onClose: () => {
               row.enabledMark = row.enabledMark ? 0 : 1
+              this.initData()
             }
           })
         })

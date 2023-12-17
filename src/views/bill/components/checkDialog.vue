@@ -13,10 +13,14 @@
       :rules="dataRule"
       label-width="100px"
     >
-      <el-form-item label="班组" prop="className">
-        <el-select v-model="dataForm.classIds" multiple placeholder="请选择要检查的班组">
-          <el-option v-for="item in classList" :key="item.id" :label="item.fullName" :value="item.id" />
-        </el-select>
+      <el-form-item label="班组" prop="classIds">
+        <BL-TreeSelect
+          v-model="dataForm.classIds"
+          :options="treeData"
+          placeholder="请选择要检查的班组"
+          multiple
+          check-strictly
+        />
       </el-form-item>
       <el-form-item label="检查人员" prop="inspector">
         <el-input v-model="dataForm.inspector" placeholder="请输入检查人员" />
@@ -30,24 +34,30 @@
 </template>
 
 <script>
-import { getClasses } from '@/api/bill/mb/bill'
-import { checkAll } from '@/api/scheduledTask/billCheck'
+import { getClassBasic, checkAll } from '@/api/bill/class'
 
 export default {
+  props: {
+    roleClassList: {
+      type: Array,
+      default: () => []
+    }
+  },
+
   data() {
     return {
       visible: false,
       formLoading: false,
       btnLoading: false,
-      classList: [],
+      treeData: [],
       dataForm: {
-        classIds: [],
+        classIds: '',
         inspector: '',
         type: ''
       },
       dataRule: {
         classIds: [
-          { required: true, message: '请选择要检查的班组', trigger: 'change' }
+          { required: true, message: '请选择要检查的班组', trigger: 'input' }
         ],
         inspector: [
           { required: true, message: '请输入检查人员', trigger: 'blur' }
@@ -56,13 +66,20 @@ export default {
     }
   },
 
+  computed: {
+    roleClassIds() {
+      return this.roleClassList.map(item => item.id)
+    }
+  },
+
   methods: {
     init(type) {
       this.dataForm.type = type
       this.visible = true
       this.formLoading = true
-      getClasses().then(res => {
-        this.classList = res.data.list
+      getClassBasic().then(res => {
+        this.initDisabledTreeNode(res.data.list)
+        this.treeData = res.data.list
         this.formLoading = false
       }).catch(() => {
         this.formLoading = false
@@ -92,7 +109,14 @@ export default {
     },
 
     close() {
-      this.$refs.dataForm.resetFields()
+      this.$emit('close')
+    },
+
+    initDisabledTreeNode(treeData) {
+      treeData.forEach(item => {
+        if (!this.roleClassIds.includes(item.id)) item.disabled = true
+        if (item.children?.length) this.initDisabledTreeNode(item.children)
+      })
     }
   }
 }

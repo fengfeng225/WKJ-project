@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getCheckPlanList(data) {
   return request({
-    url: '/api/scheduledTask/checkPlan',
+    url: '/api/scheduledTask/billCheckPlan',
     method: 'GET',
     data
   })
@@ -10,7 +10,7 @@ export function getCheckPlanList(data) {
 
 export function updateCheckPlan(data) {
   return request({
-    url: `/api/scheduledTask/checkPlan/${data.id}`,
+    url: `/api/scheduledTask/billCheckPlan/${data.id}`,
     method: 'PUT',
     data
   })
@@ -18,44 +18,29 @@ export function updateCheckPlan(data) {
 
 export function getCheckPlanInfo(id) {
   return request({
-    url: `/api/scheduledTask/checkPlan/${id}`,
+    url: `/api/scheduledTask/billCheckPlan/${id}`,
     method: 'GET'
   })
 }
 
 export function stopCheckPlan(id) {
   return request({
-    url: `/api/scheduledTask/checkPlan/stop/${id}`,
+    url: `/api/scheduledTask/billCheckPlan/stop/${id}`,
     method: 'PUT'
   })
 }
 
 export function enableCheckPlan(id) {
   return request({
-    url: `/api/scheduledTask/checkPlan/enable/${id}`,
+    url: `/api/scheduledTask/billCheckPlan/enable/${id}`,
     method: 'PUT'
   })
 }
 
 export function getCheckPlanLog(id, data) {
   return request({
-    url: `/api/scheduledTask/checkPlan/${id}/log`,
+    url: `/api/scheduledTask/billCheckPlan/${id}/log`,
     method: 'GET',
     data
-  })
-}
-
-export function checkAll(data) {
-  return request({
-    url: `/api/scheduledTask/bill/checkAll`,
-    method: 'PUT',
-    data
-  })
-}
-
-export function getCheckRecords(id) {
-  return request({
-    url: `/api/scheduledTask/bill/checkRecords/${id}`,
-    method: 'GET'
   })
 }

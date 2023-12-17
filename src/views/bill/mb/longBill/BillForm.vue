@@ -142,7 +142,8 @@
 </template>
 
 <script>
-import { getLongBillInfo, updateLongBill, createLongBill, getClasses } from '@/api/bill/mb/bill'
+import { getLongBillInfo, updateLongBill, createLongBill } from '@/api/bill/mb/bill'
+import { getClassLeaf } from '@/api/bill/class'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 
 export default {
@@ -221,7 +222,7 @@ export default {
   created() {
     this.getDeviceNameList()
     this.getManagerList()
-    this.getClasses()
+    this.getClassLeaf()
   },
 
   methods: {
@@ -238,8 +239,8 @@ export default {
       }
     },
 
-    getClasses() {
-      getClasses().then(res => {
+    getClassLeaf() {
+      getClassLeaf().then(res => {
         this.classes = res.data.list
       }).catch(() => {})
     },

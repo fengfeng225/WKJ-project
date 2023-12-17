@@ -26,6 +26,7 @@
         :default-expanded-keys="defaultExpandedKey"
         :filter-node-method="filterNode"
         :show-checkbox="multiple"
+        :check-strictly="checkStrictly"
         :check-on-click-node="multiple"
         :class="{'single':!multiple}"
         :expand-on-click-node="!multiple"
@@ -82,7 +83,8 @@ export default {
     // 自动收起
     accordion: { type: Boolean, default: false },
     defaultExpandAll: { type: Boolean, default: true },
-    multiple: { type: Boolean, default: false } // 是否多选，默认单选
+    multiple: { type: Boolean, default: false }, // 是否多选，默认单选
+    checkStrictly: { type: Boolean, default: false } // 是否严格的遵循父子不互相关联的做法, 默认为 false
   },
   data() {
     return {

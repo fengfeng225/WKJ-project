@@ -21,6 +21,7 @@
                   value-format="timestamp"
                   clearable
                   :editable="false"
+                  style="width: 100%;"
                 />
               </el-form-item>
             </el-col>
@@ -32,7 +33,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="12">
               <el-form-item>
                 <el-button type="primary" icon="el-icon-search" @click="search">
                   查询
@@ -46,10 +47,10 @@
         </el-row>
         <BL-table v-loading="listLoading" :data="list">
           <el-table-column
-            prop="runTime"
+            prop="creatorTime"
             label="下发时间"
             :formatter="dateFormatTable"
-            width="130"
+            width="150"
           />
           <el-table-column prop="runResult" label="下发结果" width="100" align="center">
             <template slot-scope="scope">
@@ -60,7 +61,7 @@
           </el-table-column>
           <el-table-column prop="description" label="说明" />
         </BL-table>
-        <pagination
+        <BL-pagination
           :total="total"
           :page.sync="listQuery.currentPage"
           :limit.sync="listQuery.pageSize"
@@ -72,7 +73,7 @@
 </template>
 
 <script>
-import { getCheckPlanLog } from '@/api/scheduledTask/billCheck'
+import { getCheckPlanLog } from '@/api/scheduledTask/billCheckPlan'
 import { dateFormatTable } from '@/utils'
 
 export default {
@@ -172,7 +173,7 @@ export default {
     flex-direction: column;
     padding: 0 0 10px;
 
-    :deep(.el-table) {
+    ::v-deep .el-table {
       flex: 1;
       border-top: none;
     }

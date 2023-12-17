@@ -30,9 +30,9 @@
         />
       </el-tab-pane>
 
-      <el-tab-pane v-if="shouldHide('mouth')" label="月">
+      <el-tab-pane v-if="shouldHide('month')" label="月">
         <CrontabMonth
-          ref="cronmouth"
+          ref="cronmonth"
           :cron="contabValueObj"
           @update="updateContabValue"
         />
@@ -78,7 +78,7 @@
               <span>{{ contabValueObj.day }}</span>
             </td>
             <td>
-              <span>{{ contabValueObj.mouth }}</span>
+              <span>{{ contabValueObj.month }}</span>
             </td>
             <td>
               <span>{{ contabValueObj.week }}</span>
@@ -128,7 +128,7 @@ export default {
   props: {
     expression: {
       type: String,
-      default: '* * * * * ?'
+      default: '* * * * * *' // 兼容 ? 改 *
     },
     hideComponent: {
       type: Array,
@@ -144,8 +144,8 @@ export default {
         min: '*',
         hour: '*',
         day: '*',
-        mouth: '*',
-        week: '?',
+        month: '*',
+        week: '*', // 兼容 ? 改 *
         year: ''
       }
     }
@@ -162,7 +162,7 @@ export default {
         ' ' +
         obj.day +
         ' ' +
-        obj.mouth +
+        obj.month +
         ' ' +
         obj.week +
         (obj.year === '' ? '' : ' ' + obj.year)
@@ -194,7 +194,7 @@ export default {
             min: arr[1],
             hour: arr[2],
             day: arr[3],
-            mouth: arr[4],
+            month: arr[4],
             week: arr[5],
             year: arr[6] ? arr[6] : ''
           }
@@ -220,7 +220,7 @@ export default {
     },
     // 赋值到组件
     changeRadio(name, value) {
-      const arr = ['second', 'min', 'hour', 'mouth']
+      const arr = ['second', 'min', 'hour', 'month']
       const refName = 'cron' + name
       let insValue
 
@@ -341,8 +341,8 @@ export default {
         min: '*',
         hour: '*',
         day: '*',
-        mouth: '*',
-        week: '?',
+        month: '*',
+        week: '*', // 兼容 ? 改 *
         year: ''
       }
       for (const j in this.contabValueObj) {
@@ -350,12 +350,20 @@ export default {
       }
     },
 
-    weekChange() {
-      this.$refs.cronday.weekChange()
+    // weekChange() {
+    //   this.$refs.cronday.weekChange()
+    // },
+
+    // dayChange() {
+    //   this.$refs.cronweek.dayChange()
+    // }
+
+    weekChange(radioValue) {
+      this.$refs.cronday.weekChange(radioValue)
     },
 
-    dayChange() {
-      this.$refs.cronweek.dayChange()
+    dayChange(radioValue) {
+      this.$refs.cronweek.dayChange(radioValue)
     }
   }
 }

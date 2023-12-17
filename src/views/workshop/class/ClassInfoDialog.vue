@@ -14,6 +14,14 @@
       :rules="dataRule"
       label-width="100px"
     >
+      <el-form-item label="上级" prop="parentId">
+        <BL-TreeSelect
+          v-model="dataForm.parentId"
+          :options="treeData"
+          placeholder="选择上级"
+          :disabled="!!dataForm.id"
+        />
+      </el-form-item>
       <el-form-item label="名称" prop="fullName">
         <el-input v-model="dataForm.fullName" placeholder="请输入名称" />
       </el-form-item>
@@ -37,8 +45,9 @@
 import {
   createClass,
   updateClass,
-  getClassInfo
-} from '@/api/bill/mb/classCheck'
+  getClassInfo,
+  getClassSelector
+} from '@/api/bill/class'
 
 export default {
   data() {
@@ -46,12 +55,17 @@ export default {
       visible: false,
       formLoading: false,
       btnLoading: false,
+      treeData: [],
       dataForm: {
         id: '',
+        parentId: '',
         fullName: '',
         sortCode: 0
       },
       dataRule: {
+        parentId: [
+          { required: true, message: '上级不能为空', trigger: 'change' }
+        ],
         fullName: [
           { required: true, message: '请输入名称', trigger: 'blur' }
         ]
@@ -63,18 +77,28 @@ export default {
     init(id) {
       this.visible = true
       this.dataForm.id = id || ''
-      this.formLoading = true
+
+      // 获取上级菜单
+      getClassSelector().then(res => {
+        const topItem = {
+          fullName: '顶级节点',
+          hasChildren: true,
+          id: '-1',
+          children: res.data.list
+        }
+        this.treeData = [topItem]
+      })
 
       if (this.dataForm.id) {
+        this.formLoading = true
         getClassInfo(this.dataForm.id).then(res => {
+          res.data.parentId ??= '-1'
           this.dataForm = res.data
           this.formLoading = false
         }).catch(() => {
           this.formLoading = false
         })
       }
-
-      this.formLoading = false
     },
 
     dataFormSubmit() {

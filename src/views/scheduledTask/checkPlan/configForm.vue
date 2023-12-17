@@ -21,12 +21,12 @@
           >
             <el-col :span="24">
               <el-form-item label="台账类别" prop="fullName">
-                <el-input v-model="dataForm.fullName" readonly />
+                <el-input v-model="dataForm.fullName" />
               </el-form-item>
             </el-col>
             <el-col :span="24">
               <el-form-item label="编码" prop="entityCode">
-                <el-input v-model="dataForm.entityCode" readonly />
+                <el-input v-model="dataForm.entityCode" disabled />
               </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { getCheckPlanInfo, updateCheckPlan } from '@/api/scheduledTask/billCheck'
+import { getCheckPlanInfo, updateCheckPlan } from '@/api/scheduledTask/billCheckPlan'
 import vcrontab from '@/components/vcrontab'
 
 export default {
@@ -128,7 +128,7 @@ export default {
           this.btnLoading = true
           updateCheckPlan(this.dataForm).then((res) => {
             this.$message({
-              message: res.msg,
+              message: res.message,
               type: 'success',
               duration: 1500,
               onClose: () => {

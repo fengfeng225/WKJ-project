@@ -65,7 +65,7 @@ export default {
           hour: '*',
           day: '*',
           month: '*',
-          week: '?',
+          week: '*', // 兼容 ? 改 *
           year: ''
         }
       }
@@ -116,7 +116,7 @@ export default {
           this.$emit('update', 'day', '*')
           break
         case 2:
-          this.$emit('update', 'day', '?')
+          this.$emit('update', 'day', '*') // 兼容 ? 改 *
           break
         case 3:
           this.$emit('update', 'day', this.cycle01 + '-' + this.cycle02)
@@ -134,7 +134,8 @@ export default {
           this.$emit('update', 'day', this.checkboxString)
           break
       }
-      this.$emit('dayChange')
+      // this.$emit('dayChange')
+      this.$emit('dayChange', this.radioValue)
     },
     // 周期两个值变化时
     cycleChange() {
@@ -161,11 +162,17 @@ export default {
       }
     },
     // 父组件传递的week发生变化触发
-    weekChange() {
-      // 判断week值与day不能同时为“?”
-      if (this.cron.week === '?' && this.radioValue === 2) {
-        this.radioValue = 1
-      } else if (this.cron.week !== '?' && this.radioValue !== 2) {
+    // weekChange() {
+    //   // 判断week值与day不能同时为“?”
+    //   if (this.cron.week === '?' && this.radioValue === 2) {
+    //     this.radioValue = 1
+    //   } else if (this.cron.week !== '?' && this.radioValue !== 2) {
+    //     this.radioValue = 2
+    //   }
+    // }
+    weekChange(radioValue) {
+      // 判断week值与day至少有一个为“*” 兼容
+      if (this.cron.day !== '*' && radioValue !== 1 && radioValue !== 2) {
         this.radioValue = 2
       }
     }
