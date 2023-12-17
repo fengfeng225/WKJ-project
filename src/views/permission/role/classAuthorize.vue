@@ -15,6 +15,7 @@
       default-expand-all
       node-key="id"
       check-on-click-node
+      :check-strictly="checkStrictly"
       :props="defaultProps"
       :expand-on-click-node="false"
       @check-change="selectTreeNodeClick"
@@ -38,6 +39,7 @@ export default {
       visible: false,
       treeLoading: false,
       btnLoading: false,
+      checkStrictly: true,
       authorizeTreeData: [],
       roleId: '',
       dataForm: {
@@ -60,6 +62,7 @@ export default {
         this.authorizeTreeData = res.data.list
         this.dataForm.classIds = res.data.ids
         this.$refs.authorizeTree.setCheckedKeys(res.data.ids)
+        this.checkStrictly = false
         this.treeLoading = false
       }).catch(() => {
         this.treeLoading = false
