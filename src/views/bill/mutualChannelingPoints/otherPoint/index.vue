@@ -124,7 +124,7 @@ import BillForm from './BillForm'
 import CheckDialog from '../../components/checkDialog'
 
 export default {
-  name: 'OtherPoint',
+  name: 'OtherPointBill',
   components: {
     BillForm,
     CheckDialog

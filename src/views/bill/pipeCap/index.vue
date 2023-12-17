@@ -82,20 +82,7 @@
                 </template>
               </ex-table-column>
             </template>
-            <template v-else-if="item.prop === 'name'">
-              <ex-table-column :key="item.prop" :label="item.label" :filters="deviceNameListForFilter">
-                <template #default="scope">
-                  {{ getDeviceName(scope.row.name) }}
-                </template>
-              </ex-table-column>
-            </template>
-            <template v-else-if="item.prop === 'description'">
-              <el-table-column :key="item.prop" :label="item.label" :prop="item.prop" width="300" show-overflow-tooltip />
-            </template>
-            <template v-else-if="item.prop === 'riskAnalysis'">
-              <el-table-column :key="item.prop" :label="item.label" :prop="item.prop" width="300" show-overflow-tooltip />
-            </template>
-            <template v-else-if="item.prop === 'measures'">
+            <template v-else-if="item.prop === 'position'">
               <el-table-column :key="item.prop" :label="item.label" :prop="item.prop" width="300" show-overflow-tooltip />
             </template>
             <template v-else-if="item.prop === 'creatorTime'">
@@ -121,16 +108,16 @@
 </template>
 
 <script>
-import { getAllKeyPointBills, getKeyPointBills, deleteKeyPointBill } from '@/api/bill/mutualChannelingPoints/keyPoint'
-import { getClassSelector } from '@/api/bill/class'
+import { getAllPipeCapBills, getPipeCapBills, deletePipeCapBill } from '@/api/bill/pipeCap'
+import { getClassBasic, getClassLeaf } from '@/api/bill/class'
 import { getOptionsByCode } from '@/api/systemData/dictionary'
 import { dateFormatTable, transToTDArray } from '@/utils'
 
 import BillForm from './BillForm'
-import CheckDialog from '../../components/checkDialog'
+import CheckDialog from '../components/checkDialog'
 
 export default {
-  name: 'KeyPointBill',
+  name: 'PipeCapBill',
   components: {
     BillForm,
     CheckDialog
@@ -164,20 +151,32 @@ export default {
           prop: 'name'
         },
         {
-          label: '高压窜低压部位',
+          label: '放空阀封堵位置',
           prop: 'position'
         },
         {
-          label: '现状描述',
-          prop: 'description'
+          label: '介质',
+          prop: 'media'
         },
         {
-          label: '存在问题及风险分析',
-          prop: 'riskAnalysis'
+          label: '介质最高操作温度 (℃)',
+          prop: 'temperature'
         },
         {
-          label: '现有或临时防窜措施',
-          prop: 'measures'
+          label: '介质最高操作压力 (MPa)',
+          prop: 'pressure'
+        },
+        {
+          label: '放空阀封堵直径 (DN)',
+          prop: 'diameter'
+        },
+        {
+          label: '放空阀封堵类型',
+          prop: 'type'
+        },
+        {
+          label: '封堵形式',
+          prop: 'plugging'
         },
         {
           label: '创建时间',
@@ -203,13 +202,13 @@ export default {
 
   created() {
     this.getDeviceNameList()
-    this.getClassSelector()
+    this.getClassBasic()
   },
 
   methods: {
-    getClassSelector() {
+    getClassBasic() {
       this.treeLoading = true
-      getClassSelector().then(res => {
+      getClassBasic().then(res => {
         const parent = [{
           fullName: '全部',
           hasChildren: true,
@@ -240,7 +239,7 @@ export default {
 
     initData() {
       this.tableLoading = true
-      getKeyPointBills(this.params).then(res => {
+      getPipeCapBills(this.params).then(res => {
         this.tableData = res.data.list
         this.total = res.data.pagination.total
         this.tableLoading = false
@@ -292,30 +291,34 @@ export default {
       const headers = {
         '班组': 'classId',
         '装置名称': 'name',
-        '高压窜低压部位': 'position',
-        '现状描述': 'description',
-        '存在问题及风险分析': 'riskAnalysis',
-        '现有或临时防窜措施': 'measures'
+        '放空阀封堵位置': 'position',
+        '介质': 'media',
+        '介质最高操作温度（℃）': 'temperature',
+        '介质最高操作压力 (MPa)': 'pressure',
+        '放空阀封堵直径 (DN)': 'diameter',
+        '放空阀封堵类型': 'type',
+        '封堵形式': 'plugging'
       }
 
       try {
-        const { data } = await getClassSelector()
+        const { data } = await getClassLeaf()
         const classes = {}
         data.list.forEach(item => {
           classes[item.id] = item.fullName
         })
 
         import('@/vendor/Export2Excel').then(async excel => {
-          const { data: { list }} = await getAllKeyPointBills()
+          const { data: { list }} = await getAllPipeCapBills()
           list.forEach(row => {
             row.classId = classes[row.classId]
           })
 
           const data = transToTDArray(headers, list)
+
           excel.export_json_to_excel({
             header: Object.keys(headers),
             data,
-            filename: '关键点互窜台账',
+            filename: '管帽放空台账',
             autoWidth: true,
             bookType: 'xlsx'
           })
@@ -329,7 +332,7 @@ export default {
     showCheckDialog() {
       this.checkDialogVisible = true
       this.$nextTick(() => {
-        this.$refs.CheckDialog.init('keyPoint')
+        this.$refs.CheckDialog.init('pipeCap')
       })
     },
 
@@ -357,7 +360,7 @@ export default {
       this.$confirm('您确定要删除该条数据吗?', '提示', {
         type: 'warning'
       }).then(() => {
-        deleteKeyPointBill(id).then(res => {
+        deletePipeCapBill(id).then(res => {
           this.$message({
             message: res.message,
             type: 'success',

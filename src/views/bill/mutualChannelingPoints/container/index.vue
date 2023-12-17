@@ -141,7 +141,7 @@ import BillForm from './BillForm'
 import CheckDialog from '../../components/checkDialog'
 
 export default {
-  name: 'Container',
+  name: 'ContainerBill',
   components: {
     BillForm,
     CheckDialog

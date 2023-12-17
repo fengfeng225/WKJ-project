@@ -127,7 +127,7 @@ import BillForm from './BillForm'
 import CheckDialog from '../../components/checkDialog'
 
 export default {
-  name: 'HeatExchanger',
+  name: 'HeatExchangerBill',
   components: {
     BillForm,
     CheckDialog

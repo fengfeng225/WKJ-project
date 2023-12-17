@@ -197,6 +197,7 @@ export default {
 
     close() {
       this.$refs['dataForm'].resetFields()
+      this.dataForm.urlAddress = ''
     }
   }
 }
