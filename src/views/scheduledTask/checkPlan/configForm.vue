@@ -46,7 +46,7 @@
               </el-form-item>
             </el-col>
             <el-col v-if="hasExpiringDay" :span="18">
-              <el-form-item>
+              <el-form-item prop="expiringDays" label-width="150px">
                 <template #label>
                   <span>有效期(天)</span>
                   <el-tooltip :content="'这表示在计划下发' + dataForm.expiringDays + '天后将自动结束本轮检查'" placement="top-start">
@@ -128,6 +128,10 @@ export default {
         ],
         cron: [
           { required: true, message: 'Cron表达式不能为空', trigger: 'click' }
+        ],
+        expiringDays: [
+          { required: true, message: '有效期不能为空', trigger: 'blur' },
+          { min: 1, message: '最小有效期1天', trigger: 'blur' }
         ]
       }
     }

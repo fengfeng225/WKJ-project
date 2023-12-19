@@ -37,17 +37,17 @@
             :formatter="dateFormatTable"
           />
           <el-table-column
+            prop="stopCheckTime"
+            label="检查截止时间"
+            width="150"
+            :formatter="dateFormatTable"
+          />
+          <el-table-column
             prop="nextRunTime"
             label="下次下发时间"
             width="150"
             :formatter="dateFormatTable"
           />
-          <ex-table-column label="有效期">
-            <template #default="scope">
-              <span v-if="scope.row.expiringDays">{{ scope.row.expiringDays + '天' }}</span>
-              <span v-else>-</span>
-            </template>
-          </ex-table-column>
           <ex-table-column prop="description" label="说明" />
           <ex-table-column prop="sortCode" label="排序" />
           <el-table-column label="状态" prop="enabledMark" width="70" align="center">
