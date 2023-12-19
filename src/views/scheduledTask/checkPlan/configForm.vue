@@ -36,6 +36,26 @@
                 </el-input>
               </el-form-item>
             </el-col>
+            <el-col :span="6">
+              <el-form-item label="设置有效期">
+                <el-switch
+                  v-model="hasExpiringDay"
+                  active-color="#13ce66"
+                  inactive-color="#ff4949"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col v-if="hasExpiringDay" :span="18">
+              <el-form-item>
+                <template #label>
+                  <span>有效期(天)</span>
+                  <el-tooltip :content="'这表示在计划下发' + dataForm.expiringDays + '天后将自动结束本轮检查'" placement="top-start">
+                    <i class="el-icon-info expiring-day-remark" />
+                  </el-tooltip>
+                </template>
+                <el-input-number v-model="dataForm.expiringDays" :min="0" :step="1" step-strictly />
+              </el-form-item>
+            </el-col>
             <el-col :span="24">
               <el-form-item label="排序" prop="sortCode">
                 <el-input-number
@@ -89,11 +109,13 @@ export default {
       btnLoading: false,
       showCron: false,
       showCronTab: false,
+      hasExpiringDay: false,
       dataForm: {
         id: '',
         fullName: '',
         entityCode: '',
         cron: '',
+        expiringDays: null,
         description: '',
         sortCode: 0
       },
@@ -126,7 +148,11 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.btnLoading = true
-          updateCheckPlan(this.dataForm).then((res) => {
+          const requestBody = { ...this.dataForm }
+          if (!this.hasExpiringDay) {
+            delete requestBody.expiringDays
+          }
+          updateCheckPlan(requestBody).then((res) => {
             this.$message({
               message: res.message,
               type: 'success',
@@ -160,5 +186,9 @@ export default {
 <style lang="scss" scoped>
 :deep(.el-dialog__body) {
   padding: 10px 10px 0 !important;
+}
+.expiring-day-remark {
+  padding-left: 5px;
+  color: #9d9e9e;
 }
 </style>
