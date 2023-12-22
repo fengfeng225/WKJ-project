@@ -16,7 +16,7 @@
             ref="dataForm"
             :model="dataForm"
             :rules="dataRule"
-            label-width="100px"
+            label-width="120px"
             @submit.native.prevent
           >
             <el-col :span="24">
@@ -32,28 +32,29 @@
             <el-col :span="24">
               <el-form-item label="检查周期" prop="cron">
                 <el-input v-model="dataForm.cron" placeholder="Cron表达式" readonly>
-                  <el-button slot="append" icon="el-icon-edit-outline" @click="showCronDialog" />
+                  <el-button slot="append" icon="el-icon-edit-outline" @click="showCronDialog('cron')" />
                 </el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
-              <el-form-item label="设置有效期">
-                <el-switch
-                  v-model="hasExpiringDay"
-                  active-color="#13ce66"
-                  inactive-color="#ff4949"
-                />
+            <el-col :span="24">
+              <el-form-item label="截止日期" prop="stopCron">
+                <el-input v-model="dataForm.stopCron" placeholder="Cron表达式" readonly>
+                  <el-button slot="append" icon="el-icon-edit-outline" @click="showCronDialog('stopCron')" />
+                </el-input>
               </el-form-item>
             </el-col>
-            <el-col v-if="hasExpiringDay" :span="18">
-              <el-form-item prop="expiringDays" label-width="150px">
+            <el-col :span="24">
+              <el-form-item prop="workCycle">
                 <template #label>
-                  <span>有效期(天)</span>
-                  <el-tooltip :content="'这表示在计划下发' + dataForm.expiringDays + '天后将自动结束本轮检查'" placement="top-start">
-                    <i class="el-icon-info expiring-day-remark" />
+                  <span>生效周期</span>
+                  <el-tooltip content="指修改了截止日期后，何时生效；该字段只有在修改了截止日期时才会作用。" placement="top-start">
+                    <i class="el-icon-info work-cycle-remark" />
                   </el-tooltip>
                 </template>
-                <el-input-number v-model="dataForm.expiringDays" :min="0" :step="1" step-strictly />
+                <el-select v-model="dataForm.workCycle" placeholder="请选择生效周期">
+                  <el-option label="立即生效" :value="0" />
+                  <el-option label="次轮生效" :value="1" />
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -89,7 +90,7 @@
         width="700px"
         @closed="showCronTab = false"
       >
-        <vcrontab v-if="showCronTab" :expression="dataForm.cron" @hide="showCron = false" @fill="crontabFill" />
+        <vcrontab v-if="showCronTab" :expression="dataForm[currentCron]" @hide="showCron = false" @fill="crontabFill" />
       </el-dialog>
     </div>
   </transition>
@@ -109,13 +110,14 @@ export default {
       btnLoading: false,
       showCron: false,
       showCronTab: false,
-      hasExpiringDay: false,
+      currentCron: '',
       dataForm: {
         id: '',
         fullName: '',
         entityCode: '',
         cron: '',
-        expiringDays: null,
+        stopCron: '',
+        workCycle: 1, // 0 表示当前周期立即生效， 1 表示从下一周期开始生效
         description: '',
         sortCode: 0
       },
@@ -129,9 +131,11 @@ export default {
         cron: [
           { required: true, message: 'Cron表达式不能为空', trigger: 'click' }
         ],
-        expiringDays: [
-          { required: true, message: '有效期不能为空', trigger: 'blur' },
-          { min: 1, message: '最小有效期1天', trigger: 'blur' }
+        stopCron: [
+          { required: true, message: 'Cron表达式不能为空', trigger: 'click' }
+        ],
+        workCycle: [
+          { required: true, message: '请选择生效周期', trigger: 'change' }
         ]
       }
     }
@@ -152,11 +156,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.btnLoading = true
-          const requestBody = { ...this.dataForm }
-          if (!this.hasExpiringDay) {
-            delete requestBody.expiringDays
-          }
-          updateCheckPlan(requestBody).then((res) => {
+          updateCheckPlan(this.dataForm).then((res) => {
             this.$message({
               message: res.message,
               type: 'success',
@@ -175,13 +175,14 @@ export default {
       this.$emit('close')
     },
 
-    showCronDialog() {
+    showCronDialog(cronName) {
+      this.currentCron = cronName
       this.showCron = true
       this.showCronTab = true
     },
 
     crontabFill(value) {
-      this.dataForm.cron = value
+      this.dataForm[this.currentCron] = value
     }
 
   }
@@ -191,7 +192,7 @@ export default {
 :deep(.el-dialog__body) {
   padding: 10px 10px 0 !important;
 }
-.expiring-day-remark {
+.work-cycle-remark {
   padding-left: 5px;
   color: #9d9e9e;
 }
