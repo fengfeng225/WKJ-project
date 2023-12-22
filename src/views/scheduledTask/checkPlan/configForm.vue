@@ -37,24 +37,16 @@
               </el-form-item>
             </el-col>
             <el-col :span="24">
-              <el-form-item label="截止日期" prop="stopCron">
+              <el-form-item prop="stopCron">
+                <template #label>
+                  <span>截止日期</span>
+                  <el-tooltip content="若只修改截止日期，则立刻生效；若同时修改检查周期和截止日期，则次轮生效。" placement="top-start">
+                    <i class="el-icon-info stop-cron-remark" />
+                  </el-tooltip>
+                </template>
                 <el-input v-model="dataForm.stopCron" placeholder="Cron表达式" readonly>
                   <el-button slot="append" icon="el-icon-edit-outline" @click="showCronDialog('stopCron')" />
                 </el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item prop="workCycle">
-                <template #label>
-                  <span>生效周期</span>
-                  <el-tooltip content="指修改了截止日期后，何时生效；该字段只有在修改了截止日期时才会作用。" placement="top-start">
-                    <i class="el-icon-info work-cycle-remark" />
-                  </el-tooltip>
-                </template>
-                <el-select v-model="dataForm.workCycle" placeholder="请选择生效周期">
-                  <el-option label="立即生效" :value="0" />
-                  <el-option label="次轮生效" :value="1" />
-                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -117,7 +109,6 @@ export default {
         entityCode: '',
         cron: '',
         stopCron: '',
-        workCycle: 1, // 0 表示当前周期立即生效， 1 表示从下一周期开始生效
         description: '',
         sortCode: 0
       },
@@ -133,9 +124,6 @@ export default {
         ],
         stopCron: [
           { required: true, message: 'Cron表达式不能为空', trigger: 'click' }
-        ],
-        workCycle: [
-          { required: true, message: '请选择生效周期', trigger: 'change' }
         ]
       }
     }
@@ -192,7 +180,7 @@ export default {
 :deep(.el-dialog__body) {
   padding: 10px 10px 0 !important;
 }
-.work-cycle-remark {
+.stop-cron-remark {
   padding-left: 5px;
   color: #9d9e9e;
 }
