@@ -1,6 +1,6 @@
 <template>
   <div class="BL-common-layout">
-    <div class="BL-common-layout-center">
+    <div class="BL-common-layout-center BL-flex-main">
       <el-row class="BL-common-search-box" :gutter="16">
         <el-form @submit.native.prevent>
           <el-col :span="6">
