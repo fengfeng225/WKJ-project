@@ -29,7 +29,7 @@
         </div>
         <ol v-loading="checkRecordLoading" class="check-record-list">
           <template v-for="item in checkRecordList">
-            <el-tooltip :key="item.id" :disabled="item.checkStatus === 1" effect="dark" :content="getDaysLeft(item.nextRunTime)" placement="top" :open-delay="500">
+            <el-tooltip :key="item.id" :disabled="item.checkStatus === 1" effect="dark" :content="getDaysLeft(item.stopCheckTime)" placement="top" :open-delay="500">
               <el-badge :value="item.checkStatus === 0 ? '待检查' : ''" type="primary">
                 <li
                   :style="{
@@ -196,9 +196,9 @@ export default {
       })
     },
 
-    getDaysLeft(nextRunTime) {
+    getDaysLeft(stopCheckTime) {
       const now = Date.now()
-      const endDate = new Date(nextRunTime).getTime()
+      const endDate = new Date(stopCheckTime).getTime()
       const daysTimeStamp = endDate - now
       if (daysTimeStamp < 0) return '已过期'
       const days = Math.floor(daysTimeStamp / (1000 * 60 * 60 * 24))
