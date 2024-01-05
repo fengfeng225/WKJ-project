@@ -102,6 +102,14 @@ module.exports = {
       })
       .end()
 
+    // set pdf use file-loader
+    config.module
+      .rule('pdf')
+      .test(/\.pdf$/)
+      .use('file-loader')
+      .loader('file-loader')
+      .end()
+
     config
       .when(process.env.NODE_ENV !== 'development',
         config => {

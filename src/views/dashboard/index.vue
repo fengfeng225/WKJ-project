@@ -6,20 +6,13 @@
           <p>管理规定</p>
         </div>
         <div class="management-rules">
-          <div class="rule">
-            <span class="text-left">公告</span>
+          <div v-for="(item, index) in pdfs" :key="item" class="rule">
+            <span class="text-left">{{ index + 1 }}</span>
             <el-divider direction="vertical" />
-            <el-link type="primary" @click="showContent(1)">炼油第三联合车间防互窜管理规定</el-link>
-          </div>
-          <div class="rule">
-            <span class="text-left">公告</span>
-            <el-divider direction="vertical" />
-            <el-link type="primary" @click="showContent(2)">关于修订印发《中石油克拉玛依石化有限责任公司盲板、放空阀封堵管理办法》的通知</el-link>
-          </div>
-          <div class="rule">
-            <span class="text-left">公告</span>
-            <el-divider direction="vertical" />
-            <el-link type="primary" @click="showContent(3)">中石油克拉玛依石化有限责任公司 盲板、放空阀封堵管理办法</el-link>
+            <el-link @click="showPDFView(item)">
+              <img src="@/assets/images/pdf.png" alt="PDF" width="24px" height="24px" style="vertical-align: middle; margin-right: 5px;">
+              <span>{{ item }}</span>
+            </el-link>
           </div>
         </div>
       </el-card>
@@ -57,14 +50,13 @@
       </el-card>
     </div>
 
-    <FileContent v-if="fileContentVisible" ref="FileContent" />
+    <PDFView v-if="pdfViewVisible" :pdf-name="pdfName" @close="closePDF" />
   </div>
 </template>
 
 <script>
 import { getSumBills, getNewCheckRecords, getCheckProgress } from '@/api/home'
-
-import FileContent from './components/FileContent'
+import PDFView from './components/PDFView'
 import OverviewBar from './components/OverviewBar'
 import MbPie from './components/MbPie'
 import CheckProgressBar from './components/CheckProgressBar'
@@ -73,7 +65,7 @@ export default {
   name: 'Dashboard',
 
   components: {
-    FileContent,
+    PDFView,
     OverviewBar,
     MbPie,
     CheckProgressBar
@@ -81,7 +73,9 @@ export default {
 
   data() {
     return {
-      fileContentVisible: false,
+      pdfViewVisible: false,
+      pdfs: [],
+      pdfName: '',
       deviceCountLoading: true,
       // 互窜点柱状图
       barRelation: {
@@ -135,13 +129,24 @@ export default {
     this.getSumBills()
     this.getNewCheckRecords()
     this.getCheckProgress()
+    this.getPDFs()
   },
 
   methods: {
-    showContent(type) {
-      this.fileContentVisible = true
-      this.$nextTick(() => {
-        this.$refs.FileContent.init(type)
+    showPDFView(name) {
+      this.pdfName = name
+      this.pdfViewVisible = true
+    },
+
+    closePDF() {
+      this.pdfName = ''
+      this.pdfViewVisible = false
+    },
+
+    getPDFs() {
+      const files = require.context('/public/pdf').keys()
+      this.pdfs = files.filter(file => /\.pdf$/.test(file)).map(name => {
+        return name.slice(2, -4)
       })
     },
 
