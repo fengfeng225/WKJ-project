@@ -2,10 +2,9 @@
   <transition name="el-zoom-in-center">
     <div class="BL-preview-main">
       <div class="goback">
-        <i class="el-icon-back" @click="goBack" />
+        <i class="el-icon-circle-close" @click="goBack" />
       </div>
       <iframe
-        id="pdfViewer"
         :src="'./pdf/' + pdfName + '.pdf#navpanes=0'"
         width="100%"
         height="100%"
@@ -35,7 +34,7 @@ export default {
 .goback {
   position: absolute;
   top: 20px;
-  left: 3px;
+  right: 130px;
   color: #fff;
   font-size: 18px;
   &:hover {

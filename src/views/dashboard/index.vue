@@ -144,8 +144,8 @@ export default {
     },
 
     getPDFs() {
-      const files = require.context('/public/pdf').keys()
-      this.pdfs = files.filter(file => /\.pdf$/.test(file)).map(name => {
+      const files = require.context('/public/pdf', false, /\.pdf$/).keys()
+      this.pdfs = files.map(name => {
         return name.slice(2, -4)
       })
     },
