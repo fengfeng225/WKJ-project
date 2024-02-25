@@ -53,7 +53,7 @@
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
                   <span v-if="!scope.row.parentId" />
-                  <span v-else-if="scope.row.undergroundSludgeOilCheckingStatus === -1">-</span>
+                  <span v-else-if="!scope.row.hasOwnProperty('undergroundSludgeOilCheckingStatus')">-</span>
                   <el-tag v-else :type="getCheckingStatusStyle(scope.row.undergroundSludgeOilCheckingStatus)" disable-transitions>
                     {{ getCheckingStatusLabel(scope.row.undergroundSludgeOilCheckingStatus) }}
                   </el-tag>
@@ -64,7 +64,7 @@
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
                   <span v-if="!scope.row.parentId" />
-                  <span v-else-if="scope.row.undergroundSludgeOilCheckedStatus === -1">-</span>
+                  <span v-else-if="!scope.row.hasOwnProperty('undergroundSludgeOilCheckedStatus')">-</span>
                   <el-tag v-else :type="getCheckedStatusStyle(scope.row.undergroundSludgeOilCheckedStatus)" disable-transitions>
                     {{ getCheckedStatusLabel(scope.row.undergroundSludgeOilCheckedStatus) }}
                   </el-tag>
@@ -75,7 +75,7 @@
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
                   <span v-if="!scope.row.parentId" />
-                  <span v-else-if="scope.row.heatExchangerCheckingStatus === -1">-</span>
+                  <span v-else-if="!scope.row.hasOwnProperty('heatExchangerCheckingStatus')">-</span>
                   <el-tag v-else :type="getCheckingStatusStyle(scope.row.heatExchangerCheckingStatus)" disable-transitions>
                     {{ getCheckingStatusLabel(scope.row.heatExchangerCheckingStatus) }}
                   </el-tag>
@@ -86,7 +86,7 @@
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
                   <span v-if="!scope.row.parentId" />
-                  <span v-else-if="scope.row.heatExchangerCheckedStatus === -1">-</span>
+                  <span v-else-if="!scope.row.hasOwnProperty('heatExchangerCheckedStatus')">-</span>
                   <el-tag v-else :type="getCheckedStatusStyle(scope.row.heatExchangerCheckedStatus)" disable-transitions>
                     {{ getCheckedStatusLabel(scope.row.heatExchangerCheckedStatus) }}
                   </el-tag>
@@ -97,7 +97,7 @@
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
                   <span v-if="!scope.row.parentId" />
-                  <span v-else-if="scope.row.containerCheckingStatus === -1">-</span>
+                  <span v-else-if="!scope.row.hasOwnProperty('containerCheckingStatus')">-</span>
                   <el-tag v-else :type="getCheckingStatusStyle(scope.row.containerCheckingStatus)" disable-transitions>
                     {{ getCheckingStatusLabel(scope.row.containerCheckingStatus) }}
                   </el-tag>
@@ -108,7 +108,7 @@
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
                   <span v-if="!scope.row.parentId" />
-                  <span v-else-if="scope.row.containerCheckedStatus === -1">-</span>
+                  <span v-else-if="!scope.row.hasOwnProperty('containerCheckedStatus')">-</span>
                   <el-tag v-else :type="getCheckedStatusStyle(scope.row.containerCheckedStatus)" disable-transitions>
                     {{ getCheckedStatusLabel(scope.row.containerCheckedStatus) }}
                   </el-tag>
@@ -119,7 +119,7 @@
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
                   <span v-if="!scope.row.parentId" />
-                  <span v-else-if="scope.row.keyPointCheckingStatus === -1">-</span>
+                  <span v-else-if="!scope.row.hasOwnProperty('keyPointCheckingStatus')">-</span>
                   <el-tag v-else :type="getCheckingStatusStyle(scope.row.keyPointCheckingStatus)" disable-transitions>
                     {{ getCheckingStatusLabel(scope.row.keyPointCheckingStatus) }}
                   </el-tag>
@@ -130,7 +130,7 @@
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
                   <span v-if="!scope.row.parentId" />
-                  <span v-else-if="scope.row.keyPointCheckedStatus === -1">-</span>
+                  <span v-else-if="!scope.row.hasOwnProperty('keyPointCheckedStatus')">-</span>
                   <el-tag v-else :type="getCheckedStatusStyle(scope.row.keyPointCheckedStatus)" disable-transitions>
                     {{ getCheckedStatusLabel(scope.row.keyPointCheckedStatus) }}
                   </el-tag>
@@ -141,7 +141,7 @@
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
                   <span v-if="!scope.row.parentId" />
-                  <span v-else-if="scope.row.otherPointCheckingStatus === -1">-</span>
+                  <span v-else-if="!scope.row.hasOwnProperty('otherPointCheckingStatus')">-</span>
                   <el-tag v-else :type="getCheckingStatusStyle(scope.row.otherPointCheckingStatus)" disable-transitions>
                     {{ getCheckingStatusLabel(scope.row.otherPointCheckingStatus) }}
                   </el-tag>
@@ -152,7 +152,7 @@
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
                   <span v-if="!scope.row.parentId" />
-                  <span v-else-if="scope.row.otherPointCheckedStatus === -1">-</span>
+                  <span v-else-if="!scope.row.hasOwnProperty('otherPointCheckedStatus')">-</span>
                   <el-tag v-else :type="getCheckedStatusStyle(scope.row.otherPointCheckedStatus)" disable-transitions>
                     {{ getCheckedStatusLabel(scope.row.otherPointCheckedStatus) }}
                   </el-tag>

@@ -53,7 +53,7 @@
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
                   <span v-if="!scope.row.parentId" />
-                  <span v-else-if="scope.row.pipeCapCheckingStatus === -1">-</span>
+                  <span v-else-if="!scope.row.hasOwnProperty('pipeCapCheckingStatus')">-</span>
                   <el-tag v-else :type="getCheckingStatusStyle(scope.row.pipeCapCheckingStatus)" disable-transitions>
                     {{ getCheckingStatusLabel(scope.row.pipeCapCheckingStatus) }}
                   </el-tag>
@@ -64,7 +64,7 @@
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
                   <span v-if="!scope.row.parentId" />
-                  <span v-else-if="scope.row.pipeCapCheckedStatus === -1">-</span>
+                  <span v-else-if="!scope.row.hasOwnProperty('pipeCapCheckedStatus')">-</span>
                   <el-tag v-else :type="getCheckedStatusStyle(scope.row.pipeCapCheckedStatus)" disable-transitions>
                     {{ getCheckedStatusLabel(scope.row.pipeCapCheckedStatus) }}
                   </el-tag>

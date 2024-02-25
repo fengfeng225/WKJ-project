@@ -53,7 +53,7 @@
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
                   <span v-if="!scope.row.parentId" />
-                  <span v-else-if="scope.row.shortBillCheckingStatus === -1">-</span>
+                  <span v-else-if="!scope.row.hasOwnProperty('shortBillCheckingStatus')">-</span>
                   <el-tag v-else :type="getCheckingStatusStyle(scope.row.shortBillCheckingStatus)" disable-transitions>
                     {{ getCheckingStatusLabel(scope.row.shortBillCheckingStatus) }}
                   </el-tag>
@@ -64,7 +64,7 @@
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
                   <span v-if="!scope.row.parentId" />
-                  <span v-else-if="scope.row.shortBillCheckedStatus === -1">-</span>
+                  <span v-else-if="!scope.row.hasOwnProperty('shortBillCheckedStatus')">-</span>
                   <el-tag v-else :type="getCheckedStatusStyle(scope.row.shortBillCheckedStatus)" disable-transitions>
                     {{ getCheckedStatusLabel(scope.row.shortBillCheckedStatus) }}
                   </el-tag>
@@ -75,7 +75,7 @@
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
                   <span v-if="!scope.row.parentId" />
-                  <span v-else-if="scope.row.longBillCheckingStatus === -1">-</span>
+                  <span v-else-if="!scope.row.hasOwnProperty('longBillCheckingStatus')">-</span>
                   <el-tag v-else :type="getCheckingStatusStyle(scope.row.longBillCheckingStatus)" disable-transitions>
                     {{ getCheckingStatusLabel(scope.row.longBillCheckingStatus) }}
                   </el-tag>
@@ -86,7 +86,7 @@
               <ex-table-column :key="item.prop" :label="item.label">
                 <template #default="scope">
                   <span v-if="!scope.row.parentId" />
-                  <span v-else-if="scope.row.longBillCheckedStatus === -1">-</span>
+                  <span v-else-if="!scope.row.hasOwnProperty('longBillCheckedStatus')">-</span>
                   <el-tag v-else :type="getCheckedStatusStyle(scope.row.longBillCheckedStatus)" disable-transitions>
                     {{ getCheckedStatusLabel(scope.row.longBillCheckedStatus) }}
                   </el-tag>

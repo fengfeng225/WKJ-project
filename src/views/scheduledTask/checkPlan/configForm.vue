@@ -16,7 +16,7 @@
             ref="dataForm"
             :model="dataForm"
             :rules="dataRule"
-            label-width="100px"
+            label-width="120px"
             @submit.native.prevent
           >
             <el-col :span="24">
@@ -32,7 +32,20 @@
             <el-col :span="24">
               <el-form-item label="检查周期" prop="cron">
                 <el-input v-model="dataForm.cron" placeholder="Cron表达式" readonly>
-                  <el-button slot="append" icon="el-icon-edit-outline" @click="showCronDialog" />
+                  <el-button slot="append" icon="el-icon-edit-outline" @click="showCronDialog('cron')" />
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item prop="stopCron">
+                <template #label>
+                  <span>截止日期</span>
+                  <el-tooltip content="若只修改截止日期，则立刻生效；若同时修改检查周期和截止日期，则次轮生效。" placement="top-start">
+                    <i class="el-icon-info stop-cron-remark" />
+                  </el-tooltip>
+                </template>
+                <el-input v-model="dataForm.stopCron" placeholder="Cron表达式" readonly>
+                  <el-button slot="append" icon="el-icon-edit-outline" @click="showCronDialog('stopCron')" />
                 </el-input>
               </el-form-item>
             </el-col>
@@ -69,7 +82,7 @@
         width="700px"
         @closed="showCronTab = false"
       >
-        <vcrontab v-if="showCronTab" :expression="dataForm.cron" @hide="showCron = false" @fill="crontabFill" />
+        <vcrontab v-if="showCronTab" :expression="dataForm[currentCron]" @hide="showCron = false" @fill="crontabFill" />
       </el-dialog>
     </div>
   </transition>
@@ -89,11 +102,13 @@ export default {
       btnLoading: false,
       showCron: false,
       showCronTab: false,
+      currentCron: '',
       dataForm: {
         id: '',
         fullName: '',
         entityCode: '',
         cron: '',
+        stopCron: '',
         description: '',
         sortCode: 0
       },
@@ -105,6 +120,9 @@ export default {
           { required: true, message: '编码不能为空', trigger: 'blur' }
         ],
         cron: [
+          { required: true, message: 'Cron表达式不能为空', trigger: 'click' }
+        ],
+        stopCron: [
           { required: true, message: 'Cron表达式不能为空', trigger: 'click' }
         ]
       }
@@ -145,13 +163,14 @@ export default {
       this.$emit('close')
     },
 
-    showCronDialog() {
+    showCronDialog(cronName) {
+      this.currentCron = cronName
       this.showCron = true
       this.showCronTab = true
     },
 
     crontabFill(value) {
-      this.dataForm.cron = value
+      this.dataForm[this.currentCron] = value
     }
 
   }
@@ -160,5 +179,9 @@ export default {
 <style lang="scss" scoped>
 :deep(.el-dialog__body) {
   padding: 10px 10px 0 !important;
+}
+.stop-cron-remark {
+  padding-left: 5px;
+  color: #9d9e9e;
 }
 </style>
