@@ -1,8 +1,11 @@
 <template>
   <transition name="el-zoom-in-center">
     <div class="BL-preview-main">
-      <div class="goback">
-        <i class="el-icon-circle-close" @click="goBack" />
+      <div class="BL-common-page-header">
+        <el-page-header @back="goBack" />
+        <div class="options">
+          <el-button @click="goBack">关闭</el-button>
+        </div>
       </div>
       <iframe
         :src="'./pdf/' + pdfName + '.pdf#navpanes=0'"
@@ -31,14 +34,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.goback {
-  position: absolute;
-  top: 20px;
-  right: 130px;
-  color: #fff;
-  font-size: 18px;
-  &:hover {
-    cursor: pointer;
-  }
+.BL-common-page-header {
+  padding: 5px 10px;
 }
 </style>

@@ -144,7 +144,7 @@ export default {
     },
 
     getPDFs() {
-      const files = require.context('/public/pdf', false, /\.pdf$/).keys()
+      const files = require.context('/src/assets/pdf', false, /\.pdf$/).keys()
       this.pdfs = files.map(name => {
         return name.slice(2, -4)
       })

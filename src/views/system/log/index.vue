@@ -43,7 +43,7 @@
           v-model="activeName"
           type="border-card"
           class="logTabs"
-          @tab-click="handleTabClick"
+          :before-leave="beforeLeaveTabPane"
         >
           <div class="BL-common-head">
             <div class="left-btn">
@@ -127,7 +127,7 @@
             :total="total"
             :page.sync="params.currentPage"
             :limit.sync="params.pageSize"
-            @pagination="initData"
+            @pagination="initData()"
           />
         </el-tabs>
       </div>
@@ -196,8 +196,8 @@ export default {
     this.initData()
   },
   methods: {
-    initData() {
-      const activeId = this.activeName
+    initData(activeName) {
+      const activeId = activeName || this.activeName
       this.listLoading = true
       getLogList(activeId, this.params).then(res => {
         if (activeId === '1') this.loginLogData = res.data.list
@@ -209,8 +209,8 @@ export default {
         this.listLoading = false
       })
     },
-    handleTabClick() {
-      this.reset()
+    beforeLeaveTabPane(activeName) {
+      this.reset(activeName)
     },
     goDetail(data) {
       this.formVisible = true
@@ -262,7 +262,7 @@ export default {
       this.params.sort = 'desc'
       this.initData()
     },
-    reset() {
+    reset(activeName) {
       this.pickerVal = []
       this.params.keyword = ''
       this.params.startTime = ''
@@ -270,7 +270,7 @@ export default {
       this.params.currentPage = 1
       this.params.pageSize = 20
       this.params.sort = 'desc'
-      this.initData()
+      this.initData(activeName)
     },
     dateFormatTable
   }
