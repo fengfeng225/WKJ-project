@@ -40,7 +40,7 @@
                   </el-form-item>
                 </el-col>
                 <el-col :span="14">
-                  <el-form-item label="盲板安装位置" prop="description">
+                  <el-form-item label="盲板安装位置" prop="description" label-width="110px">
                     <div class="description-remark">
                       <el-input v-model="dataForm.description" type="textarea" resize="none" :autosize="{ maxRows: 3}" placeholder="请输入盲板安装位置描述" />
                       <span>

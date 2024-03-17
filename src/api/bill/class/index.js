@@ -1,5 +1,12 @@
 import request from '@/utils/request'
 
+export function getClassForRoles() {
+  return request({
+    url: `/api/admin/bill/class/forRoles`,
+    method: 'GET'
+  })
+}
+
 export function getClassBasic(data) {
   return request({
     url: `/api/admin/bill/class/basic`,

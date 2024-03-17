@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { getClassBasic, checkAll } from '@/api/bill/class'
+import { getClassForRoles, checkAll } from '@/api/bill/class'
 
 export default {
   props: {
@@ -77,8 +77,7 @@ export default {
       this.dataForm.type = type
       this.visible = true
       this.formLoading = true
-      getClassBasic().then(res => {
-        this.initDisabledTreeNode(res.data.list)
+      getClassForRoles().then(res => {
         this.treeData = res.data.list
         this.formLoading = false
       }).catch(() => {
@@ -110,13 +109,6 @@ export default {
 
     close() {
       this.$emit('close')
-    },
-
-    initDisabledTreeNode(treeData) {
-      treeData.forEach(item => {
-        if (!this.roleClassIds.includes(item.id)) item.disabled = true
-        if (item.children?.length) this.initDisabledTreeNode(item.children)
-      })
     }
   }
 }

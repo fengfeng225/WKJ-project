@@ -16,7 +16,7 @@
               ref="dataForm"
               :model="dataForm"
               :rules="dataRule"
-              label-width="120px"
+              label-width="160px"
             >
               <div class="BL-common-title BL-20">
                 <h2 class="bold">基础信息</h2>
