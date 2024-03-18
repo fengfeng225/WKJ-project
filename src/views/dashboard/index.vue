@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { getSumBills, getNewCheckRecords, getCheckProgress } from '@/api/home'
+import { getSumBills, getNewCheckRecords, getCheckProgress, getFiles } from '@/api/home'
 import PDFView from './components/PDFView'
 import OverviewBar from './components/OverviewBar'
 import MbPie from './components/MbPie'
@@ -144,10 +144,9 @@ export default {
     },
 
     getPDFs() {
-      const files = require.context('/public/pdf', false, /\.pdf$/).keys()
-      this.pdfs = files.map(name => {
-        return name.slice(2, -4)
-      })
+      getFiles().then(res => {
+        this.pdfs = res.data
+      }).catch(() => {})
     },
 
     getSumBills() {

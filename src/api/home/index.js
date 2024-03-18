@@ -20,3 +20,10 @@ export function getCheckProgress() {
     method: 'GET'
   })
 }
+
+export function getFiles() {
+  return request({
+    url: '/api/admin/home/files',
+    method: 'GET'
+  })
+}
