@@ -67,18 +67,18 @@
         <BL-table ref="BLTable" v-loading="tableLoading" :data="tableData" fixed-n-o row-key="id" @filter-change="deviceNameFilter">
           <template v-for="item in computedRoleColumnOptions">
             <template v-if="item.prop === 'action'">
-              <ex-table-column v-if="hasRoleButton(['btn_edit', 'btn_delete'])" :key="item.prop" :label="item.label" width="100" fixed="right">
+              <ex-table-column v-if="hasRoleButton(['btn_edit', 'btn_delete'])" :key="item.prop" :label="item.label" width="140" fixed="right">
                 <template #default="scope">
                   <el-button v-if="hasRoleButton('btn_edit')" type="text" @click="addOrUpdateHandle(scope.row.id)">编辑</el-button>
                   <el-button v-if="hasRoleButton('btn_delete')" class="BL-table-delBtn" type="text" @click="removeHandle(scope.row.id)">删除</el-button>
-                  <!-- <BL-Dropdown style="margin-left: 8px;">
+                  <BL-Dropdown style="margin-left: 8px;">
                     <span>
                       <el-button type="text" size="small">更多<i class="el-icon-arrow-down el-icon--right" /></el-button>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item>其他</el-dropdown-item>
+                      <el-dropdown-item @click.native="showFlowPic(scope.row)">流程图</el-dropdown-item>
                     </el-dropdown-menu>
-                  </BL-Dropdown> -->
+                  </BL-Dropdown>
                 </template>
               </ex-table-column>
             </template>
@@ -126,6 +126,7 @@
 
         <BillForm v-if="billFormVisible" ref="BillForm" @close="closeForm" />
         <CheckDialog v-if="checkDialogVisible" ref="CheckDialog" :role-class-list="roleClassList" @close="checkDialogVisible = false" />
+        <FlowPic v-if="flowPicVisible" ref="FlowPic" @close="flowPicVisible = false" />
       </div>
     </div>
   </div>
@@ -140,12 +141,14 @@ import { dateFormatTable, transToTDArray } from '@/utils'
 
 import BillForm from './BillForm'
 import CheckDialog from '../../components/checkDialog'
+import FlowPic from '../../components/flowPic'
 
 export default {
   name: 'ShortBill',
   components: {
     BillForm,
-    CheckDialog
+    CheckDialog,
+    FlowPic
   },
   data() {
     return {
@@ -243,7 +246,8 @@ export default {
         }
       ],
       billFormVisible: false,
-      checkDialogVisible: false
+      checkDialogVisible: false,
+      flowPicVisible: false
     }
   },
 
@@ -469,6 +473,13 @@ export default {
           })
         }).catch(() => {})
       }).catch(() => {})
+    },
+
+    showFlowPic(row) {
+      this.flowPicVisible = true
+      this.$nextTick(() => {
+        this.$refs.FlowPic.init(row.id, row.name + ' ' + row.code)
+      })
     },
 
     setPermissions() {
