@@ -105,13 +105,20 @@ export function removeDisassembleDetail(id) {
   })
 }
 
-export function uploadImage(id, formData) {
+export function uploadImage(id, type, formData) {
   return request({
-    url: `/api/admin/mb/uploadImage/${id}`,
+    url: `/api/admin/mb/uploadImage/${type}/${id}`,
     method: 'POST',
     data: formData,
     headers: {
       'Content-Type': 'multipart/form-data'
     }
+  })
+}
+
+export function removeImage(id, type) {
+  return request({
+    url: `/api/admin/mb/uploadImage/${type}/${id}`,
+    method: 'DELETE'
   })
 }

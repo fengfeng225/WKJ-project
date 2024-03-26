@@ -6,25 +6,26 @@
       </div>
 
       <div class="main">
-        <div>
+        <div v-if="hasUploadPermission">
           <el-upload
             ref="upload"
             class="upload"
             action="#"
+            accept="image/*"
+            list-type="picture"
             :http-request="uploadPic"
             :auto-upload="false"
             :file-list="fileList"
-            :show-file-list="false"
             :limit="1"
             :on-exceed="handleExceed"
             :before-upload="beforeUpload"
-            :on-success="handleSuccess"
             :on-change="handleChange"
+            :on-remove="handleRemove"
           >
             <el-button size="small" type="primary" :disabled="!!imageUrl">选择图片</el-button>
-            <el-button size="small" type="danger" :disabled="!imageUrl" @click.stop="clearPic">清除图片</el-button>
-            <el-button style="margin-left: 10px;" size="small" :type="imageUrl ? 'success' : 'primary'" :loading="btnLoading" @click.stop="submitUpload">{{ imageUrl ? '上传到服务器' : '保存' }}</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png格式的图片，且不超过500kb</div>
+            <el-button v-if="imageUrl" size="small" type="danger" :loading="removeBtnLoading" @click.stop="removeImage">删除图片</el-button>
+            <el-button v-if="!imageUrl && hasUploadFile" style="margin-left: 10px;" size="small" type="success" :loading="btnLoading" @click.stop="submitUpload">上传到服务器</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png格式的图片，且不超过2Mb</div>
           </el-upload>
         </div>
         <div class="upload-pic">
@@ -33,7 +34,7 @@
               style="width: 100%; height: 100%"
               fit="contain"
               alt="流程图"
-              :src="imageUrl"
+              :src="define.imgUrl + imageUrl"
               :preview-src-list="srcList"
             >
               <div slot="placeholder" class="image-slot">
@@ -52,27 +53,44 @@
 </template>
 
 <script>
-import { uploadImage } from '@/api/bill/mb/bill'
+import { uploadImage, removeImage } from '@/api/bill/mb/bill'
+import define from '@/utils/define'
+
 export default {
+  props: {
+    hasUploadPermission: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       id: '',
       title: '',
+      type: '',
       btnLoading: false,
+      removeBtnLoading: false,
       imageUrl: '',
       fileList: [],
-      srcList: []
+      srcList: [],
+      hasUploadFile: false,
+      isRefresh: false
     }
   },
 
   methods: {
-    init(id, name) {
+    init({ id, title, type, imageUrl }) {
       this.id = id
-      this.title = name
+      this.title = title
+      this.type = type
+      if (imageUrl) {
+        this.imageUrl = imageUrl
+        this.srcList.push(define.imgUrl + imageUrl)
+      }
     },
 
     goBack() {
-      this.$emit('close')
+      this.$emit('close', this.isRefresh)
     },
 
     beforeUpload(file) {
@@ -88,37 +106,62 @@ export default {
       return isPic && isLt2M
     },
 
-    handleChange(file) {
-      this.imageUrl = URL.createObjectURL(file.raw)
-      this.srcList.push(this.imageUrl)
+    handleExceed() {
+      this.$message.error('添加失败！只能选择一张图片！')
+    },
+
+    handleChange(file, fileList) {
+      if (fileList.length > 0) this.hasUploadFile = true
+    },
+
+    handleRemove(file, fileList) {
+      if (fileList.length === 0) this.hasUploadFile = false
     },
 
     submitUpload() {
       this.$refs.upload.submit()
       this.fileList = []
+      this.hasUploadFile = false
     },
 
     uploadPic(file) {
-      console.log(file.file)
       const formData = new FormData()
       formData.append('file', file.file)
-      uploadImage(this.id, formData).then(res => {
-        console.log(res)
+      this.btnLoading = true
+      uploadImage(this.id, this.type, formData).then(res => {
+        this.imageUrl = res.data.imageUrl
+        this.srcList.push(define.imgUrl + this.imageUrl)
+        this.isRefresh = true
+        this.btnLoading = false
+        this.$message({
+          message: res.message,
+          type: 'success',
+          duration: 3000
+        })
+      }).catch(() => {
+        this.btnLoading = false
+      })
+    },
+
+    removeImage() {
+      this.$confirm('您确定要删除该图片吗?', '提示', {
+        type: 'warning'
+      }).then(() => {
+        this.removeBtnLoading = true
+        removeImage(this.id, this.type).then(res => {
+          this.imageUrl = ''
+          this.srcList.splice(0)
+          this.isRefresh = true
+          this.removeBtnLoading = false
+          this.$message({
+            message: res.message,
+            type: 'success',
+            duration: 3000
+          })
+        }).catch(() => {
+          this.removeBtnLoading = false
+        })
       }).catch(() => {})
-    },
-
-    clearPic() {
-      this.imageUrl = ''
-      this.fileList = []
-      this.srcList = []
-    },
-
-    handleExceed() {
-      this.$message.error('添加失败！只能选择一张图片！')
-    },
-
-    handleSuccess() {
-      console.log(123)
     }
   }
 }

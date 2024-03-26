@@ -41,7 +41,7 @@ module.exports = {
     // 接口转发
     proxy: {
       '/dev': {
-        target: 'http://localhost:2024',
+        target: 'http://127.0.0.1:2024',
         changeOrigin: true,
         pathRewrite: {
           '^/dev': ''

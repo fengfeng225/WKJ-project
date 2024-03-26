@@ -1,7 +1,5 @@
-const APIURl = process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:5000' : process.env.VUE_APP_BASE
-
 module.exports = {
-  APIURl: APIURl + '/edge',
-  timeout: 1000000,
+  imgUrl: process.env.VUE_APP_BASE_API + '/uploadFiles/images/',
+  timeout: process.env.NODE_ENV === 'development' ? 50000 : 500000,
   version: '1.0'
 }
